@@ -28,6 +28,13 @@ Disse reglene gjelder alt arbeid i dette repoet, og går foran generelle vaner.
 - Hver side skal ha én `h1`, egen `title`, egen `meta description` og `canonical`. Ingen sider deler tekst her.
 - Teksten i synlighetstesten ligger øverst i `script.js`, som konstantene `testSpm`, `testRaad` og `testNivaa`. All redigering av spørsmål og råd skjer der, ikke i HTML.
 
+**Arbeidsflyt**
+- Commit rett på `main`. Ikke opprett gren, og ikke lag PR, med mindre Erlend ber om det. Han er eneste bidragsyter, så en PR gir ingen review, bare et ekstra steg.
+- Push publiserer. Netlify bygger fra `main`, så `git push` legger endringen ut på erlendhaddeland.no med en gang. Derfor: commit fritt, men push kun når Erlend sier fra.
+- Trengs det en titt på endringen før den er offentlig, er PR-veien fortsatt riktig, fordi Netlify lager en deploy preview per PR. Det er unntaket, ikke standarden.
+- Forhåndsvis alltid. Er endringen synlig på en side, skal den vises i nettleserpanelet før du melder fra at du er ferdig. Erlend skal se endringen, ikke bare lese om den. Gjelder også små tekstendringer.
+- Slik startes forhåndsvisningen: `python3 -m http.server 8000` i bakgrunnen via Bash, så `navigate` til `http://localhost:8000/`. `preview_start` med `launch.json` virker ikke her, fordi serverprosessen ikke får lese `~/Documents` på macOS og svarer 404 på alt. Sett vindusbredden til 1280 før du tar bilder, ellers havner du i mobilvisningen.
+
 ## Working locally
 
 Any static server works. From the repo root:
@@ -44,15 +51,16 @@ Then open `http://localhost:8000/`. Opening the HTML files directly via `file://
 
 The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in all six pages (`index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
 
-### `script.js`: four unrelated behaviors, one IIFE
+### `script.js`: five unrelated behaviors, one IIFE
 
-The whole file is a single IIFE that wires up four independent features by scanning for data-attributes, so every page loads it even if the page only uses one:
+The whole file is a single IIFE that wires up five independent features by scanning for data-attributes, so every page loads it even if the page only uses one:
 
 - `[data-test]`: the visibility test on `tjenester.html`. The copy lives at the top of the file in `testSpm` (5 questions), `testRaad` (advice keyed by the answer to question 4) and `testNivaa` (three score bands with inline SVG figures). Questions 1 to 3 carry a `p` score, summed to 0 to 9 and matched against `grense`; question 4 carries `n` (advice key) and question 5 carries `m` (goal phrase). Rendering is `innerHTML` per step, so listeners are re-bound on every redraw.
 
 - `[data-faner]` — accessible tab widget (arrow-key navigation, `aria-selected`/`hidden` toggling). Used on the home page and the services page.
 - `[data-skjema]` — the contact form. POSTs to Formspree (`https://formspree.io/f/xyeynkjn`). On network failure or non-OK response it falls back to a `mailto:` link that pre-fills subject and body. Includes a `_gotcha` honeypot field. The form exists on `index.html` and `kontakt.html` with different `id` prefixes but the same behavior.
 - `.kort .flate[data-embed]` — click-to-embed video cards on the projects page (avoids loading iframes until user opts in).
+- Scroll-innglidning. Siste blokk i IIFE-en samler opp innholdet i `main section > .ramme` og gir dem klassen `synlig` via en `IntersectionObserver`, med 80 ms forskyvning mellom naboer. Er rammen `.brod`, glir hele tekstblokken inn samlet, ellers glir hvert barn inn for seg, og `.rutenett` pakkes opp så hvert `.kort` teller som ett. Selve skjulingen ligger i `styles.css` bak `@media (scripting:enabled) and (prefers-reduced-motion:no-preference)`, slik at innholdet står synlig uten JavaScript. Legger du nye seksjoner inn på en side, blir de med automatisk, men innhold som ligger skjult i en fane eller blir tegnet på nytt med `innerHTML` må ikke havne i utvalget, ellers kan det bli stående usynlig.
 
 ### `demo/tilbud-kakaobygg.html` is the entire "tilbudssystem" product
 
