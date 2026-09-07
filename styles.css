@@ -189,20 +189,29 @@ h1.inn{animation-delay:.08s;}
 .knapper.inn{animation-delay:.3s;}
 .portrett{opacity:0;animation:tone 1.3s ease .1s forwards;}
 
+/* Personvern og andre tekstsider */
+.vilkar h2{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25;margin:46px 0 14px;}
+.vilkar ul{margin:0 0 20px;padding-left:20px;max-width:58ch;color:var(--brod);font-size:18px;line-height:1.65;}
+.vilkar li{margin-bottom:8px;}
+.vilkar a{color:var(--bla);text-decoration:none;border-bottom:1px solid var(--strek);}
+.vilkar a:hover{border-bottom-color:var(--bla);}
+
 /* Glans over ordet i overskriften */
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .glans{
     background-image:linear-gradient(100deg,
-      var(--lys) 0%,var(--lys) 40%,
-      var(--bla) 47%,var(--brod) 50%,var(--bla) 53%,
-      var(--lys) 60%,var(--lys) 100%);
-    background-size:260% 100%;background-repeat:no-repeat;
+      var(--lys) 0%,var(--lys) 44%,
+      var(--bla) 48%,var(--brod) 50%,var(--bla) 52%,
+      var(--lys) 56%,var(--lys) 100%);
+    background-size:300% 100%;background-position:100% 50%;
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;color:transparent;
     animation:glans 7s cubic-bezier(.5,0,.5,1) 1s infinite;
   }
 }
-@keyframes glans{0%{background-position:170% 50%;}40%,100%{background-position:-70% 50%;}}
+/* Bakgrunnen er 300% bred, så ordet er alltid dekket av gradienten. */
+/* I hvileposisjon ligger det blå båndet utenfor ordet, aldri over kanten. */
+@keyframes glans{0%{background-position:100% 50%;}45%,100%{background-position:0% 50%;}}
 @keyframes opp{to{opacity:1;transform:none;}}
 @keyframes tone{to{opacity:1;}}
 @media (prefers-reduced-motion:reduce){
