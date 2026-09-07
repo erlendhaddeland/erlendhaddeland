@@ -220,12 +220,13 @@ h1.inn{animation-delay:.08s;}
     background-size:300% 100%;background-position:100% 50%;
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;color:transparent;
-    animation:glans 7s cubic-bezier(.5,0,.5,1) 1s infinite;
+    animation:glans 6s linear 1s infinite;
   }
 }
 /* Bakgrunnen er 300% bred, så ordet er alltid dekket av gradienten. */
-/* I hvileposisjon ligger det blå båndet utenfor ordet, aldri over kanten. */
-@keyframes glans{0%{background-position:100% 50%;}45%,100%{background-position:0% 50%;}}
+/* Start og slutt ser like ut, begge har båndet utenfor ordet, så */
+/* sveipet ruller sømløst videre uten pause mellom rundene. */
+@keyframes glans{from{background-position:100% 50%;}to{background-position:0% 50%;}}
 @keyframes opp{to{opacity:1;transform:none;}}
 @keyframes tone{to{opacity:1;}}
 @media (prefers-reduced-motion:reduce){
