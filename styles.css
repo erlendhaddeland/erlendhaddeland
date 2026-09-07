@@ -366,12 +366,18 @@ h1.inn{animation-delay:.08s;}
 .foredrag img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;}
 @media (max-width:900px){.foredrag{grid-template-columns:1fr;gap:24px;}}
 
+/* Portrett på om-siden */
+.portrett-om{display:grid;grid-template-columns:1fr 1fr;gap:32px 56px;align-items:center;}
+.portrett-om img{width:100%;height:auto;display:block;}
+@media (max-width:900px){.portrett-om{grid-template-columns:1fr;gap:24px;}}
+
 /* Lys seksjon: kontaktskjema */
 .lys{background:#dee6f2;color:#27285e;border-top:0;}
 .skjema-tittel{font-size:clamp(17px,1.9vw,21px);font-weight:600;letter-spacing:-.01em;margin:0 0 6px;opacity:.75;}
 .hei-under{font-size:clamp(18px,2.2vw,24px);font-weight:400;line-height:1.4;margin:0 0 48px;max-width:34ch;opacity:.8;}
 .hei{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;}
 .lys .hei{font-size:clamp(40px,6.6vw,80px);font-weight:800;letter-spacing:-.035em;line-height:.94;margin:0 0 14px;font-variation-settings:"opsz" 72;text-wrap:balance;}
+.lys .skjema-kort .hei{margin-bottom:48px;}
 .lys .linje{margin-bottom:26px;gap:10px 22px;}
 .lys .linje label{font-size:clamp(20px,2.6vw,30px);font-weight:500;letter-spacing:-.02em;line-height:1.25;}
 .lys .linje input,.lys .linje textarea{
@@ -411,10 +417,6 @@ h1.inn{animation-delay:.08s;}
 .hei-book{font-size:17px;line-height:1.5;margin:24px 0 0;opacity:.85;}
 .hei-book a{color:#0072b1;text-decoration:none;border-bottom:1px solid rgba(0,114,177,.35);}
 .hei-book a:hover{border-bottom-color:#0072b1;}
-.book-boks{border:1px solid var(--strek);padding:36px 32px;max-width:640px;}
-.book-boks .stor{margin-bottom:22px;}
-.book-boks p:last-child{margin:22px 0 0;font-size:16px;color:var(--dempet);}
-@media (max-width:700px){.book-boks{padding:28px 22px;}}
 
 /* Sidebytte */
 body{padding-top:var(--topph);}
