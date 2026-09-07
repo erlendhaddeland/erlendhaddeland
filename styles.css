@@ -189,6 +189,20 @@ h1.inn{animation-delay:.08s;}
 .knapper.inn{animation-delay:.3s;}
 .portrett{opacity:0;animation:tone 1.3s ease .1s forwards;}
 
+/* Seksjoner som glir inn ved scroll. Skjules bare når JavaScript er på,
+   slik at innholdet står synlig uten skript og ved redusert bevegelse. */
+@media (scripting:enabled) and (prefers-reduced-motion:no-preference){
+  main section > .ramme.brod,
+  main section > .ramme:not(.brod) > :not(.rutenett),
+  main section > .ramme:not(.brod) > .rutenett > .kort{
+    opacity:0;transform:translateY(20px);
+    transition:opacity .95s cubic-bezier(.2,.7,.3,1),transform .95s cubic-bezier(.2,.7,.3,1);
+  }
+  main section > .ramme.brod.synlig,
+  main section > .ramme:not(.brod) > .synlig,
+  main section > .ramme:not(.brod) > .rutenett > .synlig{opacity:1;transform:none;}
+}
+
 /* Personvern og andre tekstsider */
 .vilkar h2{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25;margin:46px 0 14px;}
 .vilkar ul{margin:0 0 20px;padding-left:20px;max-width:58ch;color:var(--brod);font-size:18px;line-height:1.65;}
