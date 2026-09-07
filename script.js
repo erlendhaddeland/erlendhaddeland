@@ -257,4 +257,40 @@ document.querySelectorAll("[data-faner]").forEach(function(boks){
       k.replaceWith(i);
     });
   });
+
+  /* Seksjoner som glir inn når de kommer i syne. CSS skjuler dem bare
+     når JavaScript er på, se @media (scripting:enabled) i styles.css. */
+  var maal = [];
+  document.querySelectorAll("main section > .ramme").forEach(function(ramme){
+    /* Ren brødtekst glir inn som én blokk. Kort, faner og rader
+       glir inn hver for seg, med litt forskyvning mellom dem. */
+    if (ramme.classList.contains("brod")) { maal.push(ramme); return; }
+    Array.prototype.forEach.call(ramme.children, function(barn){
+      if (barn.classList.contains("rutenett")) {
+        Array.prototype.forEach.call(barn.children, function(kort){ maal.push(kort); });
+      } else {
+        maal.push(barn);
+      }
+    });
+  });
+
+  function vis(el, nr){
+    el.style.transitionDelay = Math.min(nr * 80, 320) + "ms";
+    el.classList.add("synlig");
+  }
+
+  if (!("IntersectionObserver" in window)) {
+    maal.forEach(function(el){ el.classList.add("synlig"); });
+  } else {
+    var speider = new IntersectionObserver(function(hendelser, obs){
+      hendelser.forEach(function(h){
+        if (!h.isIntersecting) return;
+        var el = h.target;
+        var sosken = Array.prototype.slice.call(el.parentNode.children);
+        vis(el, sosken.indexOf(el));
+        obs.unobserve(el);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: .08 });
+    maal.forEach(function(el){ speider.observe(el); });
+  }
 })();
