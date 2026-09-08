@@ -254,14 +254,16 @@ h1.inn{animation-delay:.08s;}
    slik at innholdet står synlig uten skript og ved redusert bevegelse. */
 @media (scripting:enabled) and (prefers-reduced-motion:no-preference){
   main section > .ramme.brod,
-  main section > .ramme:not(.brod) > :not(.rutenett),
-  main section > .ramme:not(.brod) > .rutenett > .kort{
+  main section > .ramme:not(.brod) > :not(.rutenett):not(.referanser),
+  main section > .ramme:not(.brod) > .rutenett > .kort,
+  main section > .ramme:not(.brod) > .referanser > .referanse{
     opacity:0;transform:translateY(20px);
     transition:opacity .95s cubic-bezier(.2,.7,.3,1),transform .95s cubic-bezier(.2,.7,.3,1);
   }
   main section > .ramme.brod.synlig,
   main section > .ramme:not(.brod) > .synlig,
-  main section > .ramme:not(.brod) > .rutenett > .synlig{opacity:1;transform:none;}
+  main section > .ramme:not(.brod) > .rutenett > .synlig,
+  main section > .ramme:not(.brod) > .referanser > .synlig{opacity:1;transform:none;}
 }
 
 /* Personvern og andre tekstsider */
