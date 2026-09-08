@@ -19,13 +19,14 @@ Disse reglene gjelder alt arbeid i dette repoet, og går foran generelle vaner.
 - Komma etter tiltale. «Hei Erlend,» og ikke «Hei Erlend».
 
 **Design**
-- Bruk fargevariablene i `styles.css` (`--natt`, `--lys`, `--brod`, `--dempet`, `--strek`, `--bla`, `--aksent`, `--dypbla`). Aldri nye hexverdier. Trengs en farge som ikke finnes, legg den inn som ny variabel på `:root` først.
+- Bruk fargevariablene i `styles.css` (`--natt`, `--lys`, `--brod`, `--dempet`, `--strek`, `--bla`, `--aksent`, `--dypbla`, `--kakao`). Aldri nye hexverdier. Trengs en farge som ikke finnes, legg den inn som ny variabel på `:root` først.
 - Bricolage Grotesque er eneste font. Fallback-stakken `"Helvetica Neue",Arial,sans-serif` blir stående, men ingen andre fonter skal legges til.
 - Skarpe hjørner. Ingen `border-radius` på bokser, kort, knapper, felt eller bilder. Unntaket er de sirklene som allerede finnes (`.prikk`, `.signatur img` og dekorsirkelen rundt linje 157), der `border-radius:50%` lager formen. Ikke legg til nye avrundinger.
 
 **Struktur**
 - Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle ti HTML-filene. Endres én, må alle endres: `index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
-- `404.html` er unntaket i lenkestil. Netlify serverer den på hvilken som helst ukjent adresse, også `/noe/dypt/her`, så alle stier der er rotrelative (`/styles.css`, `/tjenester.html`, `/bilder/logo.png`). Bruker du `tjenester.html` uten skråstrek, peker lenken feil. De andre ni sidene bruker relative stier som før.
+- `404.html` er en kakaovits, ikke en vanlig side. Overskriften er «Kakao not found», og de to firetallene flankerer et bilde av Erlend som heller kakao, slik at bildet blir nullen. Tallene er `font-weight:200` med negativ margin, så de går litt bak bildet. Endrer du bildebredden, må marginene følge etter, ellers blir sifrene stående og flyte. `--kakao` er hentet som gjennomsnittsfarge fra kakaoen i bildet og lysnet til 5,85 i kontrast mot `--natt`.
+- `404.html` er også unntaket i lenkestil. Netlify serverer den på hvilken som helst ukjent adresse, også `/noe/dypt/her`, så alle stier der er rotrelative (`/styles.css`, `/tjenester.html`, `/bilder/logo.png`). Bruker du `tjenester.html` uten skråstrek, peker lenken feil. De andre ni sidene bruker relative stier som før.
 - Hver side har `<a class="hopp" href="#innhold">` rett etter `<body>`, og `<main id="innhold">`. Lenken ligger utenfor skjermen til den får tastaturfokus. Nye sider skal ha begge deler.
 - Hver side skal ha én `h1`, egen `title`, egen `meta description` og `canonical`. Ingen sider deler tekst her.
 - Spørsmål og svar ligger i `faq.html`, i `details` og `summary`. Trekkspillet er ren HTML og CSS, uten JavaScript, så nye spørsmål legges rett inn i markupen.

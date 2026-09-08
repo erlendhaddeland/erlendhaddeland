@@ -7,6 +7,7 @@
   --bla:#6cb2e4;
   --aksent:#6cb2e4;
   --dypbla:#27285e;
+  --kakao:#c08a63;
   --mal:1180px;
   --topph:72px;
   --kaffe:url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ctext%20x%3D%272%27%20y%3D%2730%27%20font-size%3D%2730%27%3E%E2%98%95%3C%2Ftext%3E%3C%2Fsvg%3E") 10 10, pointer;
@@ -521,3 +522,25 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 .referanse ul{margin:0 0 16px;padding-left:20px;font-size:17px;line-height:1.6;color:var(--brod);}
 .referanse li{margin-bottom:6px;}
 .referanse .kilde{margin:auto 0 0;padding:22px 28px 28px;font-size:15px;}
+
+/* 404 */
+.feilside{text-align:center;padding-top:8px;}
+.feilside h1{max-width:none;margin:0 auto;}
+.feilside .kakaoord{color:var(--kakao);}
+.feilside .tagline{max-width:44ch;margin-left:auto;margin-right:auto;}
+.feilside .knapper{justify-content:center;}
+.feil-rad{display:flex;align-items:center;justify-content:center;margin:34px 0 40px;}
+.feil-tall{
+  font-size:clamp(135px,27vw,400px);
+  font-weight:200;line-height:.78;letter-spacing:-.04em;
+  font-variation-settings:"opsz" 96;
+  color:var(--lys);position:relative;z-index:0;
+}
+.feil-tall:first-child{margin-right:-14px;}
+.feil-tall:last-child{margin-left:-14px;}
+.feil-bilde{position:relative;z-index:1;width:min(340px,38vw);height:auto;display:block;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+@media (max-width:600px){
+  .feil-rad{margin:24px 0 30px;}
+  .feil-tall:first-child{margin-right:-8px;}
+  .feil-tall:last-child{margin-left:-8px;}
+}
