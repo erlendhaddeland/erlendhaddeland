@@ -26,7 +26,7 @@ Disse reglene gjelder alt arbeid i dette repoet, og går foran generelle vaner.
 **Struktur**
 - Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle seks HTML-filene. Endres én, må alle endres: `index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
 - Hver side skal ha én `h1`, egen `title`, egen `meta description` og `canonical`. Ingen sider deler tekst her.
-- Teksten i synlighetstesten ligger øverst i `script.js`, som konstantene `testSpm`, `testRaad` og `testNivaa`. All redigering av spørsmål og råd skjer der, ikke i HTML.
+- Spørsmål og svar ligger i `faq.html`, i `details` og `summary`. Trekkspillet er ren HTML og CSS, uten JavaScript, så nye spørsmål legges rett inn i markupen.
 
 **Arbeidsflyt**
 - Commit rett på `main`. Ikke opprett gren, og ikke lag PR, med mindre Erlend ber om det. Han er eneste bidragsyter, så en PR gir ingen review, bare et ekstra steg.
@@ -55,8 +55,7 @@ The `<header class="topp">` nav and `<footer class="bunn">` block are copy-paste
 
 The whole file is a single IIFE that wires up five independent features by scanning for data-attributes, so every page loads it even if the page only uses one:
 
-- `[data-test]`: the visibility test on `tjenester.html`. The copy lives at the top of the file in `testSpm` (5 questions), `testRaad` (advice keyed by the answer to question 4) and `testNivaa` (three score bands with inline SVG figures). Questions 1 to 3 carry a `p` score, summed to 0 to 9 and matched against `grense`; question 4 carries `n` (advice key) and question 5 carries `m` (goal phrase). Rendering is `innerHTML` per step, so listeners are re-bound on every redraw.
-
+- `.meny-knapp` — mobilmenyen. Under 600 piksler er hovedmenyen skjult bak hamburgerknappen, som toggler klassen `apen` på `.topp`. Lukkes med knappen, med Escape og ved klikk på en lenke. Selve panelet ligger i `styles.css` under `@media (max-width:600px)`.
 - `[data-faner]` — accessible tab widget (arrow-key navigation, `aria-selected`/`hidden` toggling). Used on the home page and the services page.
 - `[data-skjema]` — the contact form. POSTs to Formspree (`https://formspree.io/f/xyeynkjn`). On network failure or non-OK response it falls back to a `mailto:` link that pre-fills subject and body. Includes a `_gotcha` honeypot field. The form exists on `index.html` and `kontakt.html` with different `id` prefixes but the same behavior.
 - `.kort .flate[data-embed]` — click-to-embed video cards on the projects page (avoids loading iframes until user opts in).
@@ -83,4 +82,4 @@ Single stylesheet with CSS custom properties at `:root` (`--natt`, `--lys`, `--b
 
 ## Known drift
 
-The answer screen of the visibility test links to `#tjenesteliste`, but no page defines that id. The link is dead until an `id="tjenesteliste"` is added to `tjenester.html`.
+Ingen kjente avvik.
