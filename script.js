@@ -361,4 +361,28 @@ document.querySelectorAll("[data-faner]").forEach(function(boks){
     }, { rootMargin: "0px 0px -10% 0px", threshold: .08 });
     maal.forEach(function(el){ speider.observe(el); });
   }
+
+  /* Mobilmeny */
+  var topp = document.querySelector(".topp");
+  var menyKnapp = topp && topp.querySelector(".meny-knapp");
+  if (menyKnapp) {
+    var lukk = function(){
+      topp.classList.remove("apen");
+      menyKnapp.setAttribute("aria-expanded", "false");
+    };
+    menyKnapp.addEventListener("click", function(){
+      var apen = topp.classList.toggle("apen");
+      menyKnapp.setAttribute("aria-expanded", apen ? "true" : "false");
+    });
+    Array.prototype.forEach.call(topp.querySelectorAll("nav a"), function(lenke){
+      lenke.addEventListener("click", lukk);
+    });
+    document.addEventListener("keydown", function(h){
+      if (h.key === "Escape" && topp.classList.contains("apen")) {
+        lukk();
+        menyKnapp.focus();
+      }
+    });
+  }
+
 })();

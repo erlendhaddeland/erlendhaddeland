@@ -294,6 +294,19 @@ h1.inn{animation-delay:.08s;}
   .topp nav a{font-size:14px;letter-spacing:0;white-space:nowrap;}
 }
 
+/* Mobilmeny under 600px */
+@media (max-width:600px){
+  .meny-knapp{display:flex;}
+  .topp nav{
+    display:none;position:absolute;top:var(--topph);left:0;right:0;
+    flex-direction:column;gap:0;padding:6px 28px 18px;
+    background:var(--natt);border-bottom:1px solid var(--strek);
+  }
+  .topp.apen nav{display:flex;}
+  .topp nav a{font-size:17px;padding:13px 0;border-bottom:0;}
+  .topp nav a[aria-current="page"]{border-bottom:0;color:var(--aksent);}
+}
+
 @media (max-width:440px){
   :root{--topph:54px;}
   .ramme{padding:0 18px;}
