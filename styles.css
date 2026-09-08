@@ -542,7 +542,8 @@ body{padding-top:var(--topph);}
 .kort-bredt iframe{aspect-ratio:16/9;}
 .kort .kort-brod{font-size:16px;line-height:1.6;color:var(--brod);max-width:62ch;}
 
-/* Filsiden */
-.rad strong{color:var(--lys);font-weight:600;}
-.rad .knapp-kopi{margin-top:14px;font-family:inherit;background:transparent;cursor:pointer;}
-.rad .knapp-kopi:disabled{border-color:var(--bla);color:var(--bla);cursor:default;}
+/* Filsiden: adressen som kan kopieres, bygget på kontakt-linjen */
+.filadresse{margin-top:44px;}
+button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transparent;border-left:0;border-right:0;}
+.kopi-status{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;}
+.kontakt-linje:disabled .kopi-status,.kontakt-linje:disabled .kontakt-verdi{color:var(--aksent);}

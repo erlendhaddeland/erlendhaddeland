@@ -293,28 +293,31 @@ document.querySelectorAll("[data-faner]").forEach(function(boks){
 
   /* Kopier e-postadressen på filsiden */
   document.querySelectorAll("[data-kopier]").forEach(function(knapp){
-    var opprinnelig = knapp.textContent;
+    /* Kvitteringen skrives i statusfeltet hvis knappen har et,
+       ellers i knappen selv. */
+    var felt = knapp.querySelector("[data-kopistatus]") || knapp;
+    var opprinnelig = felt.textContent;
     var teller;
     function kvittering(tekst){
-      knapp.textContent = tekst;
+      felt.textContent = tekst;
       knapp.disabled = true;
       clearTimeout(teller);
       teller = setTimeout(function(){
-        knapp.textContent = opprinnelig;
+        felt.textContent = opprinnelig;
         knapp.disabled = false;
       }, 2400);
     }
     function reserve(tekst){
       var ok = false;
-      var felt = document.createElement("textarea");
-      felt.value = tekst;
-      felt.setAttribute("readonly", "");
-      felt.style.cssText = "position:absolute;left:-9999px;top:0";
-      document.body.appendChild(felt);
-      felt.select();
+      var hjelper = document.createElement("textarea");
+      hjelper.value = tekst;
+      hjelper.setAttribute("readonly", "");
+      hjelper.style.cssText = "position:absolute;left:-9999px;top:0";
+      document.body.appendChild(hjelper);
+      hjelper.select();
       try { ok = document.execCommand("copy"); } catch(e){}
-      document.body.removeChild(felt);
-      kvittering(ok ? "Kopiert" : "Merk adressen over og kopier selv");
+      document.body.removeChild(hjelper);
+      kvittering(ok ? "Kopiert" : "Gikk ikke");
     }
     knapp.addEventListener("click", function(){
       var tekst = knapp.dataset.kopier;
