@@ -239,9 +239,11 @@ h1.inn{animation-delay:.08s;}
     background-size:300% 100%;background-position:100% 50%;
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;color:transparent;
-    animation:glans 6s linear 1s infinite;
+    animation:glans 6s linear -1s infinite;
   }
 }
+/* Negativ forsinkelse starter sveipet et sekund uti runden, altså akkurat */
+/* der båndet treffer ordet, slik at glansen er i gang med en gang siden lastes. */
 /* Bakgrunnen er 300% bred, så ordet er alltid dekket av gradienten. */
 /* Start og slutt ser like ut, begge har båndet utenfor ordet, så */
 /* sveipet ruller sømløst videre uten pause mellom rundene. */
