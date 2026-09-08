@@ -503,3 +503,13 @@ body{padding-top:var(--topph);}
 button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transparent;border-left:0;border-right:0;}
 .kopi-status{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;}
 .kontakt-linje:disabled .kopi-status,.kontakt-linje:disabled .kontakt-verdi{color:var(--aksent);}
+
+/* Referanser under foredraget. Ligger i en .brod-ramme, slik at hele
+   blokken glir inn samlet. Rutenettet er ren layout, og har ingenting
+   med innglidningen å gjøre. */
+.referanser{display:grid;grid-template-columns:1fr 1fr;gap:0 64px;}
+@media (max-width:900px){.referanser{grid-template-columns:1fr;}}
+.referanse{margin:44px 0 0;padding-top:34px;border-top:1px solid var(--strek);}
+.referanse blockquote{max-width:none;}
+.referanse ul{margin:0 0 20px;padding-left:20px;font-size:18px;line-height:1.65;color:var(--brod);}
+.referanse li{margin-bottom:6px;}
