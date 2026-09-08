@@ -112,7 +112,6 @@ section.uten-strek{border-top:0;}
 .rad p{margin:0;color:var(--dempet);font-size:17px;max-width:54ch;line-height:1.6;}
 a.rad{text-decoration:none;color:inherit;}
 a.rad:hover h3{color:var(--aksent);}
-.under{margin-top:12px !important;color:var(--bla) !important;font-size:15px !important;}
 .tall{margin-top:10px !important;color:var(--lys) !important;font-size:16px !important;}
 .tall span{color:var(--dempet);}
 .tall span::before{content:"";display:inline-block;width:18px;}
@@ -357,6 +356,19 @@ h1.inn{animation-delay:.08s;}
 .fane-panel[hidden]{display:none;}
 .fane-panel h3{margin:0 0 16px;font-size:24px;font-weight:600;letter-spacing:-.02em;}
 .fane-panel p{margin:0;font-size:18px;line-height:1.65;color:var(--brod);max-width:52ch;}
+.punkter{
+  list-style:none;margin:26px 0 0;padding:0;max-width:52ch;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;
+}
+.punkter li{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-top:1px solid var(--strek);
+  color:var(--lys);font-size:17px;font-weight:500;line-height:1.3;
+}
+.punkter li::before{content:"";flex:none;width:7px;height:7px;background:var(--bla);}
+@media (max-width:600px){
+  .punkter{grid-template-columns:1fr;}
+}
 
 /* Skjema */
 .skjema{margin-top:12px;max-width:940px;}
