@@ -179,19 +179,62 @@
     el.classList.add("synlig");
   }
 
+  function visMedSosken(el, forskyv){
+    var sosken = Array.prototype.slice.call(el.parentNode.children);
+    vis(el, forskyv ? sosken.indexOf(el) : 0);
+  }
+
   if (!("IntersectionObserver" in window)) {
     maal.forEach(function(el){ el.classList.add("synlig"); });
   } else {
     var speider = new IntersectionObserver(function(hendelser, obs){
       hendelser.forEach(function(h){
         if (!h.isIntersecting) return;
-        var el = h.target;
-        var sosken = Array.prototype.slice.call(el.parentNode.children);
-        vis(el, sosken.indexOf(el));
-        obs.unobserve(el);
+        visMedSosken(h.target, true);
+        obs.unobserve(h.target);
       });
     }, { rootMargin: "0px 0px -10% 0px", threshold: .08 });
     maal.forEach(function(el){ speider.observe(el); });
+
+    /* Sikkerhetsnett. Hopper scrollen forbi et element mellom to
+       opptegninger, rekker aldri IntersectionObserver å se det, og
+       elementet blir stående usynlig for godt. Det skjer ved raske
+       kast, ved hopp til et anker, når nettleseren gjenoppretter
+       scrollposisjonen etter en omlasting, og når et verktøy tar
+       bilde av hele siden. Vi går derfor over restene ved hver
+       scroll og viser alt som har passert nedre kant. Uten
+       forskyvning, siden disse skal hentes inn, ikke animeres pent. */
+    var venter = false;
+    var ettersyn = function(){
+      venter = false;
+      var grense = window.innerHeight * 0.92;
+      var rest = [];
+      maal.forEach(function(el){
+        if (el.classList.contains("synlig")) return;
+        if (el.getBoundingClientRect().top < grense) {
+          visMedSosken(el, false);
+          speider.unobserve(el);
+        } else {
+          rest.push(el);
+        }
+      });
+      maal = rest;
+      if (!maal.length) {
+        window.removeEventListener("scroll", planlegg);
+        window.removeEventListener("resize", planlegg);
+      }
+    };
+    /* Bremsen bruker setTimeout og ikke requestAnimationFrame, fordi
+       rAF står stille i faner som ikke tegnes opp. Da ville nettet
+       aldri kjørt nettopp der det trengs. */
+    var planlegg = function(){
+      if (venter) return;
+      venter = true;
+      setTimeout(ettersyn, 120);
+    };
+    window.addEventListener("scroll", planlegg, { passive: true });
+    window.addEventListener("resize", planlegg, { passive: true });
+    window.addEventListener("pageshow", planlegg);
   }
 
   /* Mobilmeny */
