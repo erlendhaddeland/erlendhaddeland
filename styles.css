@@ -149,6 +149,12 @@ blockquote{margin:0;max-width:24ch;}
 .liten-lenke{font-size:18px;color:var(--bla);text-decoration:none;width:fit-content;border-bottom:1px solid transparent;}
 .liten-lenke:hover{border-bottom-color:var(--bla);}
 
+/* Spørsmål og svar */
+.sporsmal{border-top:1px solid var(--strek);padding:26px 0;}
+.sporsmal:last-of-type{border-bottom:1px solid var(--strek);}
+.sporsmal h3{font-size:21px;font-weight:600;letter-spacing:-.01em;margin:0 0 12px;max-width:44ch;}
+.sporsmal p{margin:0;}
+
 /* Pilen */
 .med-pil{position:relative;}
 .pil{
@@ -485,3 +491,8 @@ body{padding-top:var(--topph);}
 .kort-bredt .flate{aspect-ratio:16/9;background-color:var(--dypbla);}
 .kort-bredt iframe{aspect-ratio:16/9;}
 .kort .kort-brod{font-size:16px;line-height:1.6;color:var(--brod);max-width:62ch;}
+
+/* Filsiden */
+.rad strong{color:var(--lys);font-weight:600;}
+.rad .knapp-kopi{margin-top:14px;font-family:inherit;background:transparent;cursor:pointer;}
+.rad .knapp-kopi:disabled{border-color:var(--bla);color:var(--bla);cursor:default;}

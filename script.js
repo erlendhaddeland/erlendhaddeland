@@ -291,6 +291,41 @@ document.querySelectorAll("[data-faner]").forEach(function(boks){
     });
   });
 
+  /* Kopier e-postadressen på filsiden */
+  document.querySelectorAll("[data-kopier]").forEach(function(knapp){
+    var opprinnelig = knapp.textContent;
+    var teller;
+    function kvittering(tekst){
+      knapp.textContent = tekst;
+      knapp.disabled = true;
+      clearTimeout(teller);
+      teller = setTimeout(function(){
+        knapp.textContent = opprinnelig;
+        knapp.disabled = false;
+      }, 2400);
+    }
+    function reserve(tekst){
+      var ok = false;
+      var felt = document.createElement("textarea");
+      felt.value = tekst;
+      felt.setAttribute("readonly", "");
+      felt.style.cssText = "position:absolute;left:-9999px;top:0";
+      document.body.appendChild(felt);
+      felt.select();
+      try { ok = document.execCommand("copy"); } catch(e){}
+      document.body.removeChild(felt);
+      kvittering(ok ? "Kopiert" : "Merk adressen over og kopier selv");
+    }
+    knapp.addEventListener("click", function(){
+      var tekst = knapp.dataset.kopier;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(tekst).then(function(){ kvittering("Kopiert"); }, function(){ reserve(tekst); });
+      } else {
+        reserve(tekst);
+      }
+    });
+  });
+
   /* Seksjoner som glir inn når de kommer i syne. CSS skjuler dem bare
      når JavaScript er på, se @media (scripting:enabled) i styles.css. */
   var maal = [];
