@@ -152,10 +152,45 @@ blockquote{margin:0;max-width:24ch;}
 .liten-lenke:hover{border-bottom-color:var(--bla);}
 
 /* Spørsmål og svar */
-.sporsmal{border-top:1px solid var(--strek);padding:26px 0;}
+.faq-rad{display:grid;grid-template-columns:1fr .62fr;gap:0 64px;align-items:start;}
+.faq-bolk{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--aksent);margin:52px 0 6px;}
+.faq-bolk:first-child{margin-top:0;}
+.sporsmal{border-top:1px solid var(--strek);}
 .sporsmal:last-of-type{border-bottom:1px solid var(--strek);}
-.sporsmal h3{font-size:21px;font-weight:600;letter-spacing:-.01em;margin:0 0 12px;max-width:44ch;}
-.sporsmal p{margin:0;}
+.sporsmal summary{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:20px 0;list-style:none;cursor:var(--kaffe);
+}
+.sporsmal summary::-webkit-details-marker{display:none;}
+.sporsmal summary:focus-visible{outline:2px solid var(--aksent);outline-offset:4px;}
+.sporsmal summary h3{font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.35;margin:0;}
+.sporsmal summary:hover h3{color:var(--aksent);}
+.sporsmal summary::after{
+  content:"";flex:0 0 auto;width:15px;height:15px;
+  background:
+    linear-gradient(var(--dempet),var(--dempet)) center/15px 2px no-repeat,
+    linear-gradient(var(--dempet),var(--dempet)) center/2px 15px no-repeat;
+  transition:transform .22s ease;
+}
+.sporsmal[open] summary::after{transform:rotate(45deg);}
+.sporsmal summary:hover::after{background-image:linear-gradient(var(--aksent),var(--aksent)),linear-gradient(var(--aksent),var(--aksent));}
+.sporsmal .svar{padding:0 0 24px;}
+.sporsmal .svar p{margin:0 0 16px;max-width:62ch;}
+.sporsmal .svar p:last-child{margin-bottom:0;}
+
+.faq-side{position:sticky;top:calc(var(--topph) + 32px);}
+.faq-side img{width:100%;height:auto;display:block;}
+.faq-kontakt{border:1px solid var(--strek);border-top:0;padding:26px 24px 28px;}
+.faq-merk{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dempet);margin:0 0 12px;}
+.faq-epost{font-size:18px;font-weight:600;letter-spacing:-.01em;text-decoration:none;color:var(--lys);border-bottom:1px solid var(--strek);}
+.faq-epost:hover{border-bottom-color:var(--aksent);color:var(--aksent);}
+.faq-kontakt .knapper{margin-top:24px;}
+
+@media (max-width:900px){
+  .faq-rad{grid-template-columns:1fr;gap:56px;}
+  .faq-side{position:static;}
+  .sporsmal summary h3{font-size:18px;}
+}
 
 /* Pilen */
 .med-pil{position:relative;}
