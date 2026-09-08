@@ -87,14 +87,15 @@ h1{
 .knapp-tom:hover{border-color:var(--lys);}
 
 /* Undersider */
-.sidetopp{padding:76px 28px 8px;}
+.sidetopp{padding:52px 28px 8px;}
 .sidetopp h1{max-width:16ch;}
 .sidetopp .tagline{color:var(--dempet);max-width:34ch;}
 
 /* Seksjoner */
-section{padding:104px 0;border-top:1px solid var(--strek);}
+section{padding:72px 0;border-top:1px solid var(--strek);}
+main > section:first-child{padding-top:48px;}
 section.uten-strek{border-top:0;}
-.stor{font-size:clamp(24px,2.9vw,34px);font-weight:500;line-height:1.28;letter-spacing:-.02em;max-width:26ch;margin:0 0 34px;}
+.stor{font-size:clamp(24px,2.9vw,34px);font-weight:500;line-height:1.28;letter-spacing:-.02em;max-width:26ch;margin:0 0 26px;}
 .brod p{font-size:18px;line-height:1.65;max-width:58ch;margin:0 0 20px;color:var(--brod);}
 .brod p:last-child{margin-bottom:0;}
 .dempet{color:var(--dempet) !important;}
@@ -176,8 +177,9 @@ blockquote{margin:0;max-width:24ch;}
 .kort iframe{width:100%;aspect-ratio:9/16;border:0;display:block;}
 
 /* Bunn */
-footer.bunn{border-top:1px solid var(--strek);padding:40px 0 56px;color:var(--dempet);font-size:14px;line-height:1.7;}
+footer.bunn{border-top:1px solid var(--strek);padding:32px 0 40px;color:var(--dempet);font-size:14px;line-height:1.7;}
 .bunn-rad{display:flex;flex-wrap:wrap;gap:14px 56px;justify-content:space-between;}
+.bunn-rad .ps{width:100%;order:3;margin-top:8px;}
 footer.bunn p{margin:0;}
 footer.bunn a{color:var(--bla);text-decoration:none;}
 footer.bunn a:hover{text-decoration:underline;}
@@ -244,8 +246,9 @@ h1.inn{animation-delay:.08s;}
   h1{max-width:14ch;font-variation-settings:"opsz" 48;}
   .tagline{max-width:30ch;}
   .hero .tagline{max-width:32ch;}
-  section{padding:72px 0;}
-  .sidetopp{padding:44px 28px 4px;}
+  section{padding:56px 0;}
+  main > section:first-child{padding-top:38px;}
+  .sidetopp{padding:38px 28px 4px;}
   .stor,blockquote{max-width:none;}
   .rad{grid-template-columns:1fr;gap:6px;padding:22px 0;}
   .tall span{display:block;}
@@ -266,7 +269,7 @@ h1.inn{animation-delay:.08s;}
 @media (max-width:440px){
   :root{--topph:54px;}
   .ramme{padding:0 18px;}
-  .sidetopp{padding:40px 20px 4px;}
+  .sidetopp{padding:34px 20px 4px;}
   .merke img{height:14px;}
   .topp nav{gap:10px;}
   .topp nav a{font-size:12px;}
@@ -374,10 +377,10 @@ h1.inn{animation-delay:.08s;}
 /* Lys seksjon: kontaktskjema */
 .lys{background:#dee6f2;color:#27285e;border-top:0;}
 .skjema-tittel{font-size:clamp(17px,1.9vw,21px);font-weight:600;letter-spacing:-.01em;margin:0 0 6px;opacity:.75;}
-.hei-under{font-size:clamp(18px,2.2vw,24px);font-weight:400;line-height:1.4;margin:0 0 48px;max-width:34ch;opacity:.8;}
+.hei-under{font-size:clamp(18px,2.2vw,24px);font-weight:400;line-height:1.4;margin:0 0 34px;max-width:34ch;opacity:.8;}
 .hei{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;}
 .lys .hei{font-size:clamp(40px,6.6vw,80px);font-weight:800;letter-spacing:-.035em;line-height:.94;margin:0 0 14px;font-variation-settings:"opsz" 72;text-wrap:balance;}
-.lys .skjema-kort .hei{margin-bottom:48px;}
+.lys .skjema-kort .hei{margin-bottom:34px;}
 .lys .linje{margin-bottom:26px;gap:10px 22px;}
 .lys .linje label{font-size:clamp(20px,2.6vw,30px);font-weight:500;letter-spacing:-.02em;line-height:1.25;}
 .lys .linje input,.lys .linje textarea{
