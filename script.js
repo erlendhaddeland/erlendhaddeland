@@ -192,6 +192,39 @@ document.querySelectorAll("[data-faner]").forEach(function(boks){
   });
 
   var SKJEMA_URL = "https://formspree.io/f/xyeynkjn";
+  var takkBoks = null;
+  var takkForrige = null;
+  function lukkTakk(){
+    if(!takkBoks) return;
+    takkBoks.hidden = true;
+    document.removeEventListener("keydown", takkTast);
+    if(takkForrige && takkForrige.focus) takkForrige.focus();
+  }
+  function takkTast(e){
+    if(e.key === "Escape") lukkTakk();
+  }
+  function visTakk(){
+    if(!takkBoks){
+      takkBoks = document.createElement("div");
+      takkBoks.className = "takk";
+      takkBoks.setAttribute("role", "dialog");
+      takkBoks.setAttribute("aria-modal", "true");
+      takkBoks.setAttribute("aria-labelledby", "takk-tekst");
+      takkBoks.innerHTML = '<div class="takk-kort">'
+        + '<p id="takk-tekst">Takk, nå pinget det i innboksen min. Jeg kommer tilbake til deg ASAP.</p>'
+        + '<button class="knapp" type="button" data-lukk>Lukk</button>'
+        + '</div>';
+      takkBoks.hidden = true;
+      takkBoks.addEventListener("click", function(e){
+        if(e.target === takkBoks || e.target.hasAttribute("data-lukk")) lukkTakk();
+      });
+      document.body.appendChild(takkBoks);
+    }
+    takkForrige = document.activeElement;
+    takkBoks.hidden = false;
+    takkBoks.querySelector("[data-lukk]").focus();
+    document.addEventListener("keydown", takkTast);
+  }
   document.querySelectorAll("[data-skjema]").forEach(function(skjema){
     var knapp = skjema.querySelector("button[type=submit]");
     var kvitt = skjema.querySelector("[data-kvittering]");
@@ -229,7 +262,7 @@ document.querySelectorAll("[data-faner]").forEach(function(boks){
         .then(function(svar){
           if(svar.ok){
             skjema.reset();
-            melding("Takk, " + v("name").split(" ")[0] + ". Meldingen er sendt, og jeg svarer som regel samme dag.", false);
+            visTakk();
           } else {
             melding("Noe stoppet opp her. Jeg åpner e-postprogrammet ditt i stedet.", true);
             reserve();

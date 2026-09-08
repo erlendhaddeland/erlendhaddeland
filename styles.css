@@ -460,3 +460,10 @@ body{padding-top:var(--topph);}
 .signatur img{width:66px;height:66px;border-radius:50%;object-fit:cover;display:block;flex:0 0 auto;}
 .signatur p{margin:0;font-size:16px;line-height:1.45;color:var(--dempet);}
 .signatur strong{display:block;color:var(--lys);font-weight:600;}
+
+/* Kvitteringsboks etter sendt skjema */
+.takk{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(20,22,58,.82);backdrop-filter:saturate(140%) blur(6px);-webkit-backdrop-filter:saturate(140%) blur(6px);}
+.takk[hidden]{display:none;}
+.takk-kort{width:100%;max-width:460px;background:var(--natt);border:1px solid var(--strek);padding:36px 32px 32px;text-align:left;}
+.takk-kort p{margin:0 0 26px;font-size:clamp(19px,2.2vw,23px);line-height:1.4;color:var(--lys);}
+.takk-kort .knapp{border:0;font-family:inherit;}
