@@ -1,0 +1,21 @@
+# Statisk nettsted, ingen bygging. Netlify serverer mappa som den er.
+
+[build]
+  publish = "."
+  command = ""
+
+# Sikkerhetsheadere på alt
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=31536000"
+
+# Bilder endres sjelden, så de kan ligge i nettleseren en uke
+[[headers]]
+  for = "/bilder/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

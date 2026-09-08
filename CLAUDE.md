@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Static marketing site for erlendhaddeland.no. Six top-level HTML pages, one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
+Static marketing site for erlendhaddeland.no. Ten top-level HTML pages, one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
 
 No package.json, no build step, no test suite, no linter. Netlify serves the folder as-is; pushing to `main` publishes.
 
@@ -24,7 +24,9 @@ Disse reglene gjelder alt arbeid i dette repoet, og går foran generelle vaner.
 - Skarpe hjørner. Ingen `border-radius` på bokser, kort, knapper, felt eller bilder. Unntaket er de sirklene som allerede finnes (`.prikk`, `.signatur img` og dekorsirkelen rundt linje 157), der `border-radius:50%` lager formen. Ikke legg til nye avrundinger.
 
 **Struktur**
-- Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle seks HTML-filene. Endres én, må alle endres: `index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
+- Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle ti HTML-filene. Endres én, må alle endres: `index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
+- `404.html` er unntaket i lenkestil. Netlify serverer den på hvilken som helst ukjent adresse, også `/noe/dypt/her`, så alle stier der er rotrelative (`/styles.css`, `/tjenester.html`, `/bilder/logo.png`). Bruker du `tjenester.html` uten skråstrek, peker lenken feil. De andre ni sidene bruker relative stier som før.
+- Hver side har `<a class="hopp" href="#innhold">` rett etter `<body>`, og `<main id="innhold">`. Lenken ligger utenfor skjermen til den får tastaturfokus. Nye sider skal ha begge deler.
 - Hver side skal ha én `h1`, egen `title`, egen `meta description` og `canonical`. Ingen sider deler tekst her.
 - Spørsmål og svar ligger i `faq.html`, i `details` og `summary`. Trekkspillet er ren HTML og CSS, uten JavaScript, så nye spørsmål legges rett inn i markupen.
 
@@ -49,7 +51,7 @@ Then open `http://localhost:8000/`. Opening the HTML files directly via `file://
 
 ### Shared chrome is duplicated per page
 
-The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in all six pages (`index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
+The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in all ten pages (`index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
 
 ### `script.js`: five unrelated behaviors, one IIFE
 
@@ -74,7 +76,15 @@ Key patterns to know before editing it:
 
 ### CSS
 
-Single stylesheet with CSS custom properties at `:root` (`--natt`, `--lys`, `--brod`, `--aksent`, `--mal` for max page width `1180px`, `--topph` for fixed-nav height). Layout containers use `.ramme` (centered max-width wrapper). Norwegian class names throughout — do not "translate" them to English when refactoring; the HTML across all six pages depends on them.
+Single stylesheet with CSS custom properties at `:root` (`--natt`, `--lys`, `--brod`, `--aksent`, `--mal` for max page width `1180px`, `--topph` for fixed-nav height). Layout containers use `.ramme` (centered max-width wrapper). Norwegian class names throughout — do not "translate" them to English when refactoring; the HTML across all ten pages depends on them.
+
+### Deling, ikoner og headere
+
+- **Delingsbildene er generert, ikke fotografert.** `bilder/deling.jpg` og `bilder/deling-tilbud.jpg` (begge 1200x630) er rendret fra HTML-maler med headless Chrome, i samme farger og font som nettsiden. Skal de endres, bygg malen på nytt og rendre på 2x før du skalerer ned, ellers blir teksten uskarp. Alle sider utenom `tilbud.html` bruker `deling.jpg`.
+- Hver side har `og:site_name`, `og:image` med `og:image:width`, `og:image:height` og `og:image:alt`, samt `twitter:card` satt til `summary_large_image`. Facebook, LinkedIn, Slack og iMessage leser de samme taggene.
+- Ikonene (`favicon.ico`, `apple-touch-icon.png`, `bilder/ikon-192.png`, `bilder/ikon-512.png`) er «EH» i `--lys` på `--natt`, rendret fra samme oppsett. `site.webmanifest` peker på de to største.
+- `netlify.toml` setter sikkerhetsheadere på alt og en ukes cache på `/bilder/*`. Ingen CSP, fordi siden henter fra Google Fonts, Formspree, Facebook og Google Calendar, og en for stram regel ville brukket skjemaet eller videoene.
+- `faq.html` har `FAQPage`-strukturerte data i `head`. Blokken er generert fra `details`-elementene på siden, så legger du til et spørsmål, må JSON-en oppdateres i samme slengen, ellers spriker de.
 
 ### Character encoding inconsistency
 

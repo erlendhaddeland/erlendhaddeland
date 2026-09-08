@@ -32,6 +32,8 @@ button,[role="button"],.kort{cursor:var(--kaffe);}
 a:focus-visible,button:focus-visible{outline:2px solid var(--aksent);outline-offset:5px;}
 img{max-width:100%;height:auto;}
 .skjult{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.hopp{position:absolute;left:-9999px;top:0;z-index:100;background:var(--aksent);color:#14163a;padding:13px 20px;font-weight:600;font-size:16px;text-decoration:none;}
+.hopp:focus{left:12px;top:12px;}
 .ramme{width:100%;max-width:var(--mal);margin:0 auto;padding:0 28px;}
 
 /* Toppmeny */
