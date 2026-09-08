@@ -95,9 +95,11 @@ h1{
 section{padding:72px 0;border-top:1px solid var(--strek);}
 main > section:first-child{padding-top:48px;}
 section.uten-strek{border-top:0;}
-.stor{font-size:clamp(24px,2.9vw,34px);font-weight:500;line-height:1.28;letter-spacing:-.02em;max-width:26ch;margin:0 0 26px;}
-.brod p{font-size:18px;line-height:1.65;max-width:58ch;margin:0 0 20px;color:var(--brod);}
-.brod p:last-child{margin-bottom:0;}
+/* :where holder spesifisiteten til avsnittsstilen nede, slik at .stor
+   under her vinner. Uten det ble ingressen brødtekst inne i en .brod-ramme. */
+.brod :where(p){font-size:18px;line-height:1.65;max-width:58ch;margin:0 0 20px;color:var(--brod);}
+.brod :where(p:last-child){margin-bottom:0;}
+.stor{font-size:clamp(24px,2.9vw,34px);font-weight:500;line-height:1.28;letter-spacing:-.02em;max-width:26ch;margin:0 0 26px;color:var(--lys);}
 .dempet{color:var(--dempet) !important;}
 .videre{display:inline-block;margin-top:32px;color:var(--bla);text-decoration:none;font-size:17px;border-bottom:1px solid transparent;}
 .videre:hover{border-bottom-color:var(--bla);}
