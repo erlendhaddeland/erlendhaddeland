@@ -498,11 +498,16 @@ body{padding-top:var(--topph);}
 .kort-bredt iframe{aspect-ratio:16/9;}
 .kort .kort-brod{font-size:16px;line-height:1.6;color:var(--brod);max-width:62ch;}
 
-/* Referanse under foredraget */
-.referanse{margin:56px 0 0;padding-top:34px;border-top:1px solid var(--strek);max-width:66ch;}
+/* Referanser under foredraget */
+.referanser{display:grid;grid-template-columns:1fr 1fr;gap:0 64px;}
+@media (max-width:900px){.referanser{grid-template-columns:1fr;}}
+.referanse{margin:44px 0 0;padding-top:34px;border-top:1px solid var(--strek);}
 .referanse blockquote{max-width:none;}
 .referanse p{margin:0 0 18px;font-size:19px;line-height:1.6;color:var(--brod);}
 .referanse p:last-child{margin-bottom:0;}
+.referanse ul{margin:0 0 18px;padding-left:20px;font-size:19px;line-height:1.6;color:var(--brod);}
+.referanse li{margin-bottom:6px;}
+.referanse li:last-child{margin-bottom:0;}
 
 /* Filsiden: adressen som kan kopieres, bygget på kontakt-linjen */
 .filadresse{margin-top:44px;}

@@ -166,7 +166,7 @@
        glir inn hver for seg, med litt forskyvning mellom dem. */
     if (ramme.classList.contains("brod")) { maal.push(ramme); return; }
     Array.prototype.forEach.call(ramme.children, function(barn){
-      if (barn.classList.contains("rutenett")) {
+      if (barn.classList.contains("rutenett") || barn.classList.contains("referanser")) {
         Array.prototype.forEach.call(barn.children, function(kort){ maal.push(kort); });
       } else {
         maal.push(barn);
