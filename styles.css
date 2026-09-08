@@ -467,3 +467,9 @@ body{padding-top:var(--topph);}
 .takk-kort{width:100%;max-width:460px;background:var(--natt);border:1px solid var(--strek);padding:36px 32px 32px;text-align:left;}
 .takk-kort p{margin:0 0 26px;font-size:clamp(19px,2.2vw,23px);line-height:1.4;color:var(--lys);}
 .takk-kort .knapp{border:0;font-family:inherit;}
+
+/* Bredt prosjektkort for film i 16:9 */
+.kort-bredt{max-width:860px;}
+.kort-bredt .flate{aspect-ratio:16/9;background-color:var(--dypbla);}
+.kort-bredt iframe{aspect-ratio:16/9;}
+.kort .kort-brod{font-size:16px;line-height:1.6;color:var(--brod);max-width:62ch;}
