@@ -89,6 +89,7 @@ Fjorten oppdragsgiverlogoer ruller i et bånd rett under heroen på `index.html`
 - **Rekkefølgen er ikke tilfeldig.** Kantene toner ut med `mask-image`, så logoen som står først er halvveis usynlig ved sidelast. Derfor står en av de mindre viktige først, og Telenor på tredjeplass, godt innenfor.
 - Rullingen er to identiske rader etter hverandre, der sporet skyves en halv bredde i en evig runde. Avstanden over skjøten må være lik `gap` ellers i raden, derfor har `.logorad` samme verdi i `gap` og `padding-right`. Endrer du den ene, må den andre følge etter, ellers hakker båndet én gang per runde.
 - Ved `prefers-reduced-motion` stopper rullingen, masken slås av, duplikatraden skjules og logoene brekker over flere linjer, slik at alle fjorten fortsatt er synlige.
+- **Logoene står alene, uten overskrift over seg.** Seksjonen holder derfor avstanden selv, gjennom `main > section.logo-seksjon` i `styles.css`. Selektoren er ikke tilfeldig lang. `main > section:first-child` lenger oppe i filen setter `padding-top:48px`, og en ren `.logo-seksjon` ville tapt mot den. Regelen vinner fordi den har samme spesifisitet og står sist. Flytter du den lenger opp, faller luften over båndet sammen.
 - Nye logoer legges inn i begge radene i `index.html`. Duplikatraden har `aria-hidden="true"` og tom `alt`, så den ikke leses opp to ganger. `width` og `height` på hver `img` må stemme med filen, ellers hopper layouten når bildene lastes.
 
 ### Deling, ikoner og headere

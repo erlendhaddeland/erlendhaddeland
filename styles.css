@@ -242,7 +242,10 @@ blockquote{margin:0;max-width:24ch;}
    bredde til side i en evig runde. Da er rad to akkurat der rad en startet,
    og skjoten blir usynlig. Logoene er hvite silhuetter med gjennomsiktig bunn,
    slik at fjorten ulike merkevarer kan sta side om side uten a slass. */
-.logo-merke{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dempet);margin:0 0 36px;}
+/* Logoene star alene, uten overskrift over seg, sa seksjonen holder
+   avstanden selv. Selektoren matcher main > section:first-child lenger
+   oppe i filen, og vinner fordi den star sist. */
+main > section.logo-seksjon{padding-top:64px;padding-bottom:78px;}
 .logoband{
   overflow:hidden;
   /* Masken toner logoene ut mot begge kanter, sa de glir inn og ut i stedet
@@ -258,7 +261,6 @@ blockquote{margin:0;max-width:24ch;}
 .logorad li:hover img{opacity:1;}
 @keyframes logorull{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 @media (max-width:600px){
-  .logo-merke{margin-bottom:28px;}
   .logorad{gap:46px;padding-right:46px;}
   .logorad img{height:36px;}
 }
