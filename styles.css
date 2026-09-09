@@ -551,6 +551,7 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 .referanse p{margin:0 0 16px;font-size:17px;line-height:1.6;color:var(--brod);}
 .referanse p:last-child{margin-bottom:0;}
 .referanse ul{margin:0 0 16px;padding-left:20px;font-size:17px;line-height:1.6;color:var(--brod);}
+.referanse ul:last-child{margin-bottom:0;}
 .referanse li{margin-bottom:6px;}
 .referanse .kilde{margin:auto 0 0;padding:22px 28px 28px;font-size:15px;}
 
@@ -575,3 +576,21 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
   .feil-tall:first-child{margin-right:-8px;}
   .feil-tall:last-child{margin-left:-8px;}
 }
+
+/* Sitatblokk på forsiden. Bruker .sitat og .kilde som allerede fantes. */
+.sitat-blokk{margin:0;}
+
+/* Utvalgt film med referanse ved siden av. Filmen står stående,
+   derfor en smal spalte til den og resten til sitatet. */
+.rutenett-utvalgt{grid-template-columns:minmax(0,340px) minmax(0,1fr);margin-top:0;}
+@media (max-width:900px){
+  .rutenett-utvalgt{grid-template-columns:1fr;}
+  /* Stående film i full bredde blir en vegg. Hold den smal. */
+  .rutenett-utvalgt > .kort:first-child{max-width:340px;}
+}
+
+/* Sveneviklia-sitatet skal poppe, derfor større type enn de fire
+   referansekortene på tjenester-siden. Punktene holdes mindre, så
+   historien står først og egenskapene leses som et etterord. */
+.referanse-stor p{margin:0 0 20px;font-size:clamp(21px,2.7vw,34px);line-height:1.32;letter-spacing:-.015em;color:var(--lys);}
+.referanse-stor ul{font-size:19px;}
