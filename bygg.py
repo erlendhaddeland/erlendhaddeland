@@ -339,6 +339,15 @@ def artikkelliste(artikler, sider):
 
 # ------------------------------------------------------------------ sider
 
+def bannerklasse(t):
+    k = []
+    if t.get('staaende') == 'ja':
+        k.append('staaende')
+    if t.get('bannerutsnitt') == 'helt':
+        k.append('helt')
+    return u' class="%s"' % u' '.join(k) if k else u''
+
+
 def bygg_tjeneste(t, alle, ref, artikler, sider, topp, bunn):
     js = brodsmuler([(u'Forsiden', u''), (u'Tjenester', u'tjenester.html'),
                      (t['navn'], t['fil'])])
@@ -372,7 +381,7 @@ def bygg_tjeneste(t, alle, ref, artikler, sider, topp, bunn):
     </div>
   </section>
 ''' % dict(navn=t['navn'], ingress=t['ingress'], bilde=t['bilde'], alt=t['bildetekst'],
-           w=w, h=h, kl=u' class="staaende"' if t.get('staaende') == 'ja' else u'')
+           w=w, h=h, kl=bannerklasse(t))
 
     brod = [v for slag, v in avsnitt(t.get('#brødtekst', t.get('#brodtekst', []))) if slag == 'p']
     if brod:

@@ -20,6 +20,7 @@ Feltene, kort forklart:
 - **Merkelapp** er ordet som står til venstre i «De andre tjenestene» nederst på de andre sidene.
 - **Bilde** og **Bildetekst** er banneret øverst og `alt`-teksten.
 - **Staaende** settes til `ja` bare hvis bildet er høyere enn bredt. Da flyttes utsnittet opp så hodet ikke blir klippet.
+- **Bannerutsnitt** settes til `helt` hvis bildet er noe man skal lese, for eksempel notater. Da vises hele bildet på undersiden i stedet for en bred stripe. Sløyfer du feltet, blir det stripe.
 
 ---
 
@@ -29,8 +30,9 @@ Navn: Tekst som treffer
 Fil: tjeneste-tekst.html
 Merkelapp: Ord
 Bilde: bilder/tjeneste-tekst.jpg
-Bildetekst: Erlend Haddeland i en sofa
+Bildetekst: Håvard Legreids håndtegnede notater fra webinaret «Menneskelig innhold i AI-ens tid»
 Staaende: nei
+Bannerutsnitt: helt
 Ingress: All tekst som skal treffe øynene til kundene dine, bør aldri overlates til tilfeldighetene.
 Korttekst: Nettsider, sosiale medier, pressemeldinger og tilbud.
 
