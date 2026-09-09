@@ -275,14 +275,14 @@ footer.bunn a:hover{text-decoration:underline;}
 .bunn-topp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:44px 56px;}
 .bunn-merke{max-width:36ch;}
 .bunn-logo{width:auto;height:22px;display:block;}
-.bunn-merke p{margin:20px 0 0;font-size:15px;line-height:1.6;}
+footer.bunn .bunn-merke p{margin:28px 0 0;font-size:15px;line-height:1.6;max-width:30ch;}
 footer.bunn .bunn-li{display:inline-flex;margin-top:22px;color:var(--dempet);transition:color .18s ease;}
 footer.bunn .bunn-li:hover{color:var(--aksent);}
 .bunn-li .ikon-li{width:20px;height:20px;}
 
 .bunn-lenker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;}
 .bunn-lenker > div{display:flex;flex-direction:column;align-items:flex-start;gap:11px;}
-.bunn-merk{margin:0 0 5px !important;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--lys);}
+footer.bunn .bunn-merk{margin:0 0 5px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--lys);}
 footer.bunn .bunn-lenker a{
   color:var(--dempet);font-size:15px;line-height:1.4;
   border-bottom:1px solid transparent;transition:color .18s ease,border-color .18s ease;
