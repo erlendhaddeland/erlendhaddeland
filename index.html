@@ -65,10 +65,11 @@
     "@type": "OfferCatalog",
     "name": "Tjenester",
     "itemListElement": [
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Tekst og innhold"}},
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Video og film"}},
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "LinkedIn for ledere og ansatte"}},
-      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Strategi"}}
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Tekst som treffer", "url": "https://erlendhaddeland.no/tjeneste-tekst.html"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Video og innhold", "url": "https://erlendhaddeland.no/tjeneste-video.html"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "LinkedIn for ledere og ansatte", "url": "https://erlendhaddeland.no/tjeneste-linkedin.html"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Strategi", "url": "https://erlendhaddeland.no/tjeneste-strategi.html"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Foredrag", "url": "https://erlendhaddeland.no/tjeneste-foredrag.html"}}
     ]
   }
 }
@@ -139,52 +140,69 @@
     </div>
   </section>
 
-  <section>
-    <h2 class="skjult">Tjenester</h2>
-    <div class="ramme">
-      <p class="stor">4 måter jeg hjelper bedriften din med å bli synlig.</p>
-
-      <div class="faner" data-faner>
-        <div class="fane-liste" role="tablist" aria-label="Tjenester">
-          <button class="fane" role="tab" id="f-f0" aria-controls="f-p0" aria-selected="true" tabindex="0">Tekst som treffer</button>
-          <button class="fane" role="tab" id="f-f1" aria-controls="f-p1" aria-selected="false" tabindex="-1">Video og innhold</button>
-          <button class="fane" role="tab" id="f-f2" aria-controls="f-p2" aria-selected="false" tabindex="-1">LinkedIn for ledere og ansatte</button>
-          <button class="fane" role="tab" id="f-f3" aria-controls="f-p3" aria-selected="false" tabindex="-1">Strategi</button>
-        </div>
-        <div>
-        <div class="fane-panel" role="tabpanel" id="f-p0" aria-labelledby="f-f0">
-            <h3>Tekst som treffer</h3>
-            <p>All tekst som skal treffe øynene til kundene dine, bør aldri overlates til tilfeldighetene. Ord som «kvalitet» og «fleksibilitet» er lette å strø om seg med, men virker de egentlig? La oss finne ordene som får folk til å føle noe.</p>
-            <ul class="punkter">
-              <li>Nettsider</li>
-              <li>Sosiale medier</li>
-              <li>Landingssider</li>
-              <li>Pressemeldinger</li>
-              <li>Artikler</li>
-              <li>Tilbud til kunder</li>
-            </ul>
-        </div>
-        <div class="fane-panel" role="tabpanel" id="f-p1" aria-labelledby="f-f1" hidden>
-            <h3>Video og innhold</h3>
-            <p>Film og sosiale medier som viser folkene bak bedriften, ikke bare logoen. Produktene du selger knytter vi sammen med strategisk historiefortelling. Skal filmen treffe flere enn dem som allerede følger dere, kjører vi den som annonse mot riktig område og riktig folk.</p>
-            <ul class="punkter">
-              <li>Film</li>
-              <li>Annonsering</li>
-              <li>Sosiale medier</li>
-            </ul>
-        </div>
-        <div class="fane-panel" role="tabpanel" id="f-p2" aria-labelledby="f-f2" hidden>
-            <h3>LinkedIn for ledere og ansatte</h3>
-            <p>Den viktigste plattformen for B2B, men hvordan funker den egentlig? Jeg har hjulpet titalls ledere og ansatte med å nå ut til hundretusenvis, skaffe nye leads, få medieomtale og bygge tillit på LinkedIn. Mange av dem skriver ikke selv. Da er det jeg som skriver innleggene, i deres stemme, og de leser gjennom før noe publiseres.</p>
-        </div>
-        <div class="fane-panel" role="tabpanel" id="f-p3" aria-labelledby="f-f3" hidden>
-            <h3>Strategi</h3>
-            <p>Hva skal bedriften din eie, hvem skal si det, og hvorfor skal noen i det hele tatt bry seg? Ved å bruke tid på en tydelig strategi sørger vi for at du løper i riktig retning.</p>
-        </div>
+  <section id="tjenester">
+    <div class="ramme tjenestefelt">
+      <div class="tjeneste-intro">
+        <div class="tjeneste-fast">
+          <p class="merkelapp">Tjenester</p>
+          <h2 class="stor">Fem måter jeg hjelper bedriften din med å bli synlig.</h2>
+          <p class="tjeneste-ingress">Noen trenger ord. Noen trenger film. Noen trenger begge deler, og en plan for hva de skal si først. Klikk deg inn på det som ligner mest på ditt problem, så ser du hva det faktisk innebærer.</p>
+          <div class="knapper"><a class="knapp" href="kontakt.html">Ta en prat</a></div>
+          <a class="videre" href="prosjekter.html">Se hva det har gitt kundene mine</a>
         </div>
       </div>
-
-      <a class="videre" href="prosjekter.html">Se hva det har gitt kundene mine</a>
+      <div class="rutenett tjenestespalte">
+        <a class="kort tjenestekort" href="tjeneste-tekst.html">
+          <div class="tjenestebilde">
+            <img src="bilder/tjeneste-tekst.jpg" alt="Erlend Haddeland i en sofa" width="1600" height="1117" loading="lazy" decoding="async">
+            <span class="kortpil" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></span>
+          </div>
+          <div class="kort-tekst">
+            <h3>Tekst som treffer</h3>
+            <p>Nettsider, landingssider, pressemeldinger og innlegg. Ord som får folk til å føle noe, ikke bare nikke.</p>
+          </div>
+        </a>
+        <a class="kort tjenestekort" href="tjeneste-video.html">
+          <div class="tjenestebilde">
+            <img src="bilder/tjeneste-video.jpg" alt="Dronebilde over Kvavik i solnedgang" width="1600" height="899" loading="lazy" decoding="async">
+            <span class="kortpil" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></span>
+          </div>
+          <div class="kort-tekst">
+            <h3>Video og innhold</h3>
+            <p>Film som viser folkene bak logoen, ikke bare produktet. Og annonsering som sørger for at flere enn følgerne deres ser den.</p>
+          </div>
+        </a>
+        <a class="kort tjenestekort" href="tjeneste-linkedin.html">
+          <div class="tjenestebilde">
+            <img src="bilder/tjeneste-linkedin.jpg" alt="Erlend Haddeland med kakao i den ene hånden og telefonen i den andre" width="1600" height="1067" loading="lazy" decoding="async">
+            <span class="kortpil" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></span>
+          </div>
+          <div class="kort-tekst">
+            <h3>LinkedIn for ledere og ansatte</h3>
+            <p>Den viktigste kanalen i B2B. Jeg skriver innleggene i din stemme, eller lærer deg å skrive dem selv.</p>
+          </div>
+        </a>
+        <a class="kort tjenestekort" href="tjeneste-strategi.html">
+          <div class="tjenestebilde">
+            <img class="staaende" src="bilder/tjeneste-strategi.jpg" alt="Erlend Haddeland heller kakao i et glass" width="1067" height="1600" loading="lazy" decoding="async">
+            <span class="kortpil" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></span>
+          </div>
+          <div class="kort-tekst">
+            <h3>Strategi</h3>
+            <p>Hva skal dere eie, hvem skal si det, og hvorfor skal noen bry seg? Retningen før farten.</p>
+          </div>
+        </a>
+        <a class="kort tjenestekort" href="tjeneste-foredrag.html">
+          <div class="tjenestebilde">
+            <img src="bilder/tjeneste-foredrag.jpg" alt="Erlend Haddeland holder foredrag om LinkedIn" width="900" height="562" loading="lazy" decoding="async">
+            <span class="kortpil" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></span>
+          </div>
+          <div class="kort-tekst">
+            <h3>Foredrag</h3>
+            <p>Om synlighet, personlig merkevare og hvordan man høres ut som et menneske når alle andre bruker KI. Årets stjerneskudd 2025.</p>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 

@@ -646,3 +646,92 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 @media (max-width:440px){
   .dronestripe{padding-left:18px;padding-right:18px;scroll-padding-left:18px;}
 }
+
+/* Tjenestefelt. Introen til venstre står stille mens kortene til høyre
+   ruller forbi, slik at overskriften følger deg hele veien ned.
+   Kortene gjenbruker .rutenett og .kort, så innglidningen i script.js
+   plukker dem opp uten endringer. */
+.tjenestefelt{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px 64px;align-items:stretch;}
+.tjeneste-fast{position:sticky;top:calc(var(--topph) + 44px);}
+.merkelapp{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--aksent);margin:0 0 18px;}
+.tjeneste-fast .stor{margin:0 0 20px;}
+.tjeneste-ingress{font-size:18px;line-height:1.65;color:var(--brod);max-width:40ch;margin:0;}
+.tjeneste-fast .knapper{margin-top:32px;}
+.tjenestespalte{grid-template-columns:1fr;gap:24px;margin-top:0;}
+.tjenestekort{text-decoration:none;transition:border-color .22s ease,transform .22s ease;}
+.tjenestekort:hover{border-color:var(--dempet);transform:translateY(-3px);}
+.tjenestebilde{position:relative;}
+.tjenestebilde img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;display:block;}
+.tjenestebilde img.staaende{object-position:50% 20%;}
+.kortpil{
+  position:absolute;right:14px;top:14px;width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(20,22,58,.78);border:1px solid rgba(238,241,248,.45);
+  transition:background-color .22s ease;
+}
+.kortpil svg{width:17px;height:17px;fill:none;stroke:var(--lys);stroke-width:2;stroke-linecap:square;transition:stroke .22s ease;}
+.tjenestekort:hover .kortpil{background:var(--aksent);}
+.tjenestekort:hover .kortpil svg{stroke:#14163a;}
+.tjenestekort .kort-tekst{padding:22px 24px 26px;}
+.tjenestekort h3{font-size:22px;letter-spacing:-.02em;}
+.tjenestekort p{font-size:16px;line-height:1.6;color:var(--brod);max-width:52ch;}
+@media (max-width:900px){
+  .tjenestefelt{grid-template-columns:1fr;gap:36px;}
+  .tjeneste-fast{position:static;}
+  .tjeneste-ingress{max-width:none;}
+}
+
+/* Tjenesteside: bilde i toppen, punkter og en referanse under */
+.tjenestebanner{margin:0 0 8px;}
+.tjenestebanner img{width:100%;aspect-ratio:21/9;object-fit:cover;display:block;}
+.tjenestebanner img.staaende{object-position:50% 20%;}
+.tjeneste-to{display:grid;grid-template-columns:1.15fr .85fr;gap:32px 64px;align-items:start;}
+.tjeneste-to h3{font-size:21px;font-weight:600;letter-spacing:-.02em;margin:0 0 14px;}
+.tjeneste-to p{font-size:18px;line-height:1.65;color:var(--brod);margin:0 0 18px;max-width:56ch;}
+.tjeneste-to p:last-child{margin-bottom:0;}
+.tjeneste-boks{border:1px solid var(--strek);padding:26px 24px 28px;}
+.tjeneste-boks .punkter{margin-top:0;grid-template-columns:1fr;max-width:none;}
+@media (max-width:900px){.tjeneste-to{grid-template-columns:1fr;gap:28px;}}
+
+/* Artikler på LinkedIn-siden. Ny artikkel: kopier en artikkel-fil og
+   legg inn et nytt .artikkelkort øverst i listen. */
+.artikkelliste{display:flex;flex-direction:column;margin-top:36px;}
+.artikkelkort{
+  display:grid;grid-template-columns:1fr auto;gap:6px 32px;align-items:baseline;
+  padding:26px 0;border-top:1px solid var(--strek);text-decoration:none;
+  transition:border-color .22s ease;
+}
+.artikkelkort:last-child{border-bottom:1px solid var(--strek);}
+.artikkelkort:hover{border-top-color:var(--aksent);}
+.artikkelkort:hover + .artikkelkort{border-top-color:var(--aksent);}
+.artikkelkort:last-child:hover{border-bottom-color:var(--aksent);}
+.artikkelkort h3{grid-column:1;margin:0;font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.35;transition:color .22s ease;}
+.artikkelkort:hover h3{color:var(--aksent);}
+.artikkelkort p{grid-column:1;margin:0;font-size:16px;color:var(--dempet);max-width:60ch;line-height:1.6;}
+.artikkeldato{grid-column:2;grid-row:1;font-size:14px;color:var(--dempet);white-space:nowrap;letter-spacing:.04em;}
+@media (max-width:600px){
+  .artikkelkort{grid-template-columns:1fr;gap:6px;}
+  .artikkeldato{grid-column:1;grid-row:auto;order:-1;}
+}
+
+/* Artikkelsiden selv */
+.artikkeltopp{padding:52px 28px 8px;}
+.artikkeltopp h1{max-width:20ch;font-size:clamp(30px,4.6vw,54px);}
+.artikkelmeta{margin:22px 0 0;color:var(--dempet);font-size:16px;}
+.artikkel h2{font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.28;margin:44px 0 14px;}
+.artikkel h2:first-child{margin-top:0;}
+.artikkel p{font-size:19px;line-height:1.7;color:var(--brod);margin:0 0 20px;max-width:62ch;}
+.artikkel ul{margin:0 0 22px;padding-left:20px;max-width:62ch;color:var(--brod);font-size:19px;line-height:1.7;}
+.artikkel li{margin-bottom:8px;}
+.artikkel blockquote{margin:32px 0;padding-left:22px;border-left:2px solid var(--aksent);max-width:none;}
+.artikkel blockquote p{font-size:21px;font-weight:500;color:var(--lys);letter-spacing:-.01em;}
+.artikkel a{color:var(--bla);text-decoration:none;border-bottom:1px solid var(--strek);}
+.artikkel a:hover{border-bottom-color:var(--bla);}
+@media (max-width:900px){
+  .artikkeltopp{padding:38px 28px 4px;}
+  .artikkel p,.artikkel ul{font-size:18px;}
+}
+
+/* Tjenesteoversikten. Samme kort som på forsiden, men i to spalter
+   siden overskriften alt står i sidetoppen over. */
+.tjenesterutenett{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));}

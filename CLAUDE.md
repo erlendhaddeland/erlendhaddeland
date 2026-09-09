@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Static marketing site for erlendhaddeland.no. Ten top-level HTML pages, one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
+Static marketing site for erlendhaddeland.no. Sixteen top-level HTML pages (ten faste, fem tjenestesider, én artikkel), one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
 
 No package.json, no build step, no test suite, no linter. Netlify serves the folder as-is; pushing to `main` publishes.
 
@@ -24,9 +24,9 @@ Disse reglene gjelder alt arbeid i dette repoet, og går foran generelle vaner.
 - Skarpe hjørner. Ingen `border-radius` på bokser, kort, knapper, felt eller bilder. Unntaket er de sirklene som allerede finnes (`.prikk`, `.signatur img` og dekorsirkelen rundt linje 157), der `border-radius:50%` lager formen. Ikke legg til nye avrundinger.
 
 **Struktur**
-- Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle ti HTML-filene. Endres én, må alle endres: `index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
+- Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle HTML-filene i rota. Endres én, må alle endres: `index.html`, `tjenester.html`, `tjeneste-tekst.html`, `tjeneste-video.html`, `tjeneste-linkedin.html`, `tjeneste-strategi.html`, `tjeneste-foredrag.html`, `artikkel-*.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
 - `404.html` er en kakaovits, ikke en vanlig side. Overskriften er «Kakao not found», og de to firetallene flankerer et bilde av Erlend som heller kakao, slik at bildet blir nullen. Tallene er `font-weight:200` med negativ margin, så de går litt bak bildet. Endrer du bildebredden, må marginene følge etter, ellers blir sifrene stående og flyte. `--kakao` er hentet som gjennomsnittsfarge fra kakaoen i bildet og lysnet til 5,85 i kontrast mot `--natt`.
-- `404.html` er også unntaket i lenkestil. Netlify serverer den på hvilken som helst ukjent adresse, også `/noe/dypt/her`, så alle stier der er rotrelative (`/styles.css`, `/tjenester.html`, `/bilder/logo.png`). Bruker du `tjenester.html` uten skråstrek, peker lenken feil. De andre ni sidene bruker relative stier som før.
+- `404.html` er også unntaket i lenkestil. Netlify serverer den på hvilken som helst ukjent adresse, også `/noe/dypt/her`, så alle stier der er rotrelative (`/styles.css`, `/tjenester.html`, `/bilder/logo.png`). Bruker du `tjenester.html` uten skråstrek, peker lenken feil. Alle de andre sidene bruker relative stier som før.
 - Hver side har `<a class="hopp" href="#innhold">` rett etter `<body>`, og `<main id="innhold">`. Lenken ligger utenfor skjermen til den får tastaturfokus. Nye sider skal ha begge deler.
 - Hver side skal ha én `h1`, egen `title`, egen `meta description` og `canonical`. Ingen sider deler tekst her.
 - Spørsmål og svar ligger i `faq.html`, i `details` og `summary`. Trekkspillet er ren HTML og CSS, uten JavaScript, så nye spørsmål legges rett inn i markupen.
@@ -52,7 +52,7 @@ Then open `http://localhost:8000/`. Opening the HTML files directly via `file://
 
 ### Shared chrome is duplicated per page
 
-The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in all ten pages (`index.html`, `tjenester.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
+The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in every page in the repo root (`index.html`, `tjenester.html`, the five `tjeneste-*.html` pages, every `artikkel-*.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
 
 ### `script.js`: five unrelated behaviors, one IIFE
 
@@ -63,6 +63,25 @@ The whole file is a single IIFE that wires up five independent features by scann
 - `[data-skjema]` — the contact form. POSTs to Formspree (`https://formspree.io/f/xyeynkjn`). On network failure or non-OK response it falls back to a `mailto:` link that pre-fills subject and body. Includes a `_gotcha` honeypot field. The form exists on `index.html` and `kontakt.html` with different `id` prefixes but the same behavior.
 - `.kort .flate[data-embed]` — click-to-embed video cards on the projects page (avoids loading iframes until user opts in).
 - Scroll-innglidning. Siste blokk i IIFE-en samler opp innholdet i `main section > .ramme` og gir dem klassen `synlig` via en `IntersectionObserver`, med 80 ms forskyvning mellom naboer. Er rammen `.brod`, glir hele tekstblokken inn samlet, ellers glir hvert barn inn for seg, og `.rutenett` pakkes opp så hvert `.kort` teller som ett. Selve skjulingen ligger i `styles.css` bak `@media (scripting:enabled) and (prefers-reduced-motion:no-preference)`, slik at innholdet står synlig uten JavaScript. Legger du nye seksjoner inn på en side, blir de med automatisk, men innhold som ligger skjult i en fane eller blir tegnet på nytt med `innerHTML` må ikke havne i utvalget, ellers kan det bli stående usynlig.
+
+### Tjenestefeltet og de fem tjenestesidene
+
+Forsiden presenterer tjenestene som fem kort til høyre, med en intro som står stille til venstre mens kortene ruller forbi. Mønsteret er hentet fra brakk.no.
+
+- **Kortene gjenbruker `.rutenett` og `.kort` med vilje.** Innglidningen i `script.js` pakker opp `.rutenett` og lar hvert `.kort` gli inn for seg. Bytter du til et eget klassenavn på lista, blir kortene stående usynlige, fordi CSS-en som skjuler dem bare slippes av `.synlig`.
+- Introen er to nivåer: `.tjeneste-intro` er rutenettbarnet som glir inn, og `.tjeneste-fast` inni er den som er `position:sticky`. De må være to elementer. Legger du `sticky` rett på rutenettbarnet, mister det høyden å feste seg i, fordi grid-barn ikke strekkes når `align-items` ikke er `stretch`.
+- Samme kortmarkup ligger i `index.html` (én spalte, `.tjenestespalte`) og i `tjenester.html` (tre spalter, `.tjenesterutenett`). Endrer du en tekst på et kort, må begge stedene endres.
+- Bildene på kortene er `bilder/tjeneste-*.jpg`, nedskalert til 1600 piksler bred. `tjeneste-strategi.jpg` er stående, og har derfor klassen `staaende` som flytter `object-position` opp til 20 prosent. Uten den blir hodet klippet av i 16:10-utsnittet.
+- Hver tjenesteside har `Service`- og `BreadcrumbList`-data i `head`, egen `title`, `description` og `canonical`, og en «De andre tjenestene»-liste nederst som bruker `.kontakt-linje`. Legger du til en sjette tjeneste, må den inn fire steder: kortene i `index.html`, kortene i `tjenester.html`, «De andre tjenestene» på alle de andre tjenestesidene, og `sitemap.xml`. `hasOfferCatalog` på forsiden bør også følge med.
+
+### Artikler
+
+Artiklene ligger som egne filer i rota, `artikkel-<slug>.html`, ikke i en undermappe. Da fungerer de relative stiene (`styles.css`, `bilder/...`) likt som på alle andre sider, og meny og bunn kan kopieres uendret.
+
+- Lista over artikler står i `tjeneste-linkedin.html`, i seksjonen `#artikler`. Ny artikkel legges inn som et nytt `.artikkelkort` øverst i `.artikkelliste`, med dato, overskrift og en ingress.
+- Selve artikkelsiden bruker `.artikkeltopp` i toppen og `.ramme.brod.artikkel` rundt teksten. `.artikkel` gir større brødtekst enn resten av siden, egne `h2`-avstander og et sitatstrek i `--aksent`.
+- Hver artikkel har `Article`- og `BreadcrumbList`-data i `head`. `datePublished` og teksten i `.artikkelmeta` må stemme overens.
+- Nye artikler legges også inn i `sitemap.xml`.
 
 ### `demo/tilbud-kakaobygg.html` is the entire "tilbudssystem" product
 
@@ -77,7 +96,7 @@ Key patterns to know before editing it:
 
 ### CSS
 
-Single stylesheet with CSS custom properties at `:root` (`--natt`, `--lys`, `--brod`, `--aksent`, `--mal` for max page width `1180px`, `--topph` for fixed-nav height). Layout containers use `.ramme` (centered max-width wrapper). Norwegian class names throughout — do not "translate" them to English when refactoring; the HTML across all ten pages depends on them.
+Single stylesheet with CSS custom properties at `:root` (`--natt`, `--lys`, `--brod`, `--aksent`, `--mal` for max page width `1180px`, `--topph` for fixed-nav height). Layout containers use `.ramme` (centered max-width wrapper). Norwegian class names throughout — do not "translate" them to English when refactoring; the HTML across every page depends on them.
 
 ### Logobåndet på forsiden
 
@@ -106,4 +125,4 @@ Fjorten oppdragsgiverlogoer ruller i et bånd rett under heroen på `index.html`
 
 ## Known drift
 
-Ingen kjente avvik.
+- Faneverktøyet i `script.js` (`[data-faner]`) og `.faner`-stilene i `styles.css` er ikke i bruk lenger. Forsiden og `tjenester.html` viser tjenestene som kort i stedet. Koden er beholdt i tilfelle fanene skal brukes et annet sted, men den kan fjernes uten at noe på siden endrer seg.
