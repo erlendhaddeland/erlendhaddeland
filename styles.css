@@ -81,6 +81,8 @@ h1{
 }
 .tagline{font-size:clamp(19px,2.1vw,25px);font-weight:400;line-height:1.35;letter-spacing:-.01em;margin:26px 0 0;max-width:23ch;}
 .hero .tagline{max-width:36ch;}
+/* Tredje nivå i heroen: det konkrete, under posisjoneringen. */
+.hero-under{margin:16px 0 0;font-size:17px;line-height:1.55;color:var(--dempet);max-width:44ch;}
 .knapper{display:flex;flex-wrap:wrap;gap:14px;margin-top:44px;}
 .knapp,.knapp-tom{display:inline-block;padding:15px 26px;font-size:16px;text-decoration:none;}
 .knapp{background:var(--aksent);color:#14163a;font-weight:600;transition:background .18s ease,transform .18s ease;}
@@ -299,7 +301,8 @@ footer.bunn .bunn-lenker a:hover{color:var(--lys);border-bottom-color:var(--stre
 .inn{opacity:0;transform:translateY(14px);animation:opp .9s cubic-bezier(.2,.7,.3,1) forwards;}
 h1.inn{animation-delay:.08s;}
 .tagline.inn{animation-delay:.18s;}
-.knapper.inn{animation-delay:.3s;}
+.hero-under.inn{animation-delay:.26s;}
+.knapper.inn{animation-delay:.38s;}
 .portrett{opacity:0;animation:tone 1.3s ease .1s forwards;}
 
 /* Seksjoner som glir inn ved scroll. Skjules bare når JavaScript er på,
