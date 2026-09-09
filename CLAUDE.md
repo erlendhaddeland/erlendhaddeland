@@ -4,9 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Static marketing site for erlendhaddeland.no. Sixteen top-level HTML pages (ten faste, fem tjenestesider, én artikkel), one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
+Static marketing site for erlendhaddeland.no. Fifteen top-level HTML pages (ten faste, fem tjenestesider), plus any `artikkel-*.html` built from `innhold/`, one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
 
-No package.json, no build step, no test suite, no linter. Netlify serves the folder as-is; pushing to `main` publishes.
+No package.json, no test suite, no linter. Netlify serves the folder as-is; pushing to `main` publishes.
+
+There is one optional build step, `bygg.py`, and Netlify never runs it. It turns the text files in `innhold/` into the five `tjeneste-*.html` pages, any `artikkel-*.html`, and the card blocks on `index.html` and `tjenester.html`. Run it by hand after editing `innhold/`, then commit the HTML it writes. The site works without Python; the generated HTML is what ships.
 
 ## Husregler
 
@@ -64,24 +66,31 @@ The whole file is a single IIFE that wires up five independent features by scann
 - `.kort .flate[data-embed]` — click-to-embed video cards on the projects page (avoids loading iframes until user opts in).
 - Scroll-innglidning. Siste blokk i IIFE-en samler opp innholdet i `main section > .ramme` og gir dem klassen `synlig` via en `IntersectionObserver`, med 80 ms forskyvning mellom naboer. Er rammen `.brod`, glir hele tekstblokken inn samlet, ellers glir hvert barn inn for seg, og `.rutenett` pakkes opp så hvert `.kort` teller som ett. Selve skjulingen ligger i `styles.css` bak `@media (scripting:enabled) and (prefers-reduced-motion:no-preference)`, slik at innholdet står synlig uten JavaScript. Legger du nye seksjoner inn på en side, blir de med automatisk, men innhold som ligger skjult i en fane eller blir tegnet på nytt med `innerHTML` må ikke havne i utvalget, ellers kan det bli stående usynlig.
 
-### Tjenestefeltet og de fem tjenestesidene
+### Tjenestefeltet, tjenestesidene og artiklene bygges fra `innhold/`
+
+All tekst på de fem tjenestesidene, referansesitatene, artiklene og bindeleddene mellom dem ligger som markdown i `innhold/`. Erlend redigerer den mappen, ikke HTML-en. `python3 bygg.py` skriver resultatet.
+
+```
+innhold/tjenester.md      de fem tjenestene: navn, ingress, korttekst, bilde, brødtekst, punkter
+innhold/referanser.md     sitatene, hentet inn per tjeneste med slug
+innhold/sider.md          overskrifter og introer som binder sidene sammen
+innhold/artikler/*.md     én fil per artikkel. Filer med understrek foran bygges ikke
+```
+
+- **Ikke rediger `tjeneste-*.html` eller `artikkel-*.html` direkte.** De overskrives ved neste bygg. Skal noe endres der, endres det i `innhold/`, eventuelt i malen i `bygg.py` hvis det er strukturen og ikke teksten.
+- Kortene på `index.html` og `tjenester.html` skrives inn mellom `<!-- kort:start -->` og `<!-- kort:slutt -->`. Introen på forsiden ligger mellom `<!-- intro:start -->` og `<!-- intro:slutt -->`, og ingressen på oversikten mellom `<!-- ingress:start -->` og `<!-- ingress:slutt -->`. Fjerner du et merke, stopper bygget med `ValueError: substring not found`.
+- Meny og bunn kopieres ordrett fra `kontakt.html` ved hvert bygg. Endrer du menyen der, får alle de bygde sidene den automatisk. Endrer du den et annet sted først, blir den overskrevet neste gang.
+- `bygg.py` sletter `tjeneste-*.html` og `artikkel-*.html` som ikke lenger har en tekstfil, og holder `sitemap.xml` i takt. Legger du til en sjette tjeneste, holder det å legge inn en `## slug`-bolk i `innhold/tjenester.md`. `hasOfferCatalog` på forsiden må fortsatt oppdateres for hånd.
+- `width` og `height` på bildene leses ut av selve filene, så de stemmer alltid. Er bildet høyere enn bredt, sett `Staaende: ja`, ellers klippes hodet i 16:10-utsnittet.
+- Tomme felt faller bort i stedet for å rendre tomme elementer. Det er meningen: Erlend fyller inn ingressene selv, og siden skal se hel ut i mellomtiden.
+
+### Tjenestefeltet på forsiden
 
 Forsiden presenterer tjenestene som fem kort til høyre, med en intro som står stille til venstre mens kortene ruller forbi. Mønsteret er hentet fra brakk.no.
 
 - **Kortene gjenbruker `.rutenett` og `.kort` med vilje.** Innglidningen i `script.js` pakker opp `.rutenett` og lar hvert `.kort` gli inn for seg. Bytter du til et eget klassenavn på lista, blir kortene stående usynlige, fordi CSS-en som skjuler dem bare slippes av `.synlig`.
 - Introen er to nivåer: `.tjeneste-intro` er rutenettbarnet som glir inn, og `.tjeneste-fast` inni er den som er `position:sticky`. De må være to elementer. Legger du `sticky` rett på rutenettbarnet, mister det høyden å feste seg i, fordi grid-barn ikke strekkes når `align-items` ikke er `stretch`.
-- Samme kortmarkup ligger i `index.html` (én spalte, `.tjenestespalte`) og i `tjenester.html` (tre spalter, `.tjenesterutenett`). Endrer du en tekst på et kort, må begge stedene endres.
-- Bildene på kortene er `bilder/tjeneste-*.jpg`, nedskalert til 1600 piksler bred. `tjeneste-strategi.jpg` er stående, og har derfor klassen `staaende` som flytter `object-position` opp til 20 prosent. Uten den blir hodet klippet av i 16:10-utsnittet.
-- Hver tjenesteside har `Service`- og `BreadcrumbList`-data i `head`, egen `title`, `description` og `canonical`, og en «De andre tjenestene»-liste nederst som bruker `.kontakt-linje`. Legger du til en sjette tjeneste, må den inn fire steder: kortene i `index.html`, kortene i `tjenester.html`, «De andre tjenestene» på alle de andre tjenestesidene, og `sitemap.xml`. `hasOfferCatalog` på forsiden bør også følge med.
-
-### Artikler
-
-Artiklene ligger som egne filer i rota, `artikkel-<slug>.html`, ikke i en undermappe. Da fungerer de relative stiene (`styles.css`, `bilder/...`) likt som på alle andre sider, og meny og bunn kan kopieres uendret.
-
-- Lista over artikler står i `tjeneste-linkedin.html`, i seksjonen `#artikler`. Ny artikkel legges inn som et nytt `.artikkelkort` øverst i `.artikkelliste`, med dato, overskrift og en ingress.
-- Selve artikkelsiden bruker `.artikkeltopp` i toppen og `.ramme.brod.artikkel` rundt teksten. `.artikkel` gir større brødtekst enn resten av siden, egne `h2`-avstander og et sitatstrek i `--aksent`.
-- Hver artikkel har `Article`- og `BreadcrumbList`-data i `head`. `datePublished` og teksten i `.artikkelmeta` må stemme overens.
-- Nye artikler legges også inn i `sitemap.xml`.
+- Forsiden bruker `.tjenestespalte` (én spalte), `tjenester.html` bruker `.tjenesterutenett` (tre spalter). Samme markup ellers.
 
 ### `demo/tilbud-kakaobygg.html` is the entire "tilbudssystem" product
 

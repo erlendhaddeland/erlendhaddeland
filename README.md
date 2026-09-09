@@ -1,6 +1,6 @@
 # erlendhaddeland.no
 
-Statisk nettside. Ingen byggesteg, ingen rammeverk. Netlify serverer mappen som den er.
+Statisk nettside. Ingen rammeverk. Netlify serverer mappen som den er.
 
 ## Filer
 
@@ -10,6 +10,8 @@ Statisk nettside. Ingen byggesteg, ingen rammeverk. Netlify serverer mappen som 
 | `tjenester.html` | Oversikt over de fem tjenestene |
 | `tjeneste-*.html` | Én side per tjeneste: tekst, video, linkedin, strategi, foredrag |
 | `artikkel-*.html` | Artikler. Listes opp på `tjeneste-linkedin.html` |
+| `innhold/` | All tekst på tjenestesidene og artiklene, som markdown |
+| `bygg.py` | Lager tjenestesidene og artiklene ut fra `innhold/` |
 | `tilbud.html` | Tilbudssystemet for byggebransjen |
 | `prosjekter.html` | Prosjekter med tall |
 | `om.html` | Om meg |
@@ -23,9 +25,15 @@ Statisk nettside. Ingen byggesteg, ingen rammeverk. Netlify serverer mappen som 
 
 Menyen og bunnen ligger i hver enkelt HTML-fil. Endrer du kontaktinfo, må du gjøre det på alle sidene i rota.
 
-Tjenestekortene finnes to steder, på forsiden og på `tjenester.html`. Endrer du en tekst der, må begge oppdateres.
+Teksten på tjenestesidene ligger i `innhold/`, ikke i HTML-filene. Rediger `innhold/tjenester.md`, `innhold/referanser.md` eller `innhold/sider.md`, og kjør:
 
-Ny artikkel: kopier en `artikkel-*.html`, bytt tekst og dato, legg inn et kort i `.artikkelliste` på `tjeneste-linkedin.html`, og en linje i `sitemap.xml`.
+```
+python3 bygg.py
+```
+
+Da skrives `tjeneste-*.html`, kortene på forsiden og på `tjenester.html`, og `sitemap.xml` på nytt. `tjeneste-*.html` og `artikkel-*.html` skal ikke redigeres for hånd, de overskrives.
+
+Ny artikkel: kopier `innhold/artikler/_mal.md` til for eksempel `innhold/artikler/min-artikkel.md`, skriv teksten, og kjør `python3 bygg.py`. Da lages `artikkel-min-artikkel.html`, den legger seg i listen på `tjeneste-linkedin.html`, og i `sitemap.xml`. Sletter du md-filen, forsvinner siden igjen.
 
 ## Publisering
 
