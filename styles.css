@@ -266,12 +266,34 @@ main > section.logo-seksjon{padding-top:64px;padding-bottom:78px;}
 }
 
 /* Bunn */
-footer.bunn{border-top:1px solid var(--strek);padding:32px 0 40px;color:var(--dempet);font-size:14px;line-height:1.7;}
-.bunn-rad{display:flex;flex-wrap:wrap;gap:14px 56px;justify-content:space-between;}
-.bunn-rad .ps{width:100%;order:3;margin-top:8px;}
+footer.bunn{border-top:1px solid var(--strek);padding:56px 0 40px;color:var(--dempet);font-size:14px;line-height:1.7;}
 footer.bunn p{margin:0;}
 footer.bunn a{color:var(--bla);text-decoration:none;}
 footer.bunn a:hover{text-decoration:underline;}
+
+/* Merket til venstre, lenkespaltene til høyre. */
+.bunn-topp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:44px 56px;}
+.bunn-merke{max-width:36ch;}
+.bunn-logo{width:auto;height:22px;display:block;}
+.bunn-merke p{margin:20px 0 0;font-size:15px;line-height:1.6;}
+footer.bunn .bunn-li{display:inline-flex;margin-top:22px;color:var(--dempet);transition:color .18s ease;}
+footer.bunn .bunn-li:hover{color:var(--aksent);}
+.bunn-li .ikon-li{width:20px;height:20px;}
+
+.bunn-lenker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;}
+.bunn-lenker > div{display:flex;flex-direction:column;align-items:flex-start;gap:11px;}
+.bunn-merk{margin:0 0 5px !important;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--lys);}
+footer.bunn .bunn-lenker a{
+  color:var(--dempet);font-size:15px;line-height:1.4;
+  border-bottom:1px solid transparent;transition:color .18s ease,border-color .18s ease;
+}
+footer.bunn .bunn-lenker a:hover{color:var(--lys);border-bottom-color:var(--strek);text-decoration:none;}
+
+.bunn-bunn{
+  display:flex;flex-wrap:wrap;gap:10px 40px;justify-content:space-between;
+  margin-top:52px;padding-top:26px;border-top:1px solid var(--strek);
+}
+.bunn-bunn .ps{width:100%;order:3;}
 
 /* Innlasting */
 .inn{opacity:0;transform:translateY(14px);animation:opp .9s cubic-bezier(.2,.7,.3,1) forwards;}
@@ -351,7 +373,9 @@ h1.inn{animation-delay:.08s;}
   .tall span{display:block;}
   .tall span::before{display:none;}
   .knapp,.knapp-tom{flex:1 1 auto;text-align:center;}
-  .bunn-rad{flex-direction:column;gap:18px;}
+  .bunn-topp{grid-template-columns:1fr;gap:36px;}
+  .bunn-lenker{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 24px;}
+  .bunn-bunn{margin-top:40px;}
   .pil{width:64px;height:110px;}
   .pil-kontakt{right:2%;top:-10px;}
   .pil-tjenester{display:none;}

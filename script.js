@@ -109,6 +109,8 @@
   });
 
   document.querySelectorAll(".kort .flate").forEach(function(k){
+    /* Flater uten data-embed er vanlige lenker ut, ikke avspillere. */
+    if (!k.dataset.embed) return;
     k.addEventListener("click", function(){
       var i = document.createElement("iframe");
       i.src = k.dataset.embed;
