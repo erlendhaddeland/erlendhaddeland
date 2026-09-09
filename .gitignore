@@ -1,3 +1,8 @@
 .DS_Store
 node_modules/
 .netlify/
+
+# Originalene fra dronen ligger her, 3 til 4 MB per bilde. Netlify
+# serverer mappa som den er, så alt som committes blir publisert og
+# nedlastbart. De nedskalerte versjonene ligger i bilder/drone.
+bilder/Dronebilder/

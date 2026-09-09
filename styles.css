@@ -594,3 +594,27 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
    historien står først og egenskapene leses som et etterord. */
 .referanse-stor p{margin:0 0 20px;font-size:clamp(21px,2.7vw,34px);line-height:1.32;letter-spacing:-.015em;color:var(--lys);}
 .referanse-stor ul{font-size:19px;}
+
+/* Dronestripe. Ligger utenfor .ramme og går helt ut til kantene, så
+   den er usynlig for innglidningen og kan ikke bli stående skjult.
+   Venstre luft følger sidens egen tekstkant, slik at første bilde
+   står i flukt med overskriften over. */
+.dronestripe{
+  display:flex;gap:20px;
+  margin-top:30px;padding:0 28px 16px;
+  padding-left:max(28px,calc((100% - var(--mal)) / 2 + 28px));
+  padding-right:max(28px,calc((100% - var(--mal)) / 2 + 28px));
+  overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  scroll-padding-left:max(28px,calc((100% - var(--mal)) / 2 + 28px));
+}
+.dronestripe:focus-visible{outline:2px solid var(--aksent);outline-offset:4px;}
+.dronestripe figure{margin:0;flex:0 0 auto;width:min(76vw,860px);scroll-snap-align:start;}
+.dronestripe img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+.dronestripe figcaption{margin-top:12px;font-size:15px;line-height:1.5;color:var(--dempet);}
+
+/* Må stå etter .dronestripe over, ellers vinner max()-regelen der
+   på rekkefølge og stripa får feil tekstkant på mobil. */
+@media (max-width:440px){
+  .dronestripe{padding-left:18px;padding-right:18px;scroll-padding-left:18px;}
+}
