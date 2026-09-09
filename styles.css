@@ -379,9 +379,10 @@ h1.inn{animation-delay:.08s;}
   .bunn-topp{grid-template-columns:1fr;gap:36px;}
   .bunn-lenker{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 24px;}
   .bunn-bunn{margin-top:40px;}
-  .pil{width:64px;height:110px;}
-  .pil-kontakt{right:2%;top:-10px;}
-  .pil-tjenester{display:none;}
+  /* Begge pilene lever i lufta til høyre for teksten. Under 900 er alt
+     en spalte, og da legger de seg tvers over den. Målt: rene ned til
+     940, overlapp fra 900. */
+  .pil{display:none;}
   :root{--topph:60px;}
   .merke img{height:18px;}
   .topp nav{gap:13px;}
