@@ -79,6 +79,18 @@ Key patterns to know before editing it:
 
 Single stylesheet with CSS custom properties at `:root` (`--natt`, `--lys`, `--brod`, `--aksent`, `--mal` for max page width `1180px`, `--topph` for fixed-nav height). Layout containers use `.ramme` (centered max-width wrapper). Norwegian class names throughout — do not "translate" them to English when refactoring; the HTML across all ten pages depends on them.
 
+### Logobåndet på forsiden
+
+Fjorten oppdragsgiverlogoer ruller i et bånd rett under heroen på `index.html`. Filene ligger i `bilder/logoer/`.
+
+- **Logoene er behandlet, ikke originaler.** Hver av dem er gjort om til en hvit silhuett med gjennomsiktig bunn, fordi originalene kommer i fjorten ulike farger, og flere har egen bakgrunnsflate (Nullvisjonen på svart, XL Bygg på beige, LH Drift på mørk boks). Alle får samme lerretshøyde, 96 piksler, altså 2x av de 48 i CSS. Da holder én høydeverdi i `styles.css` for hele båndet.
+- Silhuetten lages på tre måter, avhengig av originalen. Ligger grafikken alt på gjennomsiktig bunn, brukes alfakanalen. Er den mørk på lys bunn, brukes omvendt lysstyrke. Er den lys på mørk bunn, brukes lysstyrken. LH Drift har gull og grått ved siden av hverandre, og der teller avstanden fra bunnfargen i stedet, ellers blir gullet stående grått. Metningspunktet finnes per logo, slik at en beige og en svart logo blir like hvite.
+- Størrelsen er ikke lik høyde, men lik optisk vekt. En kvadratisk merkelogo som fyller hele høyden ser tyngre ut enn en bred ordlogo, så de kompakte trekkes ned med en faktor. Telenor Cyberdefence er bevisst gitt større vekt enn de andre.
+- **Rekkefølgen er ikke tilfeldig.** Kantene toner ut med `mask-image`, så logoen som står først er halvveis usynlig ved sidelast. Derfor står en av de mindre viktige først, og Telenor på tredjeplass, godt innenfor.
+- Rullingen er to identiske rader etter hverandre, der sporet skyves en halv bredde i en evig runde. Avstanden over skjøten må være lik `gap` ellers i raden, derfor har `.logorad` samme verdi i `gap` og `padding-right`. Endrer du den ene, må den andre følge etter, ellers hakker båndet én gang per runde.
+- Ved `prefers-reduced-motion` stopper rullingen, masken slås av, duplikatraden skjules og logoene brekker over flere linjer, slik at alle fjorten fortsatt er synlige.
+- Nye logoer legges inn i begge radene i `index.html`. Duplikatraden har `aria-hidden="true"` og tom `alt`, så den ikke leses opp to ganger. `width` og `height` på hver `img` må stemme med filen, ellers hopper layouten når bildene lastes.
+
 ### Deling, ikoner og headere
 
 - **Delingsbildene er generert, ikke fotografert.** `bilder/deling.jpg` og `bilder/deling-tilbud.jpg` (begge 1200x630) er rendret fra HTML-maler med headless Chrome, i samme farger og font som nettsiden. Skal de endres, bygg malen på nytt og rendre på 2x før du skalerer ned, ellers blir teksten uskarp. Alle sider utenom `tilbud.html` bruker `deling.jpg`.
