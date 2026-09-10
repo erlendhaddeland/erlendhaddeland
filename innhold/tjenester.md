@@ -23,6 +23,7 @@ Feltene, kort forklart:
 - **Staaende** settes til `ja` bare hvis bildet er høyere enn bredt. Da flyttes utsnittet opp så hodet ikke blir klippet.
 - **Bannerutsnitt** settes til `helt` hvis bildet er noe man skal lese, for eksempel notater. Da vises hele bildet på undersiden i stedet for en bred stripe. Sløyfer du feltet, blir det stripe.
 - **Bildekreditt** er bildeteksten under banneret, til å kreditere fotograf eller illustratør. Sløyfer du feltet, kommer det ingen bildetekst.
+- **Bilde nede**, **Bildetekst nede** og **Bildekreditt nede** legger et ekstra bilde lenger ned på siden, under punktene. Det vises alltid helt. Bruk det til å vise fram arbeid som ikke bør stå øverst, der bildet kan bli lest som selve tjenesten.
 
 ---
 
@@ -32,10 +33,11 @@ Navn: Tekst som treffer
 Fil: tjeneste-tekst.html
 Merkelapp: Ord
 Bilde: bilder/tjeneste-tekst.jpg
-Bildetekst: Håvard Legreids håndtegnede notater fra webinaret «Menneskelig innhold i AI-ens tid»
+Bildetekst: Erlend Haddeland i en sofa
 Staaende: nei
-Bannerutsnitt: helt
-Bildekreditt: Illustrert av [Håvard Legreid](https://leketoys.no) under webinaret «Menneskelig innhold i AI-ens tid».
+Bilde nede: bilder/tjeneste-tekst-notater.jpg
+Bildetekst nede: Håvard Legreids håndtegnede notater fra webinaret «Menneskelig innhold i AI-ens tid»
+Bildekreditt nede: Illustrert av [Håvard Legreid](https://leketoys.no) under webinaret «Menneskelig innhold i AI-ens tid».
 Ingress: All tekst som skal treffe øynene til kundene dine, bør aldri overlates til tilfeldighetene.
 Korttekst: Nettsider, sosiale medier, pressemeldinger og tilbud.
 

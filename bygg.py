@@ -413,6 +413,19 @@ def bygg_tjeneste(t, alle, ref, artikler, sider, topp, bunn):
   </section>
 ''' % u''.join(u'        <li>%s</li>\n' % p for p in pkt)
 
+    if t.get('bilde nede'):
+        w2, h2 = maal(t['bilde nede'])
+        ut += u'''  <section>
+    <div class="ramme">
+      <figure class="tjenestebanner">
+        <img class="helt" src="%(bilde)s" alt="%(alt)s" width="%(w)d" height="%(h)d" loading="lazy" decoding="async">
+%(kreditt)s      </figure>
+    </div>
+  </section>
+''' % dict(bilde=t['bilde nede'], alt=t.get('bildetekst nede', ''), w=w2, h=h2,
+           kreditt=(u'        <figcaption>%s</figcaption>\n' % t['bildekreditt nede']
+                    if t.get('bildekreditt nede') else u''))
+
     ut += referanseseksjon(punktliste(t.get('#referanser', [])), ref)
     if t.get('artikler') == 'ja':
         ut += artikkelliste(artikler, sider)
