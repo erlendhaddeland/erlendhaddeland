@@ -687,6 +687,9 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 .tjenestebanner img.staaende{object-position:50% 20%;}
 /* Er bildet noe man skal lese, som notater, vises det helt, uten utsnitt. */
 .tjenestebanner img.helt{aspect-ratio:auto;height:auto;object-fit:contain;}
+.tjenestebanner figcaption{margin-top:12px;font-size:15px;line-height:1.5;color:var(--dempet);}
+.tjenestebanner figcaption a{color:var(--bla);text-decoration:none;border-bottom:1px solid var(--strek);}
+.tjenestebanner figcaption a:hover{border-bottom-color:var(--bla);}
 .tjeneste-to{display:grid;grid-template-columns:1.15fr .85fr;gap:32px 64px;align-items:start;}
 .tjeneste-to h3{font-size:21px;font-weight:600;letter-spacing:-.02em;margin:0 0 14px;}
 .tjeneste-to p{font-size:18px;line-height:1.65;color:var(--brod);margin:0 0 18px;max-width:56ch;}

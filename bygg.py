@@ -59,7 +59,7 @@ def bolker(tekst):
             continue
         m = re.match(r'^([A-Za-zÆØÅæøå][A-Za-zÆØÅæøå \-]*):\s*(.*)$', linje)
         if m:
-            ut[slug][m.group(1).strip().lower()] = m.group(2).strip()
+            ut[slug][m.group(1).strip().lower()] = lenker(m.group(2).strip())
     return ut
 
 
@@ -70,7 +70,7 @@ def avsnitt(linjer):
 
     def tom():
         if buffer:
-            blokker.append(('p', ' '.join(buffer)))
+            blokker.append(('p', lenker(' '.join(buffer))))
             del buffer[:]
 
     for linje in linjer:
@@ -93,6 +93,15 @@ def avsnitt(linjer):
             buffer.append(s)
     tom()
     return blokker
+
+
+def lenker(tekst):
+    """[tekst](adresse) blir en lenke. Peker den ut av huset, apnes den i ny fane."""
+    def bytt(m):
+        ord_, adr = m.group(1), m.group(2)
+        ut = u' target="_blank" rel="noopener"' if adr.startswith('http') else u''
+        return u'<a href="%s"%s>%s</a>' % (adr, ut, ord_)
+    return re.sub(r'\[([^\]]+)\]\(([^)\s]+)\)', bytt, tekst)
 
 
 def punktliste(linjer):
@@ -375,13 +384,15 @@ def bygg_tjeneste(t, alle, ref, artikler, sider, topp, bunn):
 <main id="innhold">
   <section class="uten-strek">
     <div class="ramme">
-      <div class="tjenestebanner">
+      <figure class="tjenestebanner">
         <img%(kl)s src="%(bilde)s" alt="%(alt)s" width="%(w)d" height="%(h)d" fetchpriority="high" decoding="async">
-      </div>
+%(kreditt)s      </figure>
     </div>
   </section>
 ''' % dict(navn=t['navn'], ingress=t['ingress'], bilde=t['bilde'], alt=t['bildetekst'],
-           w=w, h=h, kl=bannerklasse(t))
+           w=w, h=h, kl=bannerklasse(t),
+           kreditt=(u'        <figcaption>%s</figcaption>\n' % t['bildekreditt']
+                    if t.get('bildekreditt') else u''))
 
     brod = [v for slag, v in avsnitt(t.get('#brødtekst', t.get('#brodtekst', []))) if slag == 'p']
     if brod:

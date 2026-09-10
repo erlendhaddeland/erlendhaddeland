@@ -11,6 +11,7 @@ Slik leses filen:
 - `### Punkter` er en liste med bindestrek. Er lista tom, faller den bort på siden.
 - `### Referanser` er filnavn på referansekort, ett per linje. Tom liste gir ingen referanseseksjon.
 - Alt som står under `<!--` og `-->` er notater til deg selv, og havner ikke på nettsiden.
+- Lenker skrives `[ordene som skal være lenke](https://adressen.no)`. Peker de ut av huset, åpnes de i ny fane.
 
 Feltene, kort forklart:
 
@@ -21,6 +22,7 @@ Feltene, kort forklart:
 - **Bilde** og **Bildetekst** er banneret øverst og `alt`-teksten.
 - **Staaende** settes til `ja` bare hvis bildet er høyere enn bredt. Da flyttes utsnittet opp så hodet ikke blir klippet.
 - **Bannerutsnitt** settes til `helt` hvis bildet er noe man skal lese, for eksempel notater. Da vises hele bildet på undersiden i stedet for en bred stripe. Sløyfer du feltet, blir det stripe.
+- **Bildekreditt** er bildeteksten under banneret, til å kreditere fotograf eller illustratør. Sløyfer du feltet, kommer det ingen bildetekst.
 
 ---
 
@@ -33,6 +35,7 @@ Bilde: bilder/tjeneste-tekst.jpg
 Bildetekst: Håvard Legreids håndtegnede notater fra webinaret «Menneskelig innhold i AI-ens tid»
 Staaende: nei
 Bannerutsnitt: helt
+Bildekreditt: Illustrert av [Håvard Legreid](https://leketoys.no) under webinaret «Menneskelig innhold i AI-ens tid».
 Ingress: All tekst som skal treffe øynene til kundene dine, bør aldri overlates til tilfeldighetene.
 Korttekst: Nettsider, sosiale medier, pressemeldinger og tilbud.
 
