@@ -426,6 +426,18 @@ def bygg_tjeneste(t, alle, ref, artikler, sider, topp, bunn):
            kreditt=(u'        <figcaption>%s</figcaption>\n' % t['bildekreditt nede']
                     if t.get('bildekreditt nede') else u''))
 
+    if t.get(u'verktøy'):
+        ut += u'''  <section>
+    <div class="ramme brod">
+      <p class="merkelapp">Verktøy</p>
+      <h2 class="stor">%(o)s</h2>
+%(tekst)s      <div class="knapper"><a class="knapp" href="%(lenke)s">%(knapp)s</a></div>
+    </div>
+  </section>
+''' % dict(o=t[u'verktøy'],
+           tekst=(u'      <p>%s</p>\n' % t[u'verktøytekst'] if t.get(u'verktøytekst') else u''),
+           lenke=t.get(u'verktøylenke', u'#'), knapp=t.get(u'verktøyknapp', u'Prøv verktøyet'))
+
     ut += referanseseksjon(punktliste(t.get('#referanser', [])), ref)
     if t.get('artikler') == 'ja':
         ut += artikkelliste(artikler, sider)

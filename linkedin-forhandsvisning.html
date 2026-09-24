@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkedIn-forhåndsvisning | Erlend Haddeland</title>
+<meta name="description" content="Lim inn et LinkedIn-innlegg og se hvor «…mer» kutter teksten på mobil og desktop, og hvordan bilder og karusell blir seende ut i feeden.">
+<meta name="author" content="Erlend Haddeland">
+<link rel="canonical" href="https://erlendhaddeland.no/linkedin-forhandsvisning.html">
+<meta property="og:site_name" content="Erlend Haddeland">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LinkedIn-forhåndsvisning | Erlend Haddeland">
+<meta property="og:description" content="Lim inn et LinkedIn-innlegg og se hvor «…mer» kutter teksten på mobil og desktop, og hvordan bilder og karusell blir seende ut i feeden.">
+<meta property="og:url" content="https://erlendhaddeland.no/linkedin-forhandsvisning.html">
+<meta property="og:image" content="https://erlendhaddeland.no/bilder/deling.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Erlend Haddeland, med teksten Menneskelig markedsføring">
+<meta property="og:locale" content="nb_NO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#14163a">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Forsiden", "item": "https://erlendhaddeland.no/"},
+    {"@type": "ListItem", "position": 2, "name": "LinkedIn for ledere og ansatte", "item": "https://erlendhaddeland.no/tjeneste-linkedin.html"},
+    {"@type": "ListItem", "position": 3, "name": "LinkedIn-forhåndsvisning", "item": "https://erlendhaddeland.no/linkedin-forhandsvisning.html"}
+  ]
+}
+</script>
+</head>
+<body>
+<a class="hopp" href="#innhold">Hopp til innhold</a>
+<div class="topp">
+  <div class="ramme topp-rad">
+    <a class="merke" href="index.html" aria-label="Erlend Haddeland, til forsiden"><img class="logo-lang" src="bilder/logo.png" alt="Erlend Haddeland" width="407" height="36"></a>
+    <button class="meny-knapp" type="button" aria-label="Meny" aria-expanded="false" aria-controls="hovedmeny"><span></span><span></span><span></span></button>
+    <nav id="hovedmeny" aria-label="Hovedmeny"><a href="tjenester.html" aria-current="page">Tjenester</a><a href="prosjekter.html">Prosjekter</a><a href="om.html">Om</a><a href="faq.html">Spørsmål</a><a href="kontakt.html">Kontakt</a></nav>
+  </div>
+</div>
+<header class="ramme sidetopp">
+  <p class="merkelapp">Verktøy fra Erlend Haddeland</p>
+  <h1>LinkedIn-forhåndsvisning</h1>
+  <p class="tagline">Se hvor LinkedIn kutter innlegget ditt, før du trykker publiser.</p>
+</header>
+<main id="innhold">
+  <section class="uten-strek">
+    <div class="ramme">
+      <div class="fv">
+        <div class="fv-panel">
+          <div class="fv-hode">
+            <h2 class="fv-tittel">Innlegg</h2>
+            <span class="fv-teller" id="tegn">0 / 3000</span>
+          </div>
+          <div class="fv-kropp">
+            <div class="fv-navn">
+              <label class="fv-merk" for="navn">Navn</label>
+              <input id="navn" class="fv-felt" type="text" value="Ditt navn" autocomplete="name">
+            </div>
+            <label class="fv-merk" for="innlegg">Innlegget</label>
+            <textarea id="innlegg" class="fv-felt" placeholder="Lim inn eller skriv innlegget ditt her"></textarea>
+
+            <div class="fv-rad">
+              <button class="knapp" type="button" id="kopier">Kopier tekst</button>
+              <span class="fv-notis">Rydder bort skjulte tegn, så du kan lime rett inn i LinkedIn.</span>
+            </div>
+
+            <div class="fv-tall">
+              <span id="synlig">Synlig før «…mer»: <b>0</b> tegn</span>
+              <span id="ord"><b>0</b> ord</span>
+            </div>
+
+            <div class="fv-krok" id="krok" aria-live="polite">
+              <div class="fv-krok-dom" id="dom">Skriv en åpning, så sjekker jeg om den er synlig før «…mer».
+                <div class="fv-krok-tekst" id="kroktekst" hidden></div>
+              </div>
+              <div class="fv-enheter">
+                <span class="fv-enhet" id="enhetD">Desktop</span>
+                <span class="fv-enhet" id="enhetM">Mobil</span>
+              </div>
+            </div>
+
+            <div class="fv-media">
+              <div class="fv-media-hode">
+                <h2 class="fv-tittel">Media</h2>
+                <span class="fv-notis">Bilder eller PDF-karusell</span>
+              </div>
+              <div id="mediaredigering"></div>
+              <div class="fv-store">
+                <button class="fv-stor" type="button" id="leggbilde">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>
+                  Legg til bilder
+                </button>
+                <button class="fv-stor" type="button" id="leggpdf">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="11" height="16"/><path d="M17 6h4v12h-4"/></svg>
+                  Legg til karusell
+                </button>
+                <input id="bildefil" type="file" accept="image/*" multiple hidden>
+                <input id="pdffil" type="file" accept="application/pdf" hidden>
+              </div>
+              <div class="fv-rad">
+                <button class="fv-lenke" type="button" id="plassholder">Legg inn plassholderbilde</button>
+              </div>
+              <p class="fv-hint" id="hint">Bilder: tre eller flere blir sveip på mobil. Karusell (PDF): hver side blir en slide du kan bla i.</p>
+              <div class="fv-tips">
+                <p>Om karusellen</p>
+                <ul>
+                  <li>Tittelen på karusellen legger seg som en bar øverst på førstesiden. Ikke legg noe viktig akkurat der, det blir delvis dekket.</li>
+                  <li>Feeden viser ofte de to første sidene ved siden av hverandre. Sørg for at side 1 og 2 henger sammen, så de trekker leseren videre.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fv-panel">
+          <div class="fv-hode">
+            <h2 class="fv-tittel">Forhåndsvisning</h2>
+            <div class="fv-valg">
+              <div class="fv-bryter" data-valg="visning" role="group" aria-label="Visning">
+                <button type="button" data-verdi="feed" aria-pressed="true">Feed</button>
+                <button type="button" data-verdi="helt" aria-pressed="false">Fullt innlegg</button>
+              </div>
+              <div class="fv-bryter" data-valg="enhet" role="group" aria-label="Enhet">
+                <button type="button" data-verdi="desktop" aria-pressed="true">Desktop</button>
+                <button type="button" data-verdi="mobil" aria-pressed="false">Mobil</button>
+              </div>
+              <div class="fv-bryter" data-valg="type" role="group" aria-label="Profiltype">
+                <button type="button" data-verdi="person" aria-pressed="true">Person</button>
+                <button type="button" data-verdi="bedrift" aria-pressed="false">Bedriftsside</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fv-scene">
+            <div class="li" id="kort">
+              <div class="li-topp">
+                <div class="li-av" id="avatar" aria-hidden="true">DN</div>
+                <div class="li-id">
+                  <div class="li-navn"><span id="kortnavn">Ditt navn</span><span class="grad">· 1.</span></div>
+                  <div class="li-under">Din tittel · Firma</div>
+                  <div class="li-under">1 t · <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zM3 8a5 5 0 011-3l.5.9.9.3.2 1 .9.5v1l-1 .2-.4 1H4A5 5 0 013 8zm5 5a5 5 0 01-1.3-.2l.3-1 1-.6v-1l-1-1H5.6l-.3-1 1-.4.3-1h1.2l.7-.8-.6-.7.6-.4 1 .5V5l1 .5.8-.3A5 5 0 018 13z"/></svg></div>
+                </div>
+                <div class="li-meny" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </div>
+              </div>
+
+              <div class="li-tekst" id="tekst"><span class="li-tom">Innlegget vises her</span></div>
+              <div class="li-media" id="media"></div>
+
+              <div class="li-fot" aria-hidden="true">
+                <div class="li-reaksjoner">
+                  <span class="ikoner">
+                    <span style="background:var(--li-bla)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21h4V9H2v12zm20-11a2 2 0 00-2-2h-6.3l1-4.6v-.3a1.5 1.5 0 00-.5-1L13.1 1 6.6 7.6A2 2 0 006 9v10a2 2 0 002 2h9a2 2 0 001.8-1.2l3-7.1c.1-.2.2-.5.2-.7v-2z"/></svg></span>
+                    <span style="background:var(--kakao)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v-2H9v2zm3-20a7 7 0 00-4 12.7V17h8v-3.3A7 7 0 0012 1z"/></svg></span>
+                    <span style="background:var(--rod)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-1.5-1.3C5 15 2 12.3 2 8.9A5 5 0 017 4c1.9 0 3.7.9 5 2.3A6.6 6.6 0 0117 4a5 5 0 015 4.9c0 3.4-3 6.1-8.5 10.8L12 21z"/></svg></span>
+                  </span>
+                  <span>Ola Nordmann og 23 andre</span>
+                </div>
+                <div class="li-handlinger">
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 10v10M7 10l3-7a2 2 0 012 2v3h6a2 2 0 012 2l-1.5 7a2 2 0 01-2 1.6H7"/></svg>Liker</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8 8 0 01-11.7 7L3 20l1.5-6.3A8 8 0 1121 11.5z"/></svg>Kommenter</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 3l4 4-4 4M7 21l-4-4 4-4M3 17h14V7M21 7H7"/></svg>Del</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Send</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="fv-fold" id="fold"></p>
+        </div>
+      </div>
+
+      <p class="fv-fot">Avkortingstallene er anslag. LinkedIn tester varianter, så «…mer» kan lande litt før eller etter (person: ca. 140 tegn på mobil og 210 på desktop, bedriftsside: mer på desktop). Karusellen er bygd etter hvordan feeden viser dokumentinnlegg nå: tittelbar oppe til venstre, sidene på rekke med et gløtt av neste, pil og fullskjermknapp. Hvor mange sider som vises samtidig, avhenger av sideformatet, akkurat som på LinkedIn. Alt skjer i nettleseren din. Ingenting du limer inn eller laster opp, blir sendt noe sted.</p>
+    </div>
+  </section>
+  <section class="med-pil">
+    <div class="ramme brod">
+      <p class="stor">Vil du heller at noen andre skriver innleggene?</p>
+      <p>Mange av dem jeg jobber med, skriver ikke selv. Da skriver jeg i deres stemme, og de leser gjennom før noe publiseres.</p>
+      <div class="knapper"><a class="knapp" href="tjeneste-linkedin.html">Les om LinkedIn-hjelpen</a></div>
+      <span class="pil pil-tjenester" aria-hidden="true"></span>
+    </div>
+  </section>
+</main>
+<footer class="bunn">
+  <div class="ramme">
+    <div class="bunn-topp">
+      <div class="bunn-merke">
+        <img class="bunn-logo" src="bilder/logo.png" alt="Erlend Haddeland" width="407" height="36">
+        <p>Menneskelig markedsføring for bedrifter som vil bli husket og valgt.</p>
+        <a class="bunn-li" href="https://www.linkedin.com/in/erlend-haddeland/" target="_blank" rel="noopener" aria-label="Erlend Haddeland på LinkedIn"><svg class="ikon-li" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.13 1.44-2.13 2.94v5.66H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></a>
+      </div>
+      <nav class="bunn-lenker" aria-label="Bunnmeny">
+        <div>
+          <p class="bunn-merk">Sider</p>
+          <a href="tjenester.html">Tjenester</a>
+          <a href="prosjekter.html">Prosjekter</a>
+          <a href="om.html">Om</a>
+          <a href="faq.html">Spørsmål</a>
+          <a href="kontakt.html">Kontakt</a>
+        </div>
+        <div>
+          <p class="bunn-merk">Mer</p>
+          <a href="tilbud.html">Tilbudssystem</a>
+          <a href="filer.html">Send filer</a>
+          <a href="personvern.html">Personvern</a>
+        </div>
+        <div>
+          <p class="bunn-merk">Kontakt</p>
+          <a href="mailto:erlend@fetterantonflaks.no">erlend@fetterantonflaks.no</a>
+          <a href="tel:+4748247566">482&nbsp;47&nbsp;566</a>
+        </div>
+      </nav>
+    </div>
+    <div class="bunn-bunn">
+      <p>Fetterantonflaks AS, Gamle Myrvei 20, 4580 Lyngdal. Org.nr. 934&nbsp;397&nbsp;584</p>
+      <p>Foto: <a href="https://www.ganeshfoto.no/" target="_blank" rel="noopener">Øyvind Ganesh / Ganeshfoto</a></p>
+      <p class="ps">PS: Jeg har også laget denne nettsiden.</p>
+    </div>
+  </div>
+</footer>
+<script src="script.js"></script>
+<script>
+/* LinkedIn-forhåndsvisningen. Alt skjer i nettleseren. pdf.js hentes
+   først når noen faktisk legger inn en PDF, så siden laster fort. */
+(function(){
+  var valg = { visning:"feed", enhet:"desktop", type:"person", apnet:false };
+  var bilder = [];
+  var pdf = null; // {sider:[dataURL], tittel, b, h}
+  var PH_FARGER = ["var(--dypbla)","var(--bla)","var(--kakao)","var(--dempet)"];
+  var GRENSE = { person:{desktop:210, mobil:140}, bedrift:{desktop:700, mobil:250} };
+  var PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+
+  function $(id){ return document.getElementById(id); }
+  var innlegg = $("innlegg"), tekst = $("tekst"), media = $("media"), fold = $("fold"), hint = $("hint");
+
+  function lagre(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
+  function hent(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function initialer(navn){
+    var d = navn.trim().split(/\s+/).filter(Boolean);
+    if (!d.length) return "?";
+    if (d.length === 1) return d[0].slice(0,2).toUpperCase();
+    return (d[0][0] + d[d.length-1][0]).toUpperCase();
+  }
+
+  /* Hvor feeden kutter. En blank linje før grensen kutter tidligere. */
+  function kutt(t, grense){
+    var avsn = t.search(/\n[ \t]*\n/), grunn = "tegn", ved = grense;
+    if (avsn !== -1 && avsn < grense){ ved = avsn; grunn = "avsnitt"; }
+    if (t.length <= ved) return { synlig:t, kuttet:false, antall:t.length, grunn:null };
+    var bit = t.slice(0, ved);
+    if (grunn === "tegn"){
+      var b = Math.max(bit.lastIndexOf(" "), bit.lastIndexOf("\n"));
+      if (b > ved * 0.55) bit = t.slice(0, b);
+    }
+    bit = bit.replace(/[ \t\n]+$/, "");
+    return { synlig:bit, kuttet:true, antall:bit.length, grunn:grunn };
+  }
+
+  function rens(t){
+    t = t.replace(/\r\n?/g,"\n").replace(/ /g," ").replace(/[​‌‍﻿⁠]/g,"").replace(/\t/g," ");
+    t = t.split("\n").map(function(l){ return l.replace(/[ \t]+$/,""); }).join("\n");
+    return t.replace(/^\n+/,"").replace(/\n+$/,"");
+  }
+
+  function bildeHTML(b){
+    return b.ph ? '<div class="ph" style="background:' + b.farge + '">' + b.n + '</div>' : '<img src="' + b.src + '" alt="">';
+  }
+  function pil(retning){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">' +
+      (retning === "forrige" ? '<path d="M15 5l-7 7 7 7"/>' : '<path d="M9 5l7 7-7 7"/>') + '</svg>';
+  }
+  var FULLSKJERM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H4a1 1 0 00-1 1v4M16 3h4a1 1 0 011 1v4M8 21H4a1 1 0 01-1-1v-4M16 21h4a1 1 0 001-1v-4"/></svg>';
+
+  function tegnMediaredigering(){
+    var el = $("mediaredigering");
+    if (pdf){
+      el.innerHTML = '<div class="fv-pdf"><div class="side"><img src="' + pdf.sider[0] + '" alt=""></div>' +
+        '<div class="meta"><label class="fv-merk" for="doktittel">PDF, ' + pdf.sider.length + ' sider. Tittel i feeden:</label>' +
+        '<input class="fv-felt" id="doktittel" value="' + esc(pdf.tittel) + '"></div>' +
+        '<button class="knapp-tom" type="button" id="fjernpdf">Fjern</button></div>';
+      $("doktittel").addEventListener("input", function(){ pdf.tittel = this.value; tegn(); });
+      $("fjernpdf").addEventListener("click", function(){ pdf = null; tegnMediaredigering(); tegn(); });
+      return;
+    }
+    if (bilder.length){
+      el.innerHTML = '<div class="fv-miniatyrer">' + bilder.map(function(b, i){
+        return '<div class="fv-miniatyr">' + bildeHTML(b) + '<button class="x" type="button" data-i="' + i + '" aria-label="Fjern bilde ' + (i+1) + '">×</button></div>';
+      }).join("") + '</div>';
+      el.querySelectorAll(".x").forEach(function(k){
+        k.onclick = function(){ bilder.splice(+k.getAttribute("data-i"), 1); tegnMediaredigering(); tegn(); };
+      });
+      return;
+    }
+    el.innerHTML = "";
+  }
+
+  function byggDokument(){
+    var stor = (valg.visning === "helt" || valg.apnet);
+    var n = pdf.sider.length;
+    var sider = pdf.sider.map(function(src){ return '<div class="dok-side"><img src="' + src + '" alt=""></div>'; }).join("");
+    var pynt = '<div class="dok-bar">' + esc(pdf.tittel || "Dokument") + ' · ' + n + (n === 1 ? " side" : " sider") + '</div>' +
+      '<button type="button" class="dok-knapp forrige" aria-label="Forrige side" hidden>' + pil("forrige") + '</button>' +
+      '<button type="button" class="dok-knapp neste" aria-label="Neste side">' + pil("neste") + '</button>';
+    pynt += stor ? '<div class="dok-teller">1 / ' + n + '</div>'
+                 : '<button type="button" class="dok-knapp fullskjerm" aria-label="Åpne stor">' + FULLSKJERM + '</button>';
+    media.innerHTML = '<div class="dok ' + (stor ? "dok-stor" : "dok-liten") + '"><div class="dok-spor">' + sider + '</div>' + pynt + '</div>';
+
+    var dok = media.querySelector(".dok"), spor = media.querySelector(".dok-spor"),
+        sideEl = media.querySelectorAll(".dok-side"),
+        forrige = media.querySelector(".forrige"), neste = media.querySelector(".neste"),
+        teller = media.querySelector(".dok-teller"), fs = media.querySelector(".fullskjerm");
+
+    var bredde = dok.clientWidth, H, B;
+    if (stor){ B = bredde; H = Math.round(bredde * pdf.h / pdf.b); }
+    else { H = valg.enhet === "mobil" ? Math.round(bredde * 0.98) : Math.round(bredde * 0.55); B = Math.round(H * pdf.b / pdf.h); }
+    sideEl.forEach(function(s){ s.style.width = B + "px"; s.style.height = H + "px"; });
+    dok.style.height = H + "px";
+    var steg = B + 8;
+
+    function oppdater(){
+      forrige.hidden = spor.scrollLeft <= 4;
+      neste.hidden = spor.scrollLeft + spor.clientWidth >= spor.scrollWidth - 4;
+      if (teller) teller.textContent = (Math.round(spor.scrollLeft / spor.clientWidth) + 1) + " / " + n;
+    }
+    spor.addEventListener("scroll", oppdater); setTimeout(oppdater, 30);
+    neste.onclick = function(){ spor.scrollBy({ left:steg, behavior:"smooth" }); };
+    forrige.onclick = function(){ spor.scrollBy({ left:-steg, behavior:"smooth" }); };
+    if (fs) fs.onclick = function(){ valg.apnet = true; tegn(); };
+  }
+
+  function tegnMedia(){
+    media.innerHTML = "";
+    if (pdf){ byggDokument(); return; }
+    var n = bilder.length; if (!n) return;
+    if (valg.enhet === "mobil" && n >= 3){
+      var s = bilder.map(function(b){ return '<div class="caro-bilde">' + bildeHTML(b) + '</div>'; }).join("");
+      var p = bilder.map(function(_, i){ return '<i class="' + (i === 0 ? "aktiv" : "") + '"></i>'; }).join("");
+      media.innerHTML = '<div class="caro"><div class="caro-teller">1 / ' + n + '</div><div class="caro-spor">' + s + '</div><div class="caro-prikker">' + p + '</div></div>';
+      var spor = media.querySelector(".caro-spor"), prikker = media.querySelectorAll(".caro-prikker i"), teller = media.querySelector(".caro-teller");
+      spor.addEventListener("scroll", function(){
+        var i = Math.round(spor.scrollLeft / spor.clientWidth);
+        prikker.forEach(function(d, j){ d.classList.toggle("aktiv", j === i); });
+        teller.textContent = (i + 1) + " / " + n;
+      });
+      return;
+    }
+    var kl = n === 1 ? "n1" : n === 2 ? "n2" : n === 3 ? "n3" : "n4", vis = Math.min(n, 4), html = "";
+    for (var i = 0; i < vis; i++){
+      var inni = bildeHTML(bilder[i]).replace('class="ph"', 'class="ph m' + i + '"').replace('<img', '<img class="m' + i + '"');
+      html += (n > 4 && i === 3) ? '<div class="flere">' + inni + '<div class="dekke">+' + (n - 4) + '</div></div>' : inni;
+    }
+    media.innerHTML = '<div class="imgs ' + kl + '">' + html + '</div>';
+  }
+
+  /* Kroken er første avsnitt, eller første linje. */
+  function krok(t){
+    t = t.replace(/^\s+/, "");
+    var p = t.search(/\n[ \t]*\n/); if (p !== -1) return t.slice(0, p).replace(/\s+$/, "");
+    var nl = t.indexOf("\n"); if (nl !== -1) return t.slice(0, nl).replace(/\s+$/, "");
+    return t.replace(/\s+$/, "");
+  }
+  function kuttVed(t, grense){
+    if (t.length <= grense) return -1;
+    var bit = t.slice(0, grense), b = Math.max(bit.lastIndexOf(" "), bit.lastIndexOf("\n"));
+    return b > grense * 0.55 ? b : grense;
+  }
+  function krokVisning(k, m, d){
+    var punkt = [];
+    if (m >= 0) punkt.push({ i:m, kl:"m", tekst:"kuttes på mobil" });
+    if (d >= 0) punkt.push({ i:d, kl:"d", tekst:"kuttes på desktop" });
+    punkt.sort(function(a, b){ return a.i - b.i; });
+    if (!punkt.length) return esc(k);
+    var html = "", sist = 0, skjul = false;
+    punkt.forEach(function(p){
+      var del = esc(k.slice(sist, p.i));
+      html += skjul ? '<span class="skjules">' + del + '</span>' : del;
+      html += '<span class="fv-kutt ' + p.kl + '">' + p.tekst + '</span>';
+      sist = p.i; skjul = true;
+    });
+    var rest = esc(k.slice(sist, sist + 90)); if (k.length > sist + 90) rest += "…";
+    return html + '<span class="skjules">' + rest + '</span>';
+  }
+  function enhet(navn, passer, igjen, ved){
+    return navn + (passer
+      ? ' <span class="merke-ok">synlig</span> <small>' + igjen + ' tegn å gå på</small>'
+      : ' <span class="merke-kutt">kuttes</span> <small>ved tegn ' + ved + '</small>');
+  }
+  function tegnKrok(){
+    var raa = innlegg.value, boks = $("krok"), dom = $("dom"), vis = $("kroktekst");
+    if (!raa.trim()){
+      boks.className = "fv-krok";
+      dom.firstChild.nodeValue = "Skriv en åpning, så sjekker jeg om den er synlig før «…mer».";
+      vis.hidden = true;
+      $("enhetD").textContent = "Desktop"; $("enhetM").textContent = "Mobil";
+      return;
+    }
+    var k = krok(raa), l = k.length;
+    var gD = GRENSE[valg.type].desktop, gM = GRENSE[valg.type].mobil;
+    var mOk = l <= gM, dOk = l <= gD;
+    boks.className = "fv-krok " + (mOk ? "ok" : dOk ? "halv" : "kort");
+    dom.firstChild.nodeValue = mOk ? "Åpningen er synlig både på desktop og mobil."
+      : dOk ? "Åpningen vises på desktop, men kuttes på mobil."
+      : "Åpningen kuttes før «…mer», også på desktop.";
+    vis.hidden = false;
+    vis.innerHTML = krokVisning(k, kuttVed(k, gM), kuttVed(k, gD));
+    $("enhetD").innerHTML = enhet("Desktop", dOk, gD - l, kuttVed(k, gD));
+    $("enhetM").innerHTML = enhet("Mobil", mOk, gM - l, kuttVed(k, gM));
+  }
+
+  function tegn(){
+    var t = innlegg.value, navn = $("navn").value || "Ditt navn";
+    $("kortnavn").textContent = navn;
+    $("avatar").textContent = initialer(navn);
+    $("kort").classList.toggle("mobil", valg.enhet === "mobil");
+
+    $("tegn").textContent = t.length + " / 3000";
+    $("tegn").classList.toggle("over", t.length > 3000);
+    $("ord").innerHTML = "<b>" + ((t.trim().match(/\S+/g) || []).length) + "</b> ord";
+
+    var f = kutt(t, GRENSE[valg.type][valg.enhet]);
+    $("synlig").innerHTML = 'Synlig før «…mer»: <b>' + (t.trim() ? f.antall : 0) + '</b> tegn';
+
+    var typenavn = valg.type === "person" ? "person" : "bedriftsside";
+    if (!t.trim()){ tekst.innerHTML = '<span class="li-tom">Innlegget vises her</span>'; fold.innerHTML = ""; }
+    else if (valg.visning === "helt" || valg.apnet || !f.kuttet){
+      tekst.innerHTML = esc(t);
+      fold.innerHTML = f.kuttet ? 'Fullt innlegg. I feeden ville teksten blitt kuttet ved ca. ' + f.antall + ' tegn.' : 'Hele teksten vises uten «…mer».';
+    } else {
+      tekst.innerHTML = esc(f.synlig) + '<span class="li-mer" id="mer" role="button" tabindex="0"> …mer</span>';
+      var mer = $("mer");
+      mer.onclick = function(){ valg.apnet = true; tegn(); };
+      mer.onkeydown = function(e){ if (e.key === "Enter" || e.key === " "){ e.preventDefault(); mer.onclick(); } };
+      fold.innerHTML = f.grunn === "avsnitt"
+        ? '<b>En blank linje kutter forhåndsvisningen tidlig.</b> Bare de første ' + f.antall + ' tegnene vises. Vil du ha en lengre krok, hold åpningen i ett avsnitt.'
+        : 'Kuttet ved ca. ' + f.antall + ' tegn (' + typenavn + ', ' + valg.enhet + '). Alt etter «…mer» er skjult til noen klikker.';
+    }
+    tegnKrok();
+    tegnMedia();
+  }
+
+  innlegg.addEventListener("input", function(){ valg.apnet = false; tegn(); });
+  $("navn").addEventListener("input", function(){ lagre("eh_li_navn", this.value); tegn(); });
+
+  $("kopier").addEventListener("click", function(){
+    var ut = rens(innlegg.value), k = $("kopier");
+    function ferdig(){ k.textContent = "Kopiert"; setTimeout(function(){ k.textContent = "Kopier tekst"; }, 1500); }
+    function reserve(){
+      var ta = document.createElement("textarea"); ta.value = ut; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); ferdig(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ut).then(ferdig, reserve); else reserve();
+  });
+
+  $("leggbilde").addEventListener("click", function(){ $("bildefil").click(); });
+  $("bildefil").addEventListener("change", function(e){
+    pdf = null;
+    Array.prototype.slice.call(e.target.files || []).forEach(function(fil){
+      var r = new FileReader();
+      r.onload = function(ev){ bilder.push({ src:ev.target.result }); tegnMediaredigering(); tegn(); };
+      r.readAsDataURL(fil);
+    });
+    e.target.value = "";
+  });
+  $("plassholder").addEventListener("click", function(){
+    pdf = null;
+    bilder.push({ ph:true, farge:PH_FARGER[bilder.length % PH_FARGER.length], n:bilder.length + 1 });
+    tegnMediaredigering(); tegn();
+  });
+
+  function hentPdfjs(ferdig, feil){
+    if (window.pdfjsLib) return ferdig();
+    var s = document.createElement("script");
+    s.src = PDFJS + "pdf.min.js";
+    s.onload = function(){ pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; ferdig(); };
+    s.onerror = feil;
+    document.head.appendChild(s);
+  }
+
+  $("leggpdf").addEventListener("click", function(){ $("pdffil").click(); });
+  $("pdffil").addEventListener("change", function(e){
+    var fil = e.target.files && e.target.files[0]; e.target.value = "";
+    if (!fil) return;
+    hint.className = "fv-hint"; hint.textContent = "Leser PDF …";
+    hentPdfjs(function(){ lesPdf(fil); }, function(){
+      hint.className = "fv-hint feil"; hint.textContent = "Fikk ikke lastet PDF-leseren. Sjekk at du er på nett, og prøv igjen.";
+    });
+  });
+
+  function lesPdf(fil){
+    var tittel = fil.name.replace(/\.pdf$/i, "");
+    var r = new FileReader();
+    r.onload = function(ev){
+      pdfjsLib.getDocument({ data:ev.target.result }).promise.then(function(dok){
+        var totalt = Math.min(dok.numPages, 30), sider = [], b = 4, h = 5;
+        function neste(i){
+          if (i > totalt){
+            bilder = [];
+            pdf = { sider:sider, tittel:tittel, b:b, h:h };
+            hint.className = "fv-hint";
+            hint.textContent = "PDF lastet: " + sider.length + " sider. Feed viser sidene på rekke. Fullt innlegg, eller fullskjermknappen, viser én og én side. Sjekk Mobil for lesbarhet.";
+            tegnMediaredigering(); tegn(); return;
+          }
+          dok.getPage(i).then(function(side){
+            var vp = side.getViewport({ scale:1.6 });
+            if (i === 1){ var v1 = side.getViewport({ scale:1 }); b = Math.round(v1.width); h = Math.round(v1.height); }
+            var c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+            side.render({ canvasContext:c.getContext("2d"), viewport:vp }).promise.then(function(){
+              sider.push(c.toDataURL("image/jpeg", 0.82));
+              hint.textContent = "Leser PDF … side " + i + " av " + totalt;
+              neste(i + 1);
+            });
+          });
+        }
+        neste(1);
+      }).catch(function(){ hint.className = "fv-hint feil"; hint.textContent = "Klarte ikke å lese PDF-en. Er filen gyldig?"; });
+    };
+    r.readAsArrayBuffer(fil);
+  }
+
+  document.querySelectorAll(".fv-bryter").forEach(function(gruppe){
+    var nokkel = gruppe.getAttribute("data-valg");
+    gruppe.querySelectorAll("button").forEach(function(k){
+      k.addEventListener("click", function(){
+        gruppe.querySelectorAll("button").forEach(function(x){ x.setAttribute("aria-pressed", "false"); });
+        k.setAttribute("aria-pressed", "true");
+        valg[nokkel] = k.getAttribute("data-verdi");
+        if (nokkel === "visning") valg.apnet = false;
+        tegn();
+      });
+    });
+  });
+
+  var lagretNavn = hent("eh_li_navn"); if (lagretNavn !== null) $("navn").value = lagretNavn;
+  tegnMediaredigering(); tegn();
+})();
+</script>
+</body>
+</html>

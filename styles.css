@@ -8,6 +8,14 @@
   --aksent:#6cb2e4;
   --dypbla:#27285e;
   --kakao:#c08a63;
+  --rod:#e27a66;
+  /* LinkedIn-farger, bare til kortet i linkedin-forhandsvisning.html */
+  --li-hvit:#ffffff;
+  --li-grunn:#f4f2ee;
+  --li-tekst:rgba(0,0,0,.9);
+  --li-under:rgba(0,0,0,.6);
+  --li-strek:rgba(0,0,0,.08);
+  --li-bla:#0a66c2;
   --mal:1180px;
   --topph:72px;
   --kaffe:url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ctext%20x%3D%272%27%20y%3D%2730%27%20font-size%3D%2730%27%3E%E2%98%95%3C%2Ftext%3E%3C%2Fsvg%3E") 10 10, pointer;
@@ -740,3 +748,158 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 /* Tjenesteoversikten. Samme kort som på forsiden, men i to spalter
    siden overskriften alt står i sidetoppen over. */
 .tjenesterutenett{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));}
+
+/* LinkedIn-forhåndsvisning (linkedin-forhandsvisning.html).
+   Verktøyet rundt følger husreglene. Selve kortet, .li, etterligner
+   LinkedIn med vilje, med LinkedIns runde hjørner og systemfont, ellers
+   ser man ikke hvordan innlegget faktisk blir seende ut. */
+.fv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;}
+@media (max-width:920px){.fv{grid-template-columns:minmax(0,1fr);}}
+.fv-panel{border:1px solid var(--strek);}
+.fv-hode{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 20px;border-bottom:1px solid var(--strek);}
+.fv-tittel{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--aksent);margin:0;}
+.fv-kropp{padding:20px;}
+.fv-merk{display:block;font-size:13px;font-weight:500;color:var(--dempet);margin:0 0 6px;}
+.fv-felt{width:100%;background:transparent;border:1px solid var(--strek);color:var(--lys);font:inherit;font-size:16px;padding:10px 12px;}
+.fv-felt:focus{outline:0;border-color:var(--aksent);}
+textarea.fv-felt{min-height:300px;resize:vertical;line-height:1.55;}
+.fv-felt::placeholder{color:var(--dempet);}
+.fv-navn{margin-bottom:16px;}
+.fv-teller{font-size:13px;font-weight:500;color:var(--dempet);border:1px solid var(--strek);padding:3px 10px;}
+.fv-teller.over{color:var(--rod);border-color:var(--rod);}
+.fv-rad{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:16px;}
+.fv-rad .knapp{border:0;font-family:inherit;padding:12px 22px;}
+.fv-notis{font-size:14px;color:var(--dempet);}
+.fv-tall{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;font-size:14px;color:var(--dempet);}
+.fv-tall b{color:var(--lys);font-weight:600;}
+
+.fv-krok{margin-top:18px;border:1px solid var(--strek);border-left-width:3px;}
+.fv-krok.ok{border-left-color:var(--bla);}
+.fv-krok.halv{border-left-color:var(--kakao);}
+.fv-krok.kort{border-left-color:var(--rod);}
+.fv-krok-dom{padding:16px 18px;font-size:18px;font-weight:600;line-height:1.3;letter-spacing:-.01em;}
+.fv-krok.ok .fv-krok-dom{color:var(--bla);}
+.fv-krok.halv .fv-krok-dom{color:var(--kakao);}
+.fv-krok.kort .fv-krok-dom{color:var(--rod);}
+.fv-krok-tekst{margin-top:8px;font-size:14px;font-weight:400;line-height:1.7;color:var(--brod);letter-spacing:0;}
+.fv-krok-tekst .skjules{color:var(--dempet);opacity:.7;}
+.fv-kutt{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;margin:0 5px;vertical-align:middle;white-space:nowrap;color:var(--natt);}
+.fv-kutt.m{background:var(--kakao);}
+.fv-kutt.d{background:var(--rod);}
+.fv-enheter{display:flex;border-top:1px solid var(--strek);}
+.fv-enhet{flex:1;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;padding:10px 18px;font-size:14px;font-weight:500;color:var(--brod);}
+.fv-enhet + .fv-enhet{border-left:1px solid var(--strek);}
+.fv-enhet small{color:var(--dempet);font-weight:400;font-size:13px;}
+.fv-enhet .merke-ok{color:var(--bla);}
+.fv-enhet .merke-kutt{color:var(--rod);}
+
+.fv-media{margin-top:22px;padding-top:20px;border-top:1px solid var(--strek);}
+.fv-media-hode{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.fv-store{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+@media (max-width:440px){.fv-store{grid-template-columns:1fr;}}
+.fv-stor{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px;border:1px solid var(--strek);background:transparent;color:var(--lys);font:inherit;font-size:16px;font-weight:600;transition:border-color .18s ease;}
+.fv-stor:hover{border-color:var(--aksent);}
+.fv-stor svg{width:28px;height:28px;color:var(--aksent);}
+.fv-lenke{background:none;border:0;padding:0;color:var(--aksent);font:inherit;font-size:14px;font-weight:500;text-decoration:underline;text-underline-offset:3px;}
+.fv-hint{font-size:14px;color:var(--dempet);margin:10px 0 0;}
+.fv-hint.feil{color:var(--rod);}
+.fv-tips{margin-top:14px;border:1px solid var(--strek);padding:14px 16px;}
+.fv-tips p{margin:0 0 8px;font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--aksent);}
+.fv-tips ul{margin:0;padding-left:18px;}
+.fv-tips li{font-size:14px;line-height:1.55;color:var(--brod);margin-bottom:6px;}
+.fv-tips li:last-child{margin-bottom:0;}
+.fv-miniatyrer{display:flex;flex-wrap:wrap;gap:8px;}
+.fv-miniatyr{position:relative;width:60px;height:60px;border:1px solid var(--strek);overflow:hidden;flex:none;}
+.fv-miniatyr img,.fv-miniatyr .ph{width:100%;height:100%;object-fit:cover;display:block;}
+.fv-miniatyr .ph{display:flex;align-items:center;justify-content:center;color:var(--li-hvit);font-weight:800;font-size:20px;}
+.fv-miniatyr .x{position:absolute;top:0;right:0;width:20px;height:20px;border:0;padding:0;background:var(--natt);color:var(--lys);font-size:14px;line-height:20px;text-align:center;}
+.fv-pdf{display:flex;align-items:center;gap:12px;border:1px solid var(--strek);padding:10px;}
+.fv-pdf .side{width:52px;height:66px;flex:none;overflow:hidden;border:1px solid var(--strek);}
+.fv-pdf .side img{width:100%;height:100%;object-fit:cover;display:block;}
+.fv-pdf .meta{flex:1;min-width:0;}
+.fv-pdf .fv-felt{margin-top:4px;padding:6px 8px;font-size:14px;}
+.fv-pdf .knapp-tom{padding:8px 14px;font-size:14px;background:transparent;font-family:inherit;}
+
+.fv-valg{display:flex;flex-wrap:wrap;gap:8px;}
+.fv-bryter{display:inline-flex;border:1px solid var(--strek);}
+.fv-bryter button{border:0;background:transparent;color:var(--dempet);font:inherit;font-size:13px;font-weight:500;padding:6px 11px;line-height:1.2;}
+.fv-bryter button + button{border-left:1px solid var(--strek);}
+.fv-bryter button[aria-pressed="true"]{background:var(--lys);color:var(--natt);}
+.fv-scene{background:var(--li-grunn);padding:24px 16px;display:flex;justify-content:center;}
+.fv-fold{font-size:14px;line-height:1.55;color:var(--dempet);text-align:center;padding:14px 20px 18px;margin:0;}
+.fv-fold b{color:var(--kakao);font-weight:600;}
+.fv-fot{font-size:14px;line-height:1.7;color:var(--dempet);max-width:80ch;margin:28px 0 0;}
+
+/* Kortet. Tallene er LinkedIns egne mål. */
+.li{width:100%;max-width:555px;background:var(--li-hvit);border:1px solid var(--li-strek);border-radius:8px;overflow:hidden;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--li-tekst);transition:max-width .2s ease;}
+.li.mobil{max-width:360px;}
+.li-topp{display:flex;align-items:flex-start;gap:8px;padding:12px 16px 0;}
+.li-av{width:48px;height:48px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:var(--dypbla);color:var(--li-hvit);font-weight:700;font-size:17px;}
+.li-id{flex:1;min-width:0;padding-top:1px;}
+.li-navn{font-size:14px;font-weight:600;line-height:1.3;display:flex;align-items:center;gap:4px;}
+.li-navn .grad{color:var(--li-under);font-weight:400;font-size:12px;}
+.li-under{font-size:12px;color:var(--li-under);line-height:1.35;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.li-under svg{width:14px;height:14px;fill:var(--li-under);vertical-align:-2px;}
+.li-meny{color:var(--li-under);flex:none;padding-top:2px;display:flex;gap:6px;}
+.li-tekst{padding:8px 16px 0;font-size:14px;line-height:1.4285;white-space:pre-wrap;overflow-wrap:break-word;}
+.li-mer{color:var(--li-under);cursor:pointer;}
+.li-mer:hover{color:var(--li-bla);text-decoration:underline;}
+.li-tom{color:var(--li-under);font-style:italic;}
+.li-media{margin-top:10px;}
+.li-media .ph{display:flex;align-items:center;justify-content:center;color:var(--li-hvit);font-weight:800;font-size:34px;}
+.imgs{display:grid;gap:2px;}
+.imgs img{display:block;width:100%;object-fit:cover;}
+.imgs .ph{width:100%;}
+.imgs.n1 img,.imgs.n1 .ph{max-height:500px;object-fit:contain;background:var(--li-grunn);height:auto;min-height:200px;}
+.imgs.n2{grid-template-columns:1fr 1fr;}
+.imgs.n2 img,.imgs.n2 .ph{height:250px;}
+.imgs.n3{grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;}
+.imgs.n3 .m0{grid-row:1/3;height:346px;}
+.imgs.n3 .m1,.imgs.n3 .m2{height:172px;}
+.imgs.n4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;}
+.imgs.n4 img,.imgs.n4 .ph{height:172px;}
+.imgs .flere{position:relative;}
+.imgs .flere .dekke{position:absolute;inset:0;background:rgba(0,0,0,.55);color:var(--li-hvit);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;}
+.caro{position:relative;}
+.caro-spor{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+.caro-spor::-webkit-scrollbar{display:none;}
+.caro-bilde{flex:0 0 100%;scroll-snap-align:center;height:420px;background:var(--li-grunn);display:flex;align-items:center;justify-content:center;}
+.caro-bilde img{width:100%;height:100%;object-fit:contain;}
+.caro-bilde .ph{width:100%;height:100%;font-size:40px;}
+.caro-prikker{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
+.caro-prikker i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55);}
+.caro-prikker i.aktiv{background:var(--li-hvit);}
+.caro-teller,.dok-teller{position:absolute;background:rgba(0,0,0,.65);color:var(--li-hvit);font-size:12px;font-weight:600;padding:2px 9px;border-radius:12px;z-index:4;pointer-events:none;}
+.caro-teller{top:10px;right:12px;}
+.dok-teller{bottom:14px;left:50%;transform:translateX(-50%);}
+.dok{position:relative;}
+.dok-spor{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+.dok-spor::-webkit-scrollbar{display:none;}
+.dok-side{flex:0 0 auto;background:var(--li-grunn);border:1px solid var(--li-strek);border-radius:8px;overflow:hidden;}
+.dok-side img{display:block;width:100%;height:100%;object-fit:cover;}
+.dok-stor .dok-side{border:0;border-radius:0;scroll-snap-align:center;}
+.dok-liten .dok-side{scroll-snap-align:start;}
+.dok-liten .dok-spor{padding:0 12px;scroll-padding-left:12px;}
+.dok-bar{position:absolute;top:12px;left:24px;background:rgba(0,0,0,.72);color:var(--li-hvit);font-size:13px;font-weight:600;padding:5px 12px;border-radius:8px;z-index:4;pointer-events:none;}
+.dok-knapp{position:absolute;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.55);border:0;padding:0;display:flex;align-items:center;justify-content:center;color:var(--li-hvit);z-index:4;}
+.dok-knapp:hover{background:rgba(0,0,0,.75);}
+.dok-knapp svg{width:18px;height:18px;}
+.dok-knapp.forrige{left:12px;top:50%;transform:translateY(-50%);}
+.dok-knapp.neste{right:12px;top:50%;transform:translateY(-50%);}
+.dok-knapp.fullskjerm{right:12px;bottom:14px;}
+.li-fot{padding:10px 16px 4px;margin-top:8px;}
+.li-reaksjoner{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--li-under);padding-bottom:8px;border-bottom:1px solid var(--li-strek);}
+.li-reaksjoner .ikoner{display:inline-flex;}
+.li-reaksjoner .ikoner span{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-left:-4px;border:1.5px solid var(--li-hvit);color:var(--li-hvit);}
+.li-reaksjoner .ikoner span:first-child{margin-left:0;}
+.li-reaksjoner .ikoner svg{width:9px;height:9px;}
+.li-handlinger{display:flex;padding:4px 6px 6px;}
+.li-handlinger span{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;color:var(--li-under);font-size:14px;font-weight:600;padding:10px 4px;}
+.li-handlinger svg{width:20px;height:20px;flex:none;}
+.li-handlinger span{min-width:0;}
+.li.mobil .li-handlinger span{flex-direction:column;gap:2px;font-size:12px;}
+@media (max-width:480px){
+  .fv-scene{padding:16px 10px;}
+  .li-handlinger span{flex-direction:column;gap:2px;font-size:12px;}
+}
+.dok-knapp[hidden]{display:none;}

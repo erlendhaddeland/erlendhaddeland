@@ -24,6 +24,7 @@ Feltene, kort forklart:
 - **Bannerutsnitt** settes til `helt` hvis bildet er noe man skal lese, for eksempel notater. Da vises hele bildet på undersiden i stedet for en bred stripe. Sløyfer du feltet, blir det stripe.
 - **Bildekreditt** er bildeteksten under banneret, til å kreditere fotograf eller illustratør. Sløyfer du feltet, kommer det ingen bildetekst.
 - **Bilde nede**, **Bildetekst nede** og **Bildekreditt nede** legger et ekstra bilde lenger ned på siden, under punktene. Det vises alltid helt. Bruk det til å vise fram arbeid som ikke bør stå øverst, der bildet kan bli lest som selve tjenesten.
+- **Verktøy**, **Verktøytekst**, **Verktøyknapp** og **Verktøylenke** legger en blokk med knapp til et verktøy på siden, rett over referansene. **Verktøy** er overskriften. Sløyfer du feltet, faller blokken bort.
 
 ---
 
@@ -96,6 +97,10 @@ Staaende: nei
 Ingress: Den viktigste plattformen for B2B, men hvordan funker den egentlig?
 Korttekst: Den viktigste plattformen for B2B.
 Artikler: ja
+Verktøy: Se innlegget før resten av LinkedIn gjør det.
+Verktøytekst: Lim inn et utkast i LinkedIn-forhåndsvisningen, så ser du hvor «…mer» kutter teksten på mobil og desktop, og hvordan bildene og karusellen blir seende ut i feeden.
+Verktøyknapp: Åpne forhåndsvisningen
+Verktøylenke: linkedin-forhandsvisning.html
 
 ### Brødtekst
 
