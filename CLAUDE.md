@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Static marketing site for erlendhaddeland.no. Sixteen top-level HTML pages (elleve faste, fem tjenestesider), plus any `artikkel-*.html` built from `innhold/`, one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
+Static marketing site for erlendhaddeland.no. Seventeen top-level HTML pages (tolv faste, fem tjenestesider), plus any `artikkel-*.html` built from `innhold/`, one shared `styles.css`, one shared `script.js`, plus a self-contained one-file web app under `demo/`. Norwegian-language content and code (class names, IDs, and JS identifiers are in Norwegian: `ramme`, `topp`, `knapp`, `skjema`, `faner`, etc.).
 
 No package.json, no test suite, no linter. Netlify serves the folder as-is; pushing to `main` publishes.
 
@@ -26,7 +26,7 @@ Disse reglene gjelder alt arbeid i dette repoet, og går foran generelle vaner.
 - Skarpe hjørner. Ingen `border-radius` på bokser, kort, knapper, felt eller bilder. Unntaket er de sirklene som allerede finnes (`.prikk`, `.signatur img` og dekorsirkelen rundt linje 157), der `border-radius:50%` lager formen. Ikke legg til nye avrundinger.
 
 **Struktur**
-- Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle HTML-filene i rota. Endres én, må alle endres: `index.html`, `tjenester.html`, `tjeneste-tekst.html`, `tjeneste-video.html`, `tjeneste-linkedin.html`, `tjeneste-strategi.html`, `tjeneste-foredrag.html`, `artikkel-*.html`, `linkedin-forhandsvisning.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
+- Meny (`header.topp`) og bunn (`footer.bunn`) ligger i alle HTML-filene i rota. Endres én, må alle endres: `index.html`, `tjenester.html`, `tjeneste-tekst.html`, `tjeneste-video.html`, `tjeneste-linkedin.html`, `tjeneste-strategi.html`, `tjeneste-foredrag.html`, `artikkel-*.html`, `linkedin-forhandsvisning.html`, `foredrag-linkedin.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`. Sjekk også `demo/tilbud-kakaobygg.html` når det er relevant.
 - `404.html` er en kakaovits, ikke en vanlig side. Overskriften er «Kakao not found», og de to firetallene flankerer et bilde av Erlend som heller kakao, slik at bildet blir nullen. Tallene er `font-weight:200` med negativ margin, så de går litt bak bildet. Endrer du bildebredden, må marginene følge etter, ellers blir sifrene stående og flyte. `--kakao` er hentet som gjennomsnittsfarge fra kakaoen i bildet og lysnet til 5,85 i kontrast mot `--natt`.
 - `404.html` er også unntaket i lenkestil. Netlify serverer den på hvilken som helst ukjent adresse, også `/noe/dypt/her`, så alle stier der er rotrelative (`/styles.css`, `/tjenester.html`, `/bilder/logo.png`). Bruker du `tjenester.html` uten skråstrek, peker lenken feil. Alle de andre sidene bruker relative stier som før.
 - Hver side har `<a class="hopp" href="#innhold">` rett etter `<body>`, og `<main id="innhold">`. Lenken ligger utenfor skjermen til den får tastaturfokus. Nye sider skal ha begge deler.
@@ -54,7 +54,7 @@ Then open `http://localhost:8000/`. Opening the HTML files directly via `file://
 
 ### Shared chrome is duplicated per page
 
-The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in every page in the repo root (`index.html`, `tjenester.html`, the five `tjeneste-*.html` pages, every `artikkel-*.html`, `linkedin-forhandsvisning.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
+The `<header class="topp">` nav and `<footer class="bunn">` block are copy-pasted into every top-level HTML file. Contact info (email, phone, org.nr.) appears in each footer. Any change to nav links, brand info, or footer content must be made in every page in the repo root (`index.html`, `tjenester.html`, the five `tjeneste-*.html` pages, every `artikkel-*.html`, `linkedin-forhandsvisning.html`, `foredrag-linkedin.html`, `tilbud.html`, `prosjekter.html`, `om.html`, `kontakt.html`, `faq.html`, `filer.html`, `personvern.html`, `404.html`) and, where relevant, also in `demo/tilbud-kakaobygg.html`. The README calls this out as intentional.
 
 ### `script.js`: five unrelated behaviors, one IIFE
 
@@ -91,6 +91,10 @@ Forsiden presenterer tjenestene som fem kort til høyre, med en intro som står 
 - **Kortene gjenbruker `.rutenett` og `.kort` med vilje.** Innglidningen i `script.js` pakker opp `.rutenett` og lar hvert `.kort` gli inn for seg. Bytter du til et eget klassenavn på lista, blir kortene stående usynlige, fordi CSS-en som skjuler dem bare slippes av `.synlig`.
 - Introen er to nivåer: `.tjeneste-intro` er rutenettbarnet som glir inn, og `.tjeneste-fast` inni er den som er `position:sticky`. De må være to elementer. Legger du `sticky` rett på rutenettbarnet, mister det høyden å feste seg i, fordi grid-barn ikke strekkes når `align-items` ikke er `stretch`.
 - Forsiden bruker `.tjenestespalte` (én spalte), `tjenester.html` bruker `.tjenesterutenett` (tre spalter). Samme markup ellers.
+
+### Foredragssiden
+
+`foredrag-linkedin.html` («Motgift mot AI-svada på LinkedIn») er skrevet for hånd, ikke bygd, så meny og bunn må oppdateres der manuelt. Filnavnet begynner med vilje ikke på `tjeneste-`, for da ville `bygg.py` slettet den. Tjenestesiden for foredrag lenker dit gjennom verktøyfeltene i `innhold/tjenester.md`, med `Verktøymerke: Foredrag`.
 
 ### LinkedIn-forhåndsvisningen
 

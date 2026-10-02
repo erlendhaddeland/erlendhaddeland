@@ -455,12 +455,12 @@ def bygg_tjeneste(t, alle, ref, artikler, sider, topp, bunn):
     if t.get(u'verktøy'):
         ut += u'''  <section>
     <div class="ramme brod">
-      <p class="merkelapp">Verktøy</p>
+      <p class="merkelapp">%(merke)s</p>
       <h2 class="stor">%(o)s</h2>
 %(tekst)s      <div class="knapper"><a class="knapp" href="%(lenke)s">%(knapp)s</a></div>
     </div>
   </section>
-''' % dict(o=t[u'verktøy'],
+''' % dict(o=t[u'verktøy'], merke=t.get(u'verktøymerke', u'Verktøy'),
            tekst=(u'      <p>%s</p>\n' % t[u'verktøytekst'] if t.get(u'verktøytekst') else u''),
            lenke=t.get(u'verktøylenke', u'#'), knapp=t.get(u'verktøyknapp', u'Prøv verktøyet'))
 

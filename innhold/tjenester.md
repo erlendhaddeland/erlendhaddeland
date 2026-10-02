@@ -25,6 +25,7 @@ Feltene, kort forklart:
 - **Bildekreditt** er bildeteksten under banneret, til å kreditere fotograf eller illustratør. Sløyfer du feltet, kommer det ingen bildetekst.
 - **Bilde nede**, **Bildetekst nede** og **Bildekreditt nede** legger et ekstra bilde lenger ned på siden, under punktene. Det vises alltid helt. Bruk det til å vise fram arbeid som ikke bør stå øverst, der bildet kan bli lest som selve tjenesten.
 - **Verktøy**, **Verktøytekst**, **Verktøyknapp** og **Verktøylenke** legger en blokk med knapp til et verktøy på siden, rett over referansene. **Verktøy** er overskriften. Sløyfer du feltet, faller blokken bort.
+- **Verktøymerke** er det lille ordet over overskriften i verktøyblokken. Sløyfer du feltet, står det «Verktøy». Foredrag bruker det til å lenke til foredragssiden.
 
 ---
 
@@ -152,6 +153,11 @@ Bildetekst: Erlend Haddeland på scenen under et LinkedIn-foredrag
 Staaende: nei
 Ingress: Om synlighet, personlig merkevare og hvordan man høres ut som et menneske når alle andre bruker KI.
 Korttekst: Om synlighet og personlig merkevare.
+Verktøy: Motgift mot AI-svada på LinkedIn.
+Verktøymerke: Foredrag
+Verktøytekst: Hvordan du skiller deg ut nå som alle bruker de samme AI-verktøyene, og bygger en stemme folk faktisk stoler på.
+Verktøyknapp: Les om foredraget
+Verktøylenke: foredrag-linkedin.html
 
 ### Brødtekst
 
