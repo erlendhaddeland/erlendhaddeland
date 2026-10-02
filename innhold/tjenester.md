@@ -50,6 +50,7 @@ Ord som «kvalitet» og «fleksibilitet» er lette å strø om seg med, men virk
 
 - Nettsider
 - Sosiale medier
+- LinkedIn
 - Landingssider
 - Pressemeldinger
 - Artikler
@@ -114,6 +115,7 @@ Mange av dem skriver ikke selv. Da er det jeg som skriver innleggene, i deres st
 
 ### Referanser
 
+- vegard-haavik
 - berit-harr-osterhus
 - linn-eva-sorlie
 
