@@ -5,6 +5,7 @@ slugene under `### Referanser` i `tjenester.md`.
 
 - `Type: sitat` gir ett stort sitat på tvers av siden. Bilde brukes ikke.
 - `Type: kort` gir et referansekort med portrett. Da må `Bilde` være satt.
+- `Type: utvalgt` gir portrettet i en smal spalte og teksten ved siden av, med første avsnitt i stor type. Brukes når én lang referanse står alene på en side.
 - I teksten er blank linje nytt avsnitt, og linjer som starter med bindestrek blir en punktliste.
 - `&nbsp;` mellom tall er en hard mellomrom, så «97 000» ikke brekker over to linjer.
 
@@ -80,3 +81,24 @@ Bilde: bilder/kristin-westreng-aas.jpg
 ### Tekst
 
 Erlend leverte et morsomt og bunnsolid foredrag foran et publikum på ca 150 stk. Det fikk strålende tilbakemeldinger og skapte SÅ god stemning i salen! Vel så viktig: Han er proff, kommer når han skal, er enkel å samarbeide med og til å stole på. Med andre ord: Anbefales!
+
+---
+
+## vegard-haavik
+
+Navn: Vegard Haavik
+Rolle: daglig leder i ARTI Consult
+Type: utvalgt
+Bilde: bilder/vegard-haavik.jpg
+
+### Tekst
+
+Erlend er irriterende god til å finne poenget i det jeg prøver å si.
+
+Jeg kan komme med en løs tanke, noen stikkord eller noe jeg har irritert meg over. Han finner vinkelen, stiller de riktige spørsmålene og lager et innlegg jeg gleder meg til å publisere. Det høres fortsatt ut som meg. Bare med bedre formuleringer.
+
+Han har hjulpet oss i ARTI Consult med å få frem både fagkunnskapen, meningene og humoren vår. Vi har fått enkeltinnlegg med 150&nbsp;000 visninger, samlet godt over 1 million eksponeringer, livlige kommentarfelt og nye samtaler som har ført til møter og nye kunder. Han skjønner hva som får folk til å stoppe opp, og hvordan vi kan bruke oppmerksomheten til å bygge en tydelig posisjon.
+
+Og så er han rett og slett en utrolig fin fyr å jobbe med. Det merkes at han heier på oss, og han gjør samarbeidet både enkelt og morsomt.
+
+Jeg anbefaler allerede Erlend til folk jeg kjenner. Det kommer jeg til å fortsette med.

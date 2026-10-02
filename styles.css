@@ -631,6 +631,15 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 .referanse-stor p{margin:0 0 20px;font-size:clamp(21px,2.7vw,34px);line-height:1.32;letter-spacing:-.015em;color:var(--lys);}
 .referanse-stor ul{font-size:19px;}
 
+/* Utvalgt referanse på en tjenesteside. Portrettet står i den smale
+   spalten, og første avsnitt er selve poenget, derfor stor type.
+   Resten leses som vanlig brødtekst under. */
+.referanse-portrett{align-self:start;position:sticky;top:calc(var(--topph) + 24px);}
+.referanse-portrett img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;}
+.referanse-utvalgt p{font-size:18px;}
+@media (max-width:900px){.referanse-portrett{position:static;}.referanse-portrett img{aspect-ratio:1;object-position:50% 20%;}}
+.referanse-utvalgt p:first-child{margin-bottom:24px;font-size:clamp(24px,3vw,38px);font-weight:500;line-height:1.2;letter-spacing:-.02em;color:var(--lys);text-wrap:balance;}
+
 /* Dronestripe. Ligger utenfor .ramme og går helt ut til kantene, så
    den er usynlig for innglidningen og kan ikke bli stående skjult.
    Venstre luft følger sidens egen tekstkant, slik at første bilde

@@ -57,6 +57,8 @@ Ord som «kvalitet» og «fleksibilitet» er lette å strø om seg med, men virk
 
 ### Referanser
 
+- vegard-haavik
+
 ---
 
 ## video

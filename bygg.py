@@ -238,16 +238,42 @@ def referanseseksjon(slugger, ref):
   </section>
 ''' % (tekst, r['navn'], r['rolle'])
 
+    def kropp(r):
+        ut = []
+        for slag, verdi in avsnitt(r['#tekst']):
+            if slag == 'ul':
+                ut.append(u'            <ul>\n%s            </ul>'
+                          % u''.join(u'              <li>%s</li>\n' % p for p in verdi))
+            else:
+                ut.append(u'            <p>%s</p>' % verdi)
+        return u'\n'.join(ut)
+
+    # Én lang referanse med portrett får egen plass: bildet i en smal
+    # spalte, teksten ved siden av, med første avsnitt i stor type.
+    if len(valgt) == 1 and valgt[0].get('type') == 'utvalgt':
+        r = valgt[0]
+        w, h = maal(r['bilde'])
+        return u'''  <section>
+    <div class="ramme">
+      <h2 class="stor">Det folk sier etterpå.</h2>
+      <div class="rutenett rutenett-utvalgt">
+        <div class="kort referanse-portrett">
+          <img src="%s" alt="%s" loading="lazy" width="%d" height="%d">
+        </div>
+        <figure class="kort referanse referanse-utvalgt">
+          <blockquote>
+%s
+          </blockquote>
+          <figcaption class="kilde">%s, %s</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+''' % (r['bilde'], r['navn'], w, h, kropp(r), r['navn'], r['rolle'])
+
     kortene = []
     for r in valgt:
         w, h = maal(r['bilde'])
-        kropp = []
-        for slag, verdi in avsnitt(r['#tekst']):
-            if slag == 'ul':
-                kropp.append(u'            <ul>\n%s            </ul>'
-                             % u''.join(u'              <li>%s</li>\n' % p for p in verdi))
-            else:
-                kropp.append(u'            <p>%s</p>' % verdi)
         kortene.append(u'''        <figure class="kort referanse">
           <img src="%s" alt="%s" loading="lazy" width="%d" height="%d">
           <blockquote>
@@ -255,7 +281,7 @@ def referanseseksjon(slugger, ref):
           </blockquote>
           <figcaption class="kilde">%s, %s</figcaption>
         </figure>
-''' % (r['bilde'], r['navn'], w, h, u'\n'.join(kropp), r['navn'], r['rolle']))
+''' % (r['bilde'], r['navn'], w, h, kropp(r), r['navn'], r['rolle']))
 
     return u'''  <section>
     <div class="ramme">
