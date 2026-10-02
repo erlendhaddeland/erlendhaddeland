@@ -615,6 +615,16 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 
 /* Sitatblokk på forsiden. Bruker .sitat og .kilde som allerede fantes. */
 .sitat-blokk{margin:0;}
+/* To sitater side om side. Mindre type enn ett alene, ellers blir
+   det lange sitatet en vegg. Strek mellom dem på bred skjerm. */
+.sitater{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+.sitater .sitat-blokk + .sitat-blokk{border-left:1px solid var(--strek);padding-left:56px;}
+.sitater blockquote{max-width:none;}
+.sitater .sitat{font-size:clamp(22px,2.4vw,30px);line-height:1.25;letter-spacing:-.015em;}
+@media (max-width:900px){
+  .sitater{grid-template-columns:1fr;gap:48px;}
+  .sitater .sitat-blokk + .sitat-blokk{border-left:0;padding-left:0;border-top:1px solid var(--strek);padding-top:48px;}
+}
 
 /* Utvalgt film med referanse ved siden av. Filmen står stående,
    derfor en smal spalte til den og resten til sitatet. */
