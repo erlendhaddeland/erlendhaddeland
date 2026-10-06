@@ -304,6 +304,8 @@ footer.bunn .bunn-lenker a:hover{color:var(--lys);border-bottom-color:var(--stre
   margin-top:52px;padding-top:26px;border-top:1px solid var(--strek);
 }
 .bunn-bunn .ps{width:100%;order:3;}
+.bunn-bunn .hemmelig{width:100%;order:4;font-size:13px;}
+footer.bunn .hemmelig a{color:var(--dempet);}
 
 /* Innlasting */
 .inn{opacity:0;transform:translateY(14px);animation:opp .9s cubic-bezier(.2,.7,.3,1) forwards;}
