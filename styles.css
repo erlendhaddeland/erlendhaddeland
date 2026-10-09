@@ -730,15 +730,6 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 .tjenestebilde{position:relative;}
 .tjenestebilde img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;display:block;}
 .tjenestebilde img.staaende{object-position:50% 20%;}
-.kortpil{
-  position:absolute;right:14px;top:14px;width:42px;height:42px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(20,22,58,.78);border:1px solid rgba(238,241,248,.45);
-  transition:background-color .22s ease;
-}
-.kortpil svg{width:17px;height:17px;fill:none;stroke:var(--lys);stroke-width:2;stroke-linecap:square;transition:stroke .22s ease;}
-.tjenestekort:hover .kortpil{background:var(--aksent);}
-.tjenestekort:hover .kortpil svg{stroke:var(--natt);}
 .tjenestekort .kort-tekst{padding:22px 24px 26px;}
 .tjenestekort h3{font-size:22px;letter-spacing:-.02em;}
 .tjenestekort p{font-size:16px;line-height:1.6;color:var(--brod);max-width:52ch;}

@@ -193,10 +193,6 @@ def maal(bilder):
     raise ValueError('fant ikke malene i ' + bilder)
 
 
-PIL = (u'<span class="kortpil" aria-hidden="true">'
-       u'<svg viewBox="0 0 24 24" focusable="false"><path d="M7 17 17 7M8.5 7H17v8.5"/></svg></span>')
-
-
 def kort(tjenester, rutenettklasse):
     ut = [u'      <div class="rutenett %s">' % rutenettklasse]
     for t in tjenester:
@@ -206,7 +202,6 @@ def kort(tjenester, rutenettklasse):
         ut.append(u'            <img%s src="%s" alt="%s" width="%d" height="%d" loading="lazy" decoding="async">'
                   % (u' class="staaende"' if t.get('staaende') == 'ja' else u'',
                      t['bilde'], t['bildetekst'], w, h))
-        ut.append(u'            ' + PIL)
         ut.append(u'          </div>')
         ut.append(u'          <div class="kort-tekst">')
         ut.append(u'            <h3>%s</h3>' % t['navn'])
