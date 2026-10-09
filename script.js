@@ -74,10 +74,37 @@
         + "?subject=" + encodeURIComponent("Forespørsel fra " + v("name"))
         + "&body=" + encodeURIComponent(tekst);
     }
+    /* Feltene som må fylles ut, med navnet de har i feilmeldingen. */
+    var pakrevd = [["name", "navn"], ["email", "e-post"], ["message", "melding"]];
+    function feltet(n){ return skjema.querySelector("[name=" + n + "]"); }
+    function ugyldig(n){
+      var felt = feltet(n);
+      return !v(n) || (felt.validity && !felt.validity.valid);
+    }
+    /* Markeringen forsvinner så snart feltet er i orden, ikke først ved neste innsending. */
+    pakrevd.forEach(function(p){
+      var felt = feltet(p[0]);
+      if (!felt) return;
+      felt.addEventListener("input", function(){
+        if (felt.getAttribute("aria-invalid") === "true" && !ugyldig(p[0])) {
+          felt.removeAttribute("aria-invalid");
+        }
+      });
+    });
     skjema.addEventListener("submit", function(e){
       e.preventDefault();
-      if(!v("name") || !v("email") || !v("message")){
-        melding("Fyll inn navn, e-post og hva det gjelder, så går den.", true);
+      var mangler = pakrevd.filter(function(p){ return ugyldig(p[0]); });
+      pakrevd.forEach(function(p){
+        var felt = feltet(p[0]);
+        if (mangler.indexOf(p) > -1) felt.setAttribute("aria-invalid", "true");
+        else felt.removeAttribute("aria-invalid");
+      });
+      if (mangler.length) {
+        var navn = mangler.map(function(p){ return p[1]; });
+        var liste = navn.length > 1 ? navn.slice(0, -1).join(", ") + " og " + navn[navn.length - 1] : navn[0];
+        var bareEpost = mangler.length === 1 && mangler[0][0] === "email" && v("email");
+        melding(bareEpost ? "E-postadressen ser ikke helt riktig ut." : "Mangler " + liste + ", så går den.", true);
+        feltet(mangler[0][0]).focus();
         return;
       }
       var data = new FormData(skjema);
@@ -131,11 +158,9 @@
     var teller;
     function kvittering(tekst){
       felt.textContent = tekst;
-      knapp.disabled = true;
       clearTimeout(teller);
       teller = setTimeout(function(){
         felt.textContent = opprinnelig;
-        knapp.disabled = false;
       }, 2400);
     }
     function reserve(tekst){
@@ -177,8 +202,15 @@
   });
 
   function vis(el, nr){
-    el.style.transitionDelay = Math.min(nr * 80, 320) + "ms";
+    var forsinkelse = Math.min(nr * 60, 180);
+    el.style.transitionDelay = forsinkelse + "ms";
     el.classList.add("synlig");
+    /* Når innglidningen er ferdig, slippes forsinkelsen, ellers henger
+       den igjen og gjør hover på kortene treg. */
+    setTimeout(function(){
+      el.style.transitionDelay = "";
+      el.classList.add("ferdig");
+    }, forsinkelse + 650);
   }
 
   if (!("IntersectionObserver" in window)) {

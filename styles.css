@@ -9,6 +9,15 @@
   --dypbla:#27285e;
   --kakao:#c08a63;
   --rod:#e27a66;
+  /* Nyanser som før lå som løse hexverdier rundt i fila */
+  --aksent-lys:#8cc4ee;
+  --dypnatt:#0f1130;
+  --kortflate:#191c46;
+  --lysflate:#dee6f2;
+  --blamork:#0072b1;
+  --feil:#c0453b;
+  --feil-mork:#b23a30;
+  --hvit:#ffffff;
   /* LinkedIn-farger, bare til kortet i linkedin-forhandsvisning.html */
   --li-hvit:#ffffff;
   --li-grunn:#f4f2ee;
@@ -35,13 +44,13 @@ body{
   font-variant-numeric:tabular-nums;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--aksent);color:#14163a;}
+::selection{background:var(--aksent);color:var(--natt);}
 a{color:inherit;cursor:var(--kaffe);}
 button,[role="button"],.kort{cursor:var(--kaffe);}
 a:focus-visible,button:focus-visible{outline:2px solid var(--aksent);outline-offset:5px;}
 img{max-width:100%;height:auto;}
 .skjult{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
-.hopp{position:absolute;left:-9999px;top:0;z-index:100;background:var(--aksent);color:#14163a;padding:13px 20px;font-weight:600;font-size:16px;text-decoration:none;}
+.hopp{position:absolute;left:-9999px;top:0;z-index:100;background:var(--aksent);color:var(--natt);padding:13px 20px;font-weight:600;font-size:16px;text-decoration:none;}
 .hopp:focus{left:12px;top:12px;}
 .ramme{width:100%;max-width:var(--mal);margin:0 auto;padding:0 28px;}
 
@@ -93,11 +102,17 @@ h1{
 .hero-under{margin:16px 0 0;font-size:17px;line-height:1.55;color:var(--dempet);max-width:44ch;}
 .knapper{display:flex;flex-wrap:wrap;gap:14px;margin-top:44px;}
 .knapp,.knapp-tom{display:inline-block;padding:15px 26px;font-size:16px;text-decoration:none;}
-.knapp{background:var(--aksent);color:#14163a;font-weight:600;transition:background .18s ease,transform .18s ease;}
-.knapp:hover{background:#8cc4ee;transform:translateY(-2px);}
-.lys .knapp:hover{background:#0072b1;}
-.knapp-tom{border:1px solid var(--strek);color:var(--lys);font-weight:500;transition:border-color .18s ease;}
-.knapp-tom:hover{border-color:var(--lys);}
+.knapp{background:var(--aksent);color:var(--natt);font-weight:600;transition:background .18s ease,transform .18s ease;}
+.knapp-tom{border:1px solid var(--strek);color:var(--lys);font-weight:500;transition:border-color .18s ease,transform .18s ease;}
+/* Hover bare der det finnes en mus. På berøringsskjerm blir hover
+   hengende etter trykket, og knappen står løftet til man trykker et annet sted. */
+@media (hover:hover){
+  .knapp:hover{background:var(--aksent-lys);transform:translateY(-2px);}
+  .lys .knapp:hover{background:var(--blamork);}
+  .knapp-tom:hover{border-color:var(--lys);}
+}
+/* Trykkrespons. Svarer i det fingeren eller musa går ned, ikke når den slippes. */
+.knapp:active,.knapp-tom:active,.meny-knapp:active,.kort:active{transform:scale(.97);transition-duration:.1s;}
 
 /* Undersider */
 .sidetopp{padding:52px 28px 8px;}
@@ -219,13 +234,14 @@ blockquote{margin:0;max-width:24ch;}
 /* Prosjekter */
 .rutenett{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;margin-top:44px;}
 .kort{
-  border:1px solid var(--strek);background:#191c46;
+  border:1px solid var(--strek);background:var(--kortflate);
   padding:0;text-align:left;color:inherit;font:inherit;
   display:flex;flex-direction:column;
+  transition:transform .18s ease;
 }
 .kort .flate{
   aspect-ratio:9/16;width:100%;
-  background-color:#0f1130;background-size:cover;background-position:center;
+  background-color:var(--dypnatt);background-size:cover;background-position:center;
   display:flex;align-items:center;justify-content:center;position:relative;
 }
 .kort .flate::after{
@@ -308,25 +324,29 @@ footer.bunn .bunn-lenker a:hover{color:var(--lys);border-bottom-color:var(--stre
 footer.bunn .hemmelig a{color:var(--dempet);}
 
 /* Innlasting */
-.inn{opacity:0;transform:translateY(14px);animation:opp .9s cubic-bezier(.2,.7,.3,1) forwards;}
-h1.inn{animation-delay:.08s;}
-.tagline.inn{animation-delay:.18s;}
-.hero-under.inn{animation-delay:.26s;}
-.knapper.inn{animation-delay:.38s;}
-.portrett{opacity:0;animation:tone 1.3s ease .1s forwards;}
+.inn{opacity:0;transform:translateY(10px);animation:opp .6s cubic-bezier(.2,.7,.3,1) forwards;}
+h1.inn{animation-delay:.04s;}
+.tagline.inn{animation-delay:.1s;}
+.hero-under.inn{animation-delay:.15s;}
+.knapper.inn{animation-delay:.2s;}
+.portrett{opacity:0;animation:tone .9s ease .05s forwards;}
 
 /* Seksjoner som glir inn ved scroll. Skjules bare når JavaScript er på,
    slik at innholdet står synlig uten skript og ved redusert bevegelse. */
 @media (scripting:enabled) and (prefers-reduced-motion:no-preference){
-  main section > .ramme.brod,
-  main section > .ramme:not(.brod) > :not(.rutenett),
-  main section > .ramme:not(.brod) > .rutenett > .kort{
-    opacity:0;transform:translateY(20px);
-    transition:opacity .95s cubic-bezier(.2,.7,.3,1),transform .95s cubic-bezier(.2,.7,.3,1);
+  main section > .ramme.brod:not(.synlig),
+  main section > .ramme:not(.brod) > :not(.rutenett):not(.synlig),
+  main section > .ramme:not(.brod) > .rutenett > .kort:not(.synlig){
+    opacity:0;transform:translateY(12px);
   }
-  main section > .ramme.brod.synlig,
-  main section > .ramme:not(.brod) > .synlig,
-  main section > .ramme:not(.brod) > .rutenett > .synlig{opacity:1;transform:none;}
+  /* Overgangen gjelder bare mens elementet glir inn. Når script.js setter
+     .ferdig, får elementet tilbake sin egen transform og sine egne
+     overganger, slik at pilene beholder vinkelen og kortene kan løftes. */
+  main section > .ramme.brod.synlig:not(.ferdig),
+  main section > .ramme:not(.brod) > .synlig:not(.ferdig),
+  main section > .ramme:not(.brod) > .rutenett > .synlig:not(.ferdig){
+    transition:opacity .6s cubic-bezier(.2,.7,.3,1),transform .6s cubic-bezier(.2,.7,.3,1);
+  }
 }
 
 /* Personvern og andre tekstsider */
@@ -346,7 +366,7 @@ h1.inn{animation-delay:.08s;}
     background-size:300% 100%;background-position:100% 50%;
     -webkit-background-clip:text;background-clip:text;
     -webkit-text-fill-color:transparent;color:transparent;
-    animation:glans 6s linear -1s infinite;
+    animation:glans 6s linear -1s 2;
   }
 }
 /* Negativ forsinkelse starter sveipet et sekund uti runden, altså akkurat */
@@ -354,6 +374,8 @@ h1.inn{animation-delay:.08s;}
 /* Bakgrunnen er 300% bred, så ordet er alltid dekket av gradienten. */
 /* Start og slutt ser like ut, begge har båndet utenfor ordet, så */
 /* sveipet ruller sømløst videre uten pause mellom rundene. */
+/* Glansen går to runder og stopper. En evig, langsom loop trekker blikket */
+/* bort fra teksten, og siden start og slutt ser like ut, er stoppet usynlig. */
 @keyframes glans{from{background-position:100% 50%;}to{background-position:0% 50%;}}
 @keyframes opp{to{opacity:1;transform:none;}}
 @keyframes tone{to{opacity:1;}}
@@ -365,6 +387,12 @@ h1.inn{animation-delay:.08s;}
   .inn,.portrett{animation:none;opacity:1;transform:none;}
   .glans{animation:none;background-image:none;-webkit-text-fill-color:currentColor;color:inherit;}
   *{transition:none !important;}
+}
+
+/* Redusert gjennomsiktighet: toppen og takkeboksen blir heldekkende. */
+@media (prefers-reduced-transparency:reduce){
+  .topp{background:var(--natt);-webkit-backdrop-filter:none;backdrop-filter:none;}
+  .takk{background:rgba(20,22,58,.96);-webkit-backdrop-filter:none;backdrop-filter:none;}
 }
 
 @media (max-width:900px){
@@ -404,12 +432,17 @@ h1.inn{animation-delay:.08s;}
 /* Mobilmeny under 600px */
 @media (max-width:600px){
   .meny-knapp{display:flex;}
+  /* Panelet glir ned fra toppen og tilbake samme vei. visibility holder
+     lenkene utenfor tabulatorrekkefølgen mens menyen er lukket, og slippes
+     først når lukkingen er ferdig. */
   .topp nav{
-    display:none;position:absolute;top:var(--topph);left:0;right:0;
+    position:absolute;top:var(--topph);left:0;right:0;
     flex-direction:column;gap:0;padding:6px 28px 18px;
     background:var(--natt);border-bottom:1px solid var(--strek);
+    visibility:hidden;opacity:0;transform:translateY(-8px);
+    transition:opacity .18s ease,transform .24s cubic-bezier(.2,.7,.3,1),visibility 0s linear .24s;
   }
-  .topp.apen nav{display:flex;}
+  .topp.apen nav{visibility:visible;opacity:1;transform:none;transition-delay:0s;}
   .topp nav a{font-size:17px;padding:13px 0;border-bottom:0;}
   .topp nav a[aria-current="page"]{border-bottom:0;color:var(--aksent);}
 }
@@ -419,8 +452,6 @@ h1.inn{animation-delay:.08s;}
   .ramme{padding:0 18px;}
   .sidetopp{padding:34px 20px 4px;}
   .merke img{height:14px;}
-  .topp nav{gap:10px;}
-  .topp nav a{font-size:12px;}
 }
 
 
@@ -496,7 +527,7 @@ h1.inn{animation-delay:.08s;}
 @media (max-width:900px){.portrett-om{grid-template-columns:1fr;gap:24px;}}
 
 /* Lys seksjon: kontaktskjema */
-.lys{background:#dee6f2;color:#27285e;border-top:0;}
+.lys{background:var(--lysflate);color:var(--dypbla);border-top:0;}
 .skjema-tittel{font-size:clamp(17px,1.9vw,21px);font-weight:600;letter-spacing:-.01em;margin:0 0 6px;opacity:.75;}
 .hei-under{font-size:clamp(18px,2.2vw,24px);font-weight:400;line-height:1.4;margin:0 0 34px;max-width:34ch;opacity:.8;}
 .hei{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;}
@@ -505,24 +536,26 @@ h1.inn{animation-delay:.08s;}
 .lys .linje{margin-bottom:26px;gap:10px 22px;}
 .lys .linje label{font-size:clamp(20px,2.6vw,30px);font-weight:500;letter-spacing:-.02em;line-height:1.25;}
 .lys .linje input,.lys .linje textarea{
-  color:#27285e;font-size:clamp(18px,2vw,23px);
+  color:var(--dypbla);font-size:clamp(18px,2vw,23px);
   border-bottom:2px solid rgba(39,40,94,.25);padding:10px 2px;flex:1 1 320px;
 }
 .lys .linje textarea{min-height:76px;}
 .lys .linje input::placeholder,.lys .linje textarea::placeholder{color:rgba(39,40,94,.4);font-size:.8em;}
 .lys .linje input:focus,.lys .linje textarea:focus{border-bottom-color:var(--dypbla);}
+.linje [aria-invalid="true"],.linje [aria-invalid="true"]:focus{border-bottom-color:var(--feil);}
+.lys .linje [aria-invalid="true"],.lys .linje [aria-invalid="true"]:focus{border-bottom-color:var(--feil-mork);}
 .lys .knapp{
-  background:var(--dypbla);color:#fff;
+  background:var(--dypbla);color:var(--hvit);
   margin-top:40px;padding:22px 46px;
   font-size:clamp(18px,2.1vw,23px);font-weight:700;letter-spacing:-.015em;
   width:auto;text-align:center;
 }
-.lys .kvittering{color:#0072b1;font-size:19px;}
-.kvittering.feil{color:#c0453b;}
-.lys .kvittering.feil{color:#b23a30;}
+.lys .kvittering{color:var(--blamork);font-size:19px;}
+.kvittering.feil{color:var(--feil);}
+.lys .kvittering.feil{color:var(--feil-mork);}
 .lys .pil{background-image:url("data:image/png;base64,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");}
-.lys a:focus-visible,.lys button:focus-visible{outline-color:#27285e;}
-.lys .stor{color:#27285e;}
+.lys a:focus-visible,.lys button:focus-visible{outline-color:var(--dypbla);}
+.lys .stor{color:var(--dypbla);}
 
 @media (max-width:900px){
   .lys .knapp{padding:20px 24px;width:100%;}
@@ -531,7 +564,7 @@ h1.inn{animation-delay:.08s;}
 /* Tall som merkelapp på prosjektbildet */
 .tall-merke{
   position:absolute;left:0;bottom:0;z-index:3;
-  background:var(--aksent);color:#14163a;
+  background:var(--aksent);color:var(--natt);
   font-size:14px;font-weight:700;letter-spacing:-.01em;
   padding:9px 14px;line-height:1;
 }
@@ -539,8 +572,8 @@ h1.inn{animation-delay:.08s;}
 
 /* Booking */
 .hei-book{font-size:17px;line-height:1.5;margin:24px 0 0;opacity:.85;}
-.hei-book a{color:#0072b1;text-decoration:none;border-bottom:1px solid rgba(0,114,177,.35);}
-.hei-book a:hover{border-bottom-color:#0072b1;}
+.hei-book a{color:var(--blamork);text-decoration:none;border-bottom:1px solid rgba(0,114,177,.35);}
+.hei-book a:hover{border-bottom-color:var(--blamork);}
 
 /* Sidebytte */
 body{padding-top:var(--topph);}
@@ -692,7 +725,8 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 .tjeneste-fast .knapper{margin-top:32px;}
 .tjenestespalte{grid-template-columns:1fr;gap:24px;margin-top:0;}
 .tjenestekort{text-decoration:none;transition:border-color .22s ease,transform .22s ease;}
-.tjenestekort:hover{border-color:var(--dempet);transform:translateY(-3px);}
+@media (hover:hover){.tjenestekort:hover{border-color:var(--dempet);transform:translateY(-3px);}}
+.tjenestekort:active{transform:scale(.985);transition-duration:.1s;}
 .tjenestebilde{position:relative;}
 .tjenestebilde img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;display:block;}
 .tjenestebilde img.staaende{object-position:50% 20%;}
@@ -704,7 +738,7 @@ button.kontakt-linje{width:100%;font:inherit;text-align:left;background:transpar
 }
 .kortpil svg{width:17px;height:17px;fill:none;stroke:var(--lys);stroke-width:2;stroke-linecap:square;transition:stroke .22s ease;}
 .tjenestekort:hover .kortpil{background:var(--aksent);}
-.tjenestekort:hover .kortpil svg{stroke:#14163a;}
+.tjenestekort:hover .kortpil svg{stroke:var(--natt);}
 .tjenestekort .kort-tekst{padding:22px 24px 26px;}
 .tjenestekort h3{font-size:22px;letter-spacing:-.02em;}
 .tjenestekort p{font-size:16px;line-height:1.6;color:var(--brod);max-width:52ch;}
