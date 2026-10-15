@@ -503,6 +503,7 @@
     v.srcObject = strom;
     v.play().catch(function(){});
     $("den-andre-tom").hidden = !!strom.getVideoTracks().length;
+    $("den-andre-tom").textContent = "Bare lyd";
     koblMaaler(strom, $("maaler-den-andre"));
   }
 
@@ -542,6 +543,7 @@
     if (m.t === "startet") { denAndreTarOpp = true; merkDenAndre("Tar opp", true); }
     if (m.t === "stoppet") { denAndreTarOpp = false; merkDenAndre("Tilkoblet"); }
     if (m.t === "mottatt") ferdigSendt(m);
+    if (m.t === "ufullstendig" && !erVert) ventPaaSending = m.o;
   }
 
   function startVert(){
@@ -653,102 +655,175 @@
     }
     return {
       tekst: function(t){ rad.querySelector(".spor-info").textContent = t; },
-      andel: function(a){ rad.querySelector(".fremdrift i").style.width = Math.round(a * 100) + "%"; }
+      andel: function(a){ rad.querySelector(".fremdrift i").style.width = Math.round(a * 100) + "%"; },
+      ferdig: function(){ rad.setAttribute("data-ferdig", ""); },
+      ikkeFerdig: function(){ rad.removeAttribute("data-ferdig"); },
+      erFerdig: function(){ return rad.hasAttribute("data-ferdig"); }
     };
   }
 
+  // Overføringen kan gjenopptas. Før hvert spor spør gjesten verten hvor mye den
+  // allerede har, og sender bare resten. Stopper det opp, prøves det igjen av seg selv.
+  function gjenstaar(sendt, total, startTid, startBytes){
+    var fart = (sendt - startBytes) / Math.max(1, (Date.now() - startTid) / 1000);
+    if (fart <= 0 || sendt - startBytes < 1e6) return "";
+    var sek = (total - sendt) / fart;
+    return sek < 60 ? ", under ett minutt igjen" : ", ca. " + Math.ceil(sek / 60) + " min igjen";
+  }
   async function sendTilVert(id){
-    if (!id) return;
+    if (!id || sender) return;
     if (!forbindelse || !forbindelse.open) { ventPaaSending = id; return; }
     ventPaaSending = null;
     sender = true;
+    var las = null;
+    if (navigator.wakeLock) navigator.wakeLock.request("screen").then(function(l){ las = l; }).catch(function(){});
     $("overforing-tittel").textContent = "Sender filene dine til " + (denAndreNavn || "verten");
-    status("<b>Sender filene.</b> Ikke lukk fanen før alt er sendt.");
+    status("<b>Sender filene.</b> Hold fanen åpen og skjermen på til alt er sendt.");
     var opp = (await alleOpptak()).filter(function(p){ return p.id === id; })[0];
     if (!opp) { sender = false; return; }
     var kanal = peer.connect(PREFIKS + romkode, { reliable: true, serialization: "raw", label: "fil" });
     await new Promise(function(ok, feil){ kanal.on("open", ok); kanal.on("error", feil); setTimeout(function(){ feil(new Error("tidsavbrudd")); }, 20000); }).catch(function(){});
-    if (!kanal.open) { sender = false; status("Fikk ikke åpnet overføringen. Prøv knappen «Send til verten» under."); ventPaaSending = id; return; }
+    if (!kanal.open) { sender = false; if (las) las.release().catch(function(){}); status("Fikk ikke åpnet overføringen. Prøver igjen om litt..."); ventPaaSending = id; return; }
+    var svar = null;
+    kanal.on("data", function(d){
+      if (typeof d !== "string") return;
+      try { var m = JSON.parse(d); if (m.t === "fra" && svar) svar(m); } catch (e) {}
+    });
     var dk = kanal.dataChannel;
     dk.bufferedAmountLowThreshold = 1024 * 1024;
+    // Lyden først, den er viktigst og minst
+    var mine = Object.keys(opp.spor).filter(function(k){ var i = opp.spor[k]; return i.lokal && i.person === trygtNavn($("navn").value); })
+      .sort(function(a, b){ return (opp.spor[a].type === "lyd" ? 0 : 1) - (opp.spor[b].type === "lyd" ? 0 : 1); });
     try {
-      for (var sporId in opp.spor) {
-        var info = opp.spor[sporId];
-        if (!info.lokal || info.person !== trygtNavn($("navn").value)) continue;
+      for (var n = 0; n < mine.length; n++) {
+        var sporId = mine[n], info = opp.spor[sporId];
         var biter = await hentBiter(id, sporId);
         var total = biter.reduce(function(s, b){ return s + b.size; }, 0);
         var rad = fremdriftsrad(id + sporId, info.filnavn);
-        rad.tekst(info.filnavn + ", " + storrelse(total));
-        kanal.send(JSON.stringify({ t: "fil-start", o: id, s: sporId, info: info, bytes: total, dato: opp.dato }));
-        var sendt = 0;
+        rad.ikkeFerdig();
+        rad.tekst(info.filnavn + ", spør hvor mye som er kommet fram...");
+        var fra = await new Promise(function(ok, feil){
+          svar = ok;
+          kanal.send(JSON.stringify({ t: "fil-start", o: id, s: sporId, info: info, bytes: total, dato: opp.dato }));
+          setTimeout(function(){ feil(new Error("fikk ikke svar fra verten")); }, 20000);
+        });
+        svar = null;
+        var sendt = Math.min(fra.offset || 0, total), startTid = Date.now(), startBytes = sendt;
+        var pos = 0;
         for (var i = 0; i < biter.length; i++) {
-          var data = await biter[i].arrayBuffer();
-          for (var p = 0; p < data.byteLength; p += BITSTR) {
-            while (dk.bufferedAmount > 8 * 1024 * 1024 || kanal.bufferSize > 0) {
-              if (!kanal.open) throw new Error("Forbindelsen ble brutt");
+          var b = biter[i];
+          if (pos + b.size <= sendt) { pos += b.size; continue; }
+          var data = await b.arrayBuffer();
+          for (var p = Math.max(0, sendt - pos); p < data.byteLength; p += BITSTR) {
+            var sist = Date.now(), forrige = dk.bufferedAmount;
+            while (dk.bufferedAmount > 4 * 1024 * 1024 || kanal.bufferSize > 0) {
+              if (!kanal.open || dk.readyState !== "open") throw new Error("forbindelsen ble brutt");
+              if (dk.bufferedAmount < forrige) { forrige = dk.bufferedAmount; sist = Date.now(); }
+              if (Date.now() - sist > 15000) throw new Error("overføringen stoppet opp");
               await new Promise(function(ok){ dk.onbufferedamountlow = ok; setTimeout(ok, 100); });
             }
             kanal.send(data.slice(p, p + BITSTR));
             sendt += Math.min(BITSTR, data.byteLength - p);
           }
+          pos += b.size;
           rad.andel(sendt / total);
-          rad.tekst(info.filnavn + ", " + storrelse(sendt) + " av " + storrelse(total));
+          rad.tekst(info.filnavn + ", " + storrelse(sendt) + " av " + storrelse(total) + gjenstaar(sendt, total, startTid, startBytes));
         }
         kanal.send(JSON.stringify({ t: "fil-slutt", o: id, s: sporId, bytes: total }));
+        rad.andel(1);
+        if (!rad.erFerdig()) rad.tekst(info.filnavn + ", sendt. Venter på bekreftelse...");
       }
-      while (dk.bufferedAmount > 0 && kanal.open) await vent(100);
-      status("Alt er sendt. Venter på bekreftelse fra " + (denAndreNavn || "verten") + "...");
+      var tom = Date.now();
+      while (dk.bufferedAmount > 0 && kanal.open && Date.now() - tom < 60000) await vent(100);
+      if (document.querySelector("#overforing-liste [data-overforing]:not([data-ferdig])")) status("Alt er sendt. Venter på bekreftelse fra " + (denAndreNavn || "verten") + "...");
+      else ferdigStatus();
     } catch (e) {
-      status("<b>Overføringen stoppet:</b> " + e.message + ". Filene ligger trygt her, prøv «Send til verten» under.");
+      status("<b>Overføringen stoppet:</b> " + e.message + ". Den fortsetter der den slapp om noen sekunder.");
+      try { kanal.close(); } catch (x) {}
       ventPaaSending = id;
     }
+    if (las) las.release().catch(function(){});
     sender = false;
   }
   function ferdigSendt(m){
     var rad = fremdriftsrad(m.o + m.s, "");
     rad.andel(1);
     rad.tekst(m.filnavn + " er mottatt hos " + (denAndreNavn || "verten") + ".");
-    status("<b>Ferdig.</b> Filene dine er hos " + (denAndreNavn || "verten") + ". Du har også en kopi under.");
+    rad.ferdig();
+    if (!document.querySelector("#overforing-liste [data-overforing]:not([data-ferdig])")) ferdigStatus();
   }
+  function ferdigStatus(){ status("<b>Ferdig.</b> Filene dine er hos " + (denAndreNavn || "verten") + ". Du har også en kopi under."); }
   // Sender de som venter når forbindelsen kommer tilbake
   setInterval(function(){ if (ventPaaSending && !sender && !opptaker && forbindelse && forbindelse.open) sendTilVert(ventPaaSending); }, 3000);
+  // Kommer fanen tilbake i forgrunnen (typisk på mobil), prøv med en gang
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible" && ventPaaSending && !sender && forbindelse && forbindelse.open) sendTilVert(ventPaaSending);
+  });
 
-  // Vertens side av overføringen
+  // Vertens side av overføringen. Alt som skrives for ett spor går i samme kø,
+  // så et nytt forsøk venter til det forrige er lagret før det regner ut hvor langt vi kom.
+  var mottak = {};
   function mottaFiler(kanal){
     var gjeldende = null;
-    kanal.on("data", function(d){
+    var avslutt = function(){ if (gjeldende) { gjeldende.skyll(); gjeldende.dod = true; gjeldende = null; } };
+    kanal.on("close", avslutt);
+    kanal.on("error", avslutt);
+    kanal.on("data", async function(d){
       if (typeof d === "string") {
         var m; try { m = JSON.parse(d); } catch (e) { return; }
-        if (m.t === "fil-start") gjeldende = mottaStart(m);
+        if (m.t === "fil-start") {
+          gjeldende = null;
+          var g = await mottaStart(m);
+          gjeldende = g;
+          kanal.send(JSON.stringify({ t: "fra", o: m.o, s: m.s, offset: g.mottatt }));
+        }
         if (m.t === "fil-slutt" && gjeldende) { mottaSlutt(m, gjeldende); gjeldende = null; }
         return;
       }
-      if (!gjeldende) return;
+      var g2 = gjeldende;
+      if (!g2 || g2.dod) return;
       var buf = d instanceof ArrayBuffer ? d : (d.buffer || d);
-      gjeldende.del.push(buf);
-      gjeldende.iBuffer += buf.byteLength;
-      gjeldende.mottatt += buf.byteLength;
-      if (gjeldende.iBuffer >= 2 * 1024 * 1024) gjeldende.skyll();
-      if (gjeldende.mottatt - gjeldende.vist > 512 * 1024) {
-        gjeldende.vist = gjeldende.mottatt;
-        gjeldende.rad.andel(gjeldende.mottatt / gjeldende.bytes);
-        gjeldende.rad.tekst(gjeldende.info.filnavn + ", " + storrelse(gjeldende.mottatt) + " av " + storrelse(gjeldende.bytes));
+      g2.del.push(buf);
+      g2.iBuffer += buf.byteLength;
+      g2.mottatt += buf.byteLength;
+      if (g2.iBuffer >= 2 * 1024 * 1024) g2.skyll();
+      if (g2.mottatt - g2.vist > 512 * 1024) {
+        g2.vist = g2.mottatt;
+        g2.rad.andel(g2.mottatt / g2.bytes);
+        g2.rad.tekst(g2.info.filnavn + ", " + storrelse(g2.mottatt) + " av " + storrelse(g2.bytes) + gjenstaar(g2.mottatt, g2.bytes, g2.startTid, g2.startBytes));
       }
     });
   }
-  function mottaStart(m){
-    var g = { o: m.o, s: m.s, info: m.info, bytes: m.bytes, mottatt: 0, vist: 0, del: [], iBuffer: 0, nr: 0, ko: null };
+  async function mottaStart(m){
+    var nokkelId = m.o + m.s;
+    var gammel = mottak[nokkelId];
+    if (gammel) { gammel.skyll(); gammel.dod = true; await gammel.ko; }
     $("overforing-tittel").textContent = "Mottar filer fra " + (denAndreNavn || "gjesten");
-    g.rad = fremdriftsrad(m.o + m.s, m.info.filnavn);
-    g.rad.tekst(m.info.filnavn + ", venter...");
-    var info = Object.assign({}, m.info, { lokal: false, ferdig: false });
-    g.ko = slettBiter(m.o, m.s).then(function(){ return oppdaterOpptak(m.o, function(p){ p.dato = p.dato || m.dato; p.spor[m.s] = info; }); });
+    var g = { o: m.o, s: m.s, info: m.info, bytes: m.bytes, mottatt: 0, vist: 0, del: [], iBuffer: 0, nr: 0, ko: null };
+    g.rad = fremdriftsrad(nokkelId, m.info.filnavn);
+    // Finnes det allerede data for dette sporet med samme størrelse, fortsetter vi der
+    var post = (await alleOpptak()).filter(function(p){ return p.id === m.o; })[0];
+    var tidligere = post && post.spor[m.s];
+    var biter = tidligere && tidligere.bytes === m.bytes ? await hentBiter(m.o, m.s) : [];
+    if (biter.length) {
+      g.nr = biter.length;
+      g.mottatt = biter.reduce(function(s, b){ return s + b.size; }, 0);
+      if (g.mottatt > m.bytes) { g.nr = 0; g.mottatt = 0; biter = []; }
+    }
+    var info = Object.assign({}, m.info, { lokal: false, ferdig: false, bytes: m.bytes });
+    g.ko = (biter.length ? Promise.resolve() : slettBiter(m.o, m.s))
+      .then(function(){ return oppdaterOpptak(m.o, function(p){ p.dato = p.dato || m.dato; p.spor[m.s] = info; }); });
+    await g.ko;
+    g.startTid = Date.now(); g.startBytes = g.mottatt; g.vist = g.mottatt;
+    g.rad.andel(g.mottatt / Math.max(1, m.bytes));
+    g.rad.tekst(m.info.filnavn + (g.mottatt ? ", fortsetter fra " + storrelse(g.mottatt) + " av " + storrelse(m.bytes) : ", " + storrelse(m.bytes)));
     g.skyll = function(){
       if (!g.del.length) return;
       var blob = new Blob(g.del), nr = g.nr++;
       g.del = []; g.iBuffer = 0;
       g.ko = g.ko.then(function(){ return lagreBit(g.o, g.s, nr, blob); });
     };
+    mottak[nokkelId] = g;
     return g;
   }
   function mottaSlutt(m, g){
@@ -757,10 +832,10 @@
     g.ko.then(function(){
       var ok = g.mottatt === m.bytes;
       g.rad.andel(1);
-      g.rad.tekst(g.info.filnavn + (ok ? " er mottatt, " + storrelse(g.mottatt) + "." : " kom ufullstendig fram (" + storrelse(g.mottatt) + " av " + storrelse(m.bytes) + "). Be gjesten sende på nytt."));
+      g.rad.tekst(g.info.filnavn + (ok ? " er mottatt, " + storrelse(g.mottatt) + "." : " kom ufullstendig fram (" + storrelse(g.mottatt) + " av " + storrelse(m.bytes) + "). Gjesten prøver igjen."));
       return oppdaterOpptak(g.o, function(p){ p.spor[g.s].ferdig = ok; p.spor[g.s].ufullstendig = !ok; });
     }).then(function(){
-      if (g.mottatt === m.bytes) send({ t: "mottatt", o: g.o, s: g.s, filnavn: g.info.filnavn });
+      send(g.mottatt === m.bytes ? { t: "mottatt", o: g.o, s: g.s, filnavn: g.info.filnavn } : { t: "ufullstendig", o: g.o, s: g.s });
       tegnBibliotek();
     });
   }
