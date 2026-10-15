@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Podkaststudio | Erlend Haddeland</title>
+<meta name="description" content="Ta opp podkast med to personer på hvert sitt sted. Hver tar opp sitt eget spor lokalt, i full kvalitet.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14163a">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<style>
+/* Podkaststudio. Alt her følger husreglene: variablene fra styles.css, skarpe hjørner. */
+.studio{max-width:var(--mal);margin:0 auto;padding:28px 28px 80px;}
+.studio-topp{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--strek);margin-bottom:32px;}
+.studio-topp h1{font-size:26px;font-weight:600;margin:0;letter-spacing:-.01em;}
+.studio-topp a{color:var(--dempet);font-size:14px;text-decoration:none;}
+.studio-topp a:hover{color:var(--lys);}
+.studio > section{padding:0;border-top:0;}
+.studio > section.studio-panel{padding:24px;border-top:1px solid var(--strek);}
+.studio h2{font-size:20px;font-weight:600;margin:0 0 14px;}
+.studio p{color:var(--brod);margin:0 0 14px;}
+.studio-liten{font-size:14px;color:var(--dempet) !important;}
+.studio-panel{border:1px solid var(--strek);background:var(--kortflate);padding:24px;margin-bottom:28px;}
+.studio-to{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;}
+@media (max-width:820px){.studio-to{grid-template-columns:1fr;}}
+.studio-felt{display:block;margin-bottom:16px;}
+.studio-felt span{display:block;font-size:14px;color:var(--dempet);margin-bottom:6px;}
+.studio-felt input[type=text],.studio-felt select{width:100%;font:inherit;font-size:16px;color:var(--lys);background:var(--natt);border:1px solid var(--strek);padding:11px 12px;border-radius:0;}
+.studio-felt input:focus,.studio-felt select:focus{outline:2px solid var(--aksent);outline-offset:0;}
+.studio-avkryss{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--brod);margin-bottom:16px;}
+.studio-avkryss input{margin-top:5px;accent-color:var(--aksent);}
+.studio button.knapp,.studio button.knapp-tom{font-family:inherit;border-radius:0;}
+.studio button.knapp{border:0;}
+.studio button.knapp-tom{background:transparent;}
+.studio button:disabled{opacity:.4;cursor:not-allowed;}
+.studio-knapper{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.studio-lenke{display:flex;gap:0;margin:8px 0 6px;}
+.studio-lenke input{flex:1;min-width:0;font:inherit;font-size:15px;color:var(--lys);background:var(--natt);border:1px solid var(--strek);border-right:0;padding:11px 12px;border-radius:0;}
+.studio-lenke button{padding:11px 18px;}
+
+/* Videoflisene */
+.flis{position:relative;background:var(--dypnatt);border:1px solid var(--strek);aspect-ratio:16/9;overflow:hidden;}
+.flis video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--dypnatt);}
+.flis video.speil{transform:scaleX(-1);}
+.flis-tom{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dempet);font-size:15px;text-align:center;padding:20px;}
+.flis-navn{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:10px;background:rgba(15,17,48,.82);padding:7px 12px;font-size:14px;font-weight:500;}
+.flis-merke{position:absolute;right:0;top:0;background:rgba(15,17,48,.82);padding:5px 10px;font-size:13px;color:var(--brod);}
+.flis-merke.tar-opp{background:var(--rod);color:var(--natt);font-weight:600;}
+.maaler{width:64px;height:6px;background:var(--strek);position:relative;overflow:hidden;}
+.maaler i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--aksent);transition:width .06s linear;}
+.maaler.hoy i{background:var(--rod);}
+
+/* Kontrollrad */
+.kontroll{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin:24px 0 28px;}
+.tidtaker{font-size:44px;font-weight:200;letter-spacing:.02em;min-width:5.4ch;}
+.opptaksknapp{display:inline-flex;align-items:center;gap:12px;}
+.opptaksknapp .prikk-rod{width:14px;height:14px;border-radius:50%;background:var(--natt);}
+.knapp.stopp{background:var(--rod);}
+.status-linje{font-size:14px;color:var(--dempet);}
+.status-linje b{color:var(--lys);font-weight:500;}
+
+/* Overføring og bibliotek */
+.fremdrift{height:8px;background:var(--strek);margin:8px 0 4px;}
+.fremdrift i{display:block;height:100%;width:0;background:var(--aksent);}
+.opptak{border-top:1px solid var(--strek);padding:18px 0;}
+.opptak:first-child{border-top:0;padding-top:0;}
+.opptak-hode{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 20px;align-items:baseline;margin-bottom:10px;}
+.opptak-hode strong{font-weight:600;}
+.spor{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:8px 0;font-size:15px;}
+.spor-navn{flex:1 1 260px;min-width:0;overflow-wrap:anywhere;}
+.spor-info{color:var(--dempet);font-size:14px;}
+.liten-knapp{font:inherit;font-size:14px;padding:7px 14px;background:transparent;color:var(--lys);border:1px solid var(--strek);border-radius:0;cursor:var(--kaffe);}
+.liten-knapp:hover{border-color:var(--aksent);}
+.liten-knapp.fare:hover{border-color:var(--rod);color:var(--rod);}
+.varsel{border-left:3px solid var(--rod);padding:10px 14px;background:var(--dypnatt);color:var(--brod);margin-bottom:20px;font-size:15px;}
+.varsel.ok{border-left-color:var(--aksent);}
+.nedtelling{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,17,48,.7);font-size:180px;font-weight:200;z-index:80;pointer-events:none;}
+.nedtelling.vis{display:flex;}
+[hidden]{display:none !important;}
+</style>
+</head>
+<body>
+<a class="hopp" href="#innhold">Hopp til innholdet</a>
+<main id="innhold" class="studio">
+  <div class="studio-topp">
+    <h1>Podkaststudio</h1>
+    <a href="../index.html">erlendhaddeland.no</a>
+  </div>
+
+  <div class="varsel" id="nettleservarsel" hidden></div>
+
+  <!-- Inngang: velg navn og utstyr -->
+  <section id="inngang">
+    <div class="studio-to">
+      <div>
+        <h2 id="inngang-tittel">Gjør klart utstyret</h2>
+        <p id="inngang-tekst">Begge tar opp sitt eget spor lokalt i full kvalitet, uansett hvor god forbindelsen er. Etterpå sendes gjestens filer automatisk til verten.</p>
+        <label class="studio-felt"><span>Navnet ditt</span><input type="text" id="navn" autocomplete="name" maxlength="40" placeholder="For eksempel Cecilie"></label>
+        <label class="studio-felt"><span>Mikrofon</span><select id="velg-mic"></select></label>
+        <label class="studio-felt"><span>Kamera</span><select id="velg-kamera"></select></label>
+        <label class="studio-avkryss"><input type="checkbox" id="hodetelefoner" checked><span>Jeg bruker hodetelefoner. Da slås støyfjerning og ekkodemping av, og opptaket blir renere. Fjern haken hvis du lytter på høyttalere.</span></label>
+        <div class="studio-knapper">
+          <button class="knapp" id="knapp-opprett" type="button">Opprett rom</button>
+          <button class="knapp" id="knapp-bli-med" type="button" hidden>Bli med i rommet</button>
+        </div>
+      </div>
+      <div>
+        <div class="flis">
+          <video id="forhand" class="speil" autoplay muted playsinline></video>
+          <div class="flis-tom" id="forhand-tom">Gi tilgang til mikrofon og kamera for å se deg selv her.</div>
+          <button class="liten-knapp" type="button" id="knapp-prov-igjen" hidden style="position:absolute;left:50%;top:66%;transform:translateX(-50%)">Prøv igjen</button>
+          <div class="flis-navn"><span>Deg</span><div class="maaler" id="maaler-forhand"><i></i></div></div>
+        </div>
+        <p class="studio-liten" style="margin-top:12px">Snakk normalt og se at måleren slår ut. Blir den rød hele tiden, skru ned inngangsnivået på mikrofonen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Studio: selve opptaket -->
+  <section id="rom" hidden>
+    <div class="studio-panel" id="invitasjon" hidden>
+      <h2>Send lenken til gjesten</h2>
+      <div class="studio-lenke"><input type="text" id="invitasjonslenke" readonly aria-label="Invitasjonslenke"><button class="knapp" type="button" id="knapp-kopier">Kopier</button></div>
+      <p class="studio-liten">Gjesten åpner lenken i Chrome på egen maskin. Selve opptaket startes herfra.</p>
+    </div>
+
+    <div class="studio-to">
+      <div class="flis">
+        <video id="video-meg" class="speil" autoplay muted playsinline></video>
+        <div class="flis-merke" id="merke-meg">Klar</div>
+        <div class="flis-navn"><span id="navn-meg">Deg</span><div class="maaler" id="maaler-meg"><i></i></div></div>
+      </div>
+      <div class="flis">
+        <video id="video-den-andre" autoplay playsinline></video>
+        <div class="flis-tom" id="den-andre-tom">Venter på at den andre skal koble seg til</div>
+        <div class="flis-merke" id="merke-den-andre">Ikke tilkoblet</div>
+        <div class="flis-navn"><span id="navn-den-andre">Gjest</span><div class="maaler" id="maaler-den-andre"><i></i></div></div>
+      </div>
+    </div>
+
+    <div class="studio-to" style="margin-top:20px">
+      <label class="studio-felt"><span>Mikrofon</span><select id="rom-mic"></select></label>
+      <label class="studio-felt"><span>Kamera</span><select id="rom-kamera"></select></label>
+    </div>
+
+    <div class="kontroll" style="margin-top:4px">
+      <div class="tidtaker" id="tidtaker" aria-live="off">00:00</div>
+      <div class="studio-knapper">
+        <button class="knapp opptaksknapp" type="button" id="knapp-start" disabled><span class="prikk-rod"></span>Start opptak</button>
+        <button class="knapp stopp" type="button" id="knapp-stopp" hidden>Stopp opptak</button>
+        <button class="knapp-tom" type="button" id="knapp-stopp-lokalt" hidden>Stopp mitt opptak</button>
+      </div>
+      <div class="status-linje" id="statuslinje" aria-live="polite"></div>
+    </div>
+
+    <div class="studio-panel" id="overforing" hidden>
+      <h2 id="overforing-tittel">Overføring</h2>
+      <div id="overforing-liste"></div>
+    </div>
+  </section>
+
+  <!-- Opptakene som ligger lagret i denne nettleseren -->
+  <section class="studio-panel" id="bibliotek">
+    <h2>Opptak på denne maskinen</h2>
+    <p class="studio-liten" id="lagringsplass">Opptakene lagres fortløpende i nettleseren, så de overlever selv om fanen krasjer. Last dem ned og slett dem herfra når du er ferdig.</p>
+    <div id="opptaksliste"></div>
+  </section>
+</main>
+
+<div class="nedtelling" id="nedtelling" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var params = new URLSearchParams(location.search);
+  var romkode = (params.get("rom") || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  var erVert = !romkode || params.has("vert");
+  var PREFIKS = "ehpodkast-";
+  var BITSTR = 64 * 1024;
+
+  // ---------- Lagring i IndexedDB ----------
+  // To lagre: "opptak" med metadata, og "biter" med selve dataene.
+  // Nøkkelen til en bit er opptak|spor|løpenummer, så de kan hentes i rekkefølge.
+  var db;
+  function apneDb(){
+    return new Promise(function(ok, feil){
+      var r = indexedDB.open("podkaststudio", 1);
+      r.onupgradeneeded = function(){
+        r.result.createObjectStore("opptak", { keyPath: "id" });
+        r.result.createObjectStore("biter");
+      };
+      r.onsuccess = function(){ db = r.result; ok(); };
+      r.onerror = function(){ feil(r.error); };
+    });
+  }
+  function nokkel(o, s, nr){ return o + "|" + s + "|" + String(nr).padStart(9, "0"); }
+  function omrade(o, s){ var p = o + "|" + s + "|"; return IDBKeyRange.bound(p, p + "￿"); }
+  function transaksjon(lagre, modus, fn){
+    return new Promise(function(ok, feil){
+      var t = db.transaction(lagre, modus);
+      var svar;
+      fn(t, function(v){ svar = v; });
+      t.oncomplete = function(){ ok(svar); };
+      t.onerror = t.onabort = function(){ feil(t.error); };
+    });
+  }
+  function lagreBit(o, s, nr, blob){
+    return transaksjon("biter", "readwrite", function(t){ t.objectStore("biter").put(blob, nokkel(o, s, nr)); });
+  }
+  function hentBiter(o, s){
+    return transaksjon("biter", "readonly", function(t, svar){
+      var r = t.objectStore("biter").getAll(omrade(o, s));
+      r.onsuccess = function(){ svar(r.result); };
+    });
+  }
+  function slettBiter(o, s){
+    return transaksjon("biter", "readwrite", function(t){ t.objectStore("biter").delete(omrade(o, s)); });
+  }
+  function oppdaterOpptak(id, endring){
+    return transaksjon("opptak", "readwrite", function(t){
+      var lager = t.objectStore("opptak");
+      var r = lager.get(id);
+      r.onsuccess = function(){
+        var post = r.result || { id: id, opprettet: Date.now(), spor: {} };
+        endring(post);
+        lager.put(post);
+      };
+    });
+  }
+  function alleOpptak(){
+    return transaksjon("opptak", "readonly", function(t, svar){
+      var r = t.objectStore("opptak").getAll();
+      r.onsuccess = function(){ svar(r.result); };
+    });
+  }
+  function slettOpptak(id){
+    return transaksjon(["opptak", "biter"], "readwrite", function(t){
+      t.objectStore("opptak").delete(id);
+      t.objectStore("biter").delete(IDBKeyRange.bound(id + "|", id + "|￿"));
+    });
+  }
+
+  // ---------- Hjelpere ----------
+  function tid(ms){
+    var s = Math.floor(ms / 1000), t = Math.floor(s / 3600), m = Math.floor(s / 60) % 60;
+    var mm = String(m).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+    return t ? t + ":" + mm : mm;
+  }
+  function storrelse(b){
+    if (b > 1e9) return (b / 1e9).toFixed(2).replace(".", ",") + " GB";
+    if (b > 1e6) return Math.round(b / 1e6) + " MB";
+    return Math.max(1, Math.round(b / 1e3)) + " kB";
+  }
+  function trygtNavn(n){ return (n || "ukjent").trim().replace(/[^\wæøåÆØÅ-]+/g, "-").replace(/^-+|-+$/g, "") || "ukjent"; }
+  function lagKode(){
+    var t = "abcdefghjkmnpqrstuvwxyz23456789", k = "";
+    var tall = crypto.getRandomValues(new Uint8Array(6));
+    for (var i = 0; i < 6; i++) k += t[tall[i] % t.length];
+    return k;
+  }
+  function vent(ms){ return new Promise(function(ok){ setTimeout(ok, ms); }); }
+  function status(tekst){ $("statuslinje").innerHTML = tekst; }
+  function lagre(n, v){ try { localStorage.setItem(n, v); } catch (e) {} }
+  function hent(n){ try { return localStorage.getItem(n); } catch (e) { return null; } }
+  function datostempel(d){
+    var p = function(x){ return String(x).padStart(2, "0"); };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + "_" + p(d.getHours()) + p(d.getMinutes());
+  }
+
+  // ---------- Mikrofon, kamera og nivåmålere ----------
+  var lydkontekst, lokalStrom, maalere = [];
+  function kontekst(){
+    if (!lydkontekst) lydkontekst = new AudioContext({ sampleRate: 48000 });
+    if (lydkontekst.state === "suspended") lydkontekst.resume();
+    return lydkontekst;
+  }
+  function koblMaaler(strom, el){
+    if (!strom || !strom.getAudioTracks().length) return;
+    var ak = kontekst();
+    var kilde = ak.createMediaStreamSource(strom);
+    var an = ak.createAnalyser();
+    an.fftSize = 1024;
+    kilde.connect(an);
+    maalere = maalere.filter(function(m){ return m.el !== el; });
+    maalere.push({ el: el, an: an, buf: new Float32Array(an.fftSize) });
+  }
+  (function tegn(){
+    maalere.forEach(function(m){
+      m.an.getFloatTimeDomainData(m.buf);
+      var topp = 0;
+      for (var i = 0; i < m.buf.length; i++) { var v = Math.abs(m.buf[i]); if (v > topp) topp = v; }
+      m.el.firstChild.style.width = Math.min(100, Math.sqrt(topp) * 100) + "%";
+      m.el.classList.toggle("hoy", topp > 0.89);
+    });
+    requestAnimationFrame(tegn);
+  })();
+
+  function lydvalg(){
+    var hode = $("hodetelefoner").checked;
+    var mic = $("velg-mic").value;
+    return {
+      deviceId: mic ? { exact: mic } : undefined,
+      echoCancellation: !hode, noiseSuppression: !hode, autoGainControl: !hode,
+      sampleRate: { ideal: 48000 }, channelCount: { ideal: 1 }
+    };
+  }
+  function videovalg(){
+    var k = $("velg-kamera").value;
+    if (k === "ingen") return false;
+    return { deviceId: k ? { exact: k } : undefined, width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 30 } };
+  }
+  async function startUtstyr(){
+    if (lokalStrom) lokalStrom.getTracks().forEach(function(t){ t.stop(); });
+    try {
+      lokalStrom = await navigator.mediaDevices.getUserMedia({ audio: lydvalg(), video: videovalg() });
+    } catch (e) {
+      $("forhand-tom").textContent = "Fikk ikke tilgang til mikrofon eller kamera (" + e.name + "). Sjekk tillatelsene i adressefeltet.";
+      $("forhand-tom").hidden = false;
+      $("knapp-prov-igjen").hidden = false;
+      return false;
+    }
+    $("knapp-prov-igjen").hidden = true;
+    $("forhand").srcObject = lokalStrom;
+    $("video-meg").srcObject = lokalStrom;
+    $("forhand-tom").hidden = !!lokalStrom.getVideoTracks().length;
+    koblMaaler(lokalStrom, $("maaler-forhand"));
+    koblMaaler(lokalStrom, $("maaler-meg"));
+    await fyllEnheter();
+    return true;
+  }
+  async function fyllEnheter(){
+    var enheter = await navigator.mediaDevices.enumerateDevices();
+    var micValgt = lokalStrom && lokalStrom.getAudioTracks()[0] && lokalStrom.getAudioTracks()[0].getSettings().deviceId;
+    var kamSpor = lokalStrom && lokalStrom.getVideoTracks()[0];
+    var kamValgt = kamSpor ? kamSpor.getSettings().deviceId : "ingen";
+    var mic = $("velg-mic"), kam = $("velg-kamera");
+    mic.innerHTML = ""; kam.innerHTML = "";
+    enheter.forEach(function(e){
+      if (!e.deviceId || e.deviceId === "communications") return;
+      var o = document.createElement("option");
+      o.value = e.deviceId;
+      o.textContent = e.label || (e.kind === "audioinput" ? "Mikrofon" : "Kamera");
+      if (e.kind === "audioinput") { o.selected = e.deviceId === micValgt; mic.appendChild(o); }
+      if (e.kind === "videoinput") { o.selected = e.deviceId === kamValgt; kam.appendChild(o); }
+    });
+    var ingen = document.createElement("option");
+    ingen.value = "ingen"; ingen.textContent = "Uten kamera, bare lyd";
+    ingen.selected = kamValgt === "ingen";
+    kam.appendChild(ingen);
+    // Samme valg i studioet, så kilden kan byttes etter at man har gått inn i rommet
+    $("rom-mic").innerHTML = mic.innerHTML; $("rom-mic").value = mic.value;
+    $("rom-kamera").innerHTML = kam.innerHTML; $("rom-kamera").value = kam.value;
+  }
+  [["rom-mic", "velg-mic"], ["rom-kamera", "velg-kamera"]].forEach(function(par){
+    $(par[0]).addEventListener("change", function(){
+      $(par[1]).value = $(par[0]).value;
+      $(par[1]).dispatchEvent(new Event("change"));
+    });
+  });
+  ["velg-mic", "velg-kamera", "hodetelefoner"].forEach(function(id){
+    $(id).addEventListener("change", async function(){
+      if (opptaker) return;
+      await startUtstyr();
+      if (samtale && lokalStrom) {
+        // Bytt sporene i samtalen uten å koble fra
+        samtale.peerConnection.getSenders().forEach(function(s){
+          var nytt = lokalStrom.getTracks().filter(function(t){ return s.track && t.kind === s.track.kind; })[0];
+          if (nytt) s.replaceTrack(nytt);
+        });
+      }
+    });
+  });
+
+  // ---------- Opptak: video med MediaRecorder, lyd som WAV ----------
+  var opptaker = null;
+  var WORKLET = "class Opptaker extends AudioWorkletProcessor{constructor(){super();this.aktiv=true;this.port.onmessage=e=>{if(e.data==='stopp')this.aktiv=false;};}" +
+    "process(inn){var k=inn[0];if(this.aktiv&&k&&k[0]){this.port.postMessage(k[0].slice(0));}return this.aktiv;}}registerProcessor('opptaker',Opptaker);";
+  var workletKlar = null;
+
+  function velgVideoformat(){
+    var liste = ["video/mp4;codecs=avc1.640028,mp4a.40.2", "video/mp4;codecs=avc1,mp4a.40.2", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"];
+    for (var i = 0; i < liste.length; i++) if (MediaRecorder.isTypeSupported(liste[i])) return liste[i];
+    return "";
+  }
+
+  async function startOpptak(id, startTid){
+    if (opptaker) return;
+    var navn = trygtNavn($("navn").value);
+    var dato = datostempel(new Date(startTid || Date.now()));
+    var ko = Promise.resolve();
+    var skriv = function(spor, nr, blob){ ko = ko.then(function(){ return lagreBit(id, spor, nr, blob); }).catch(function(e){ status("<b>Kunne ikke lagre:</b> " + e.message); }); };
+    var o = { id: id, start: Date.now(), spor: [], ferdig: [] , vent: function(){ return ko; } };
+    opptaker = o;
+
+    await oppdaterOpptak(id, function(p){ p.dato = dato; p.rom = romkode; });
+
+    // Video (med lyd), om kameraet er på
+    if (lokalStrom.getVideoTracks().length) {
+      var format = velgVideoformat();
+      var endelse = format.indexOf("mp4") > -1 ? "mp4" : "webm";
+      var vSpor = navn + "-video";
+      var mr = new MediaRecorder(lokalStrom, { mimeType: format || undefined, videoBitsPerSecond: 6000000, audioBitsPerSecond: 192000 });
+      var vnr = 0;
+      mr.ondataavailable = function(e){ if (e.data && e.data.size) skriv(vSpor, vnr++, e.data); };
+      var vFerdig = new Promise(function(ok){ mr.onstop = ok; });
+      await oppdaterOpptak(id, function(p){ p.spor[vSpor] = { person: navn, type: "video", mime: mr.mimeType || format, filnavn: dato + "_" + navn + "_video." + endelse, ferdig: false, lokal: true }; });
+      mr.start(1000);
+      o.spor.push(vSpor);
+      o.ferdig.push(vFerdig.then(function(){ return ko; }).then(function(){ return oppdaterOpptak(id, function(p){ p.spor[vSpor].ferdig = true; }); }));
+      o.mr = mr;
+    }
+
+    // Ren lyd som WAV, 48 kHz mono 16 bit
+    var ak = kontekst();
+    if (!workletKlar) workletKlar = ak.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET], { type: "application/javascript" })));
+    await workletKlar;
+    var lSpor = navn + "-lyd";
+    var kilde = ak.createMediaStreamSource(new MediaStream(lokalStrom.getAudioTracks()));
+    var node = new AudioWorkletNode(ak, "opptaker");
+    var stille = ak.createGain(); stille.gain.value = 0;
+    kilde.connect(node); node.connect(stille); stille.connect(ak.destination);
+    var buffer = [], lengde = 0, lnr = 0;
+    var tom = function(){
+      if (!lengde) return;
+      var pcm = new Int16Array(lengde), pos = 0;
+      buffer.forEach(function(b){ for (var i = 0; i < b.length; i++) { var s = Math.max(-1, Math.min(1, b[i])); pcm[pos++] = s < 0 ? s * 0x8000 : s * 0x7fff; } });
+      buffer = []; lengde = 0;
+      skriv(lSpor, lnr++, new Blob([pcm.buffer]));
+    };
+    node.port.onmessage = function(e){ buffer.push(e.data); lengde += e.data.length; if (lengde >= ak.sampleRate) tom(); };
+    await oppdaterOpptak(id, function(p){ p.spor[lSpor] = { person: navn, type: "lyd", mime: "audio/wav", rate: ak.sampleRate, filnavn: dato + "_" + navn + "_lyd.wav", ferdig: false, lokal: true }; });
+    o.spor.push(lSpor);
+    o.stoppLyd = function(){
+      node.port.postMessage("stopp");
+      return vent(150).then(function(){ node.port.onmessage = null; tom(); kilde.disconnect(); node.disconnect(); return ko; })
+        .then(function(){ return oppdaterOpptak(id, function(p){ p.spor[lSpor].ferdig = true; }); });
+    };
+
+    o.vekter = setInterval(visTid, 250);
+    navigator.wakeLock && navigator.wakeLock.request("screen").then(function(l){ o.las = l; }).catch(function(){});
+    visOpptakstilstand(true);
+    tegnBibliotek();
+  }
+
+  async function stoppOpptak(){
+    var o = opptaker;
+    if (!o || o.stopper) return;
+    o.stopper = true;
+    clearInterval(o.vekter);
+    if (o.mr && o.mr.state !== "inactive") o.mr.stop();
+    var alt = o.ferdig.slice();
+    alt.push(o.stoppLyd());
+    await Promise.all(alt);
+    if (o.las) o.las.release().catch(function(){});
+    opptaker = null;
+    visOpptakstilstand(false);
+    await tegnBibliotek();
+    return o;
+  }
+
+  function visTid(){ if (opptaker) $("tidtaker").textContent = tid(Date.now() - opptaker.start); }
+  function visOpptakstilstand(paa){
+    $("merke-meg").textContent = paa ? "Tar opp" : "Klar";
+    $("merke-meg").classList.toggle("tar-opp", paa);
+    $("knapp-start").hidden = paa || !erVert;
+    $("knapp-stopp").hidden = !paa || !erVert;
+    $("knapp-stopp-lokalt").hidden = !(paa && !erVert && !(forbindelse && forbindelse.open));
+    ["velg-mic", "velg-kamera", "hodetelefoner", "rom-mic", "rom-kamera"].forEach(function(id){ $(id).disabled = paa; });
+    oppdaterStartknapp();
+  }
+
+  window.addEventListener("beforeunload", function(e){
+    if (opptaker || sender) { e.preventDefault(); e.returnValue = ""; }
+  });
+
+  // ---------- Tilkobling med PeerJS ----------
+  var peer, forbindelse = null, samtale = null, denAndreNavn = "", denAndreTarOpp = false;
+  var ICE = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, { urls: "stun:stun1.l.google.com:19302" }, { urls: "stun:global.stun.twilio.com:3478" }] };
+
+  function settDenAndre(navn){
+    denAndreNavn = navn || denAndreNavn;
+    $("navn-den-andre").textContent = denAndreNavn || (erVert ? "Gjest" : "Vert");
+  }
+  function merkDenAndre(tekst, tarOpp){
+    $("merke-den-andre").textContent = tekst;
+    $("merke-den-andre").classList.toggle("tar-opp", !!tarOpp);
+  }
+  function oppdaterStartknapp(){
+    $("knapp-start").disabled = !(forbindelse && forbindelse.open) || !!opptaker;
+    if (erVert && !opptaker) status(forbindelse && forbindelse.open ? "<b>" + (denAndreNavn || "Gjesten") + "</b> er koblet til. Klar for opptak." : "Venter på gjesten.");
+  }
+  function send(m){ if (forbindelse && forbindelse.open) forbindelse.send(m); }
+
+  function visDenAndresVideo(strom){
+    var v = $("video-den-andre");
+    v.srcObject = strom;
+    v.play().catch(function(){});
+    $("den-andre-tom").hidden = !!strom.getVideoTracks().length;
+    koblMaaler(strom, $("maaler-den-andre"));
+  }
+
+  function nyForbindelse(c){
+    if (forbindelse && forbindelse !== c) { try { forbindelse.close(); } catch (e) {} }
+    forbindelse = c;
+    c.on("open", function(){
+      send({ t: "hei", navn: $("navn").value.trim() });
+      merkDenAndre("Tilkoblet");
+      oppdaterStartknapp();
+      if (erVert) send({ t: "tilstand", tarOpp: !!opptaker, id: opptaker && opptaker.id, start: opptaker && opptaker.start });
+      visOpptakstilstand(!!opptaker);
+    });
+    c.on("data", behandle);
+    c.on("close", function(){
+      if (forbindelse !== c) return;
+      forbindelse = null;
+      merkDenAndre("Frakoblet");
+      oppdaterStartknapp();
+      visOpptakstilstand(!!opptaker);
+      if (erVert) { if (!opptaker) status("Gjesten koblet fra. Venter på at hen kommer tilbake."); else status("<b>Gjesten mistet forbindelsen.</b> Opptaket fortsetter lokalt hos begge."); }
+      else gjenopprett();
+    });
+    c.on("error", function(){});
+  }
+
+  async function behandle(m){
+    if (!m || typeof m !== "object") return;
+    if (m.t === "hei") { settDenAndre(m.navn); merkDenAndre(denAndreTarOpp ? "Tar opp" : "Tilkoblet", denAndreTarOpp); oppdaterStartknapp(); }
+    if (m.t === "start" && !erVert) { await nedtelling(); await startOpptak(m.id, m.dato); send({ t: "startet" }); status("<b>Opptaket går.</b> Verten stopper det."); }
+    if (m.t === "stopp" && !erVert) { status("Stopper og lagrer..."); await stoppOpptak(); send({ t: "stoppet" }); sendTilVert(m.id); }
+    if (m.t === "tilstand" && !erVert) {
+      if (!m.tarOpp && opptaker) { var gammel = opptaker.id; await stoppOpptak(); sendTilVert(gammel); }
+      // Kom gjesten inn igjen etter å ha lastet siden på nytt midt i et opptak, starter et nytt spor
+      if (m.tarOpp && !opptaker) { await startOpptak(m.id + "-2", Date.now()); send({ t: "startet" }); status("<b>Opptaket går igjen.</b> Det som ble tatt opp før du falt ut, ligger i et eget opptak under."); }
+    }
+    if (m.t === "startet") { denAndreTarOpp = true; merkDenAndre("Tar opp", true); }
+    if (m.t === "stoppet") { denAndreTarOpp = false; merkDenAndre("Tilkoblet"); }
+    if (m.t === "mottatt") ferdigSendt(m);
+  }
+
+  function startVert(){
+    romkode = romkode || lagKode();
+    history.replaceState(null, "", "?rom=" + romkode + "&vert");
+    lagre("podkast-vert-rom", romkode);
+    var lenke = location.origin + location.pathname + "?rom=" + romkode;
+    $("invitasjonslenke").value = lenke;
+    $("invitasjon").hidden = false;
+    status("Kobler til...");
+    peer = new Peer(PREFIKS + romkode, { config: ICE });
+    peer.on("open", function(){ oppdaterStartknapp(); });
+    peer.on("connection", function(c){
+      if (c.label === "fil") { mottaFiler(c); return; }
+      nyForbindelse(c);
+    });
+    peer.on("call", function(call){
+      if (samtale) samtale.close();
+      samtale = call;
+      call.answer(lokalStrom);
+      call.on("stream", visDenAndresVideo);
+    });
+    peer.on("disconnected", function(){ setTimeout(function(){ if (peer && !peer.destroyed) peer.reconnect(); }, 1500); });
+    peer.on("error", function(e){
+      if (e.type === "unavailable-id") { status("Rommet er fortsatt i bruk fra en annen fane. Prøver igjen om litt..."); peer.destroy(); setTimeout(startVert, 4000); return; }
+      if (e.type === "network" || e.type === "server-error" || e.type === "socket-error") status("<b>Mistet kontakten med tilkoblingstjenesten.</b> Prøver igjen...");
+    });
+  }
+
+  var prover = 0;
+  function startGjest(){
+    status("Kobler til verten...");
+    peer = new Peer({ config: ICE });
+    peer.on("open", koblTilVert);
+    peer.on("disconnected", function(){ setTimeout(function(){ if (peer && !peer.destroyed) peer.reconnect(); }, 1500); });
+    peer.on("error", function(e){
+      if (e.type === "peer-unavailable") { status("Finner ikke verten ennå. Prøver igjen..."); gjenopprett(); }
+    });
+  }
+  function koblTilVert(){
+    var vert = PREFIKS + romkode;
+    nyForbindelse(peer.connect(vert, { reliable: true, serialization: "json" }));
+    if (samtale) samtale.close();
+    samtale = peer.call(vert, lokalStrom);
+    samtale.on("stream", visDenAndresVideo);
+    forbindelse.on("open", function(){ prover = 0; status(opptaker ? "<b>Opptaket går.</b>" : "Koblet til. Verten starter opptaket."); });
+  }
+  var gjenoppretter = null;
+  function gjenopprett(){
+    if (gjenoppretter) return;
+    gjenoppretter = setTimeout(function(){
+      gjenoppretter = null;
+      if (forbindelse && forbindelse.open) return;
+      prover++;
+      if (peer && peer.open) koblTilVert();
+      else if (peer && !peer.destroyed) peer.reconnect();
+    }, Math.min(10000, 2000 + prover * 1000));
+  }
+
+  async function nedtelling(){
+    var el = $("nedtelling");
+    el.classList.add("vis");
+    for (var i = 3; i > 0; i--) { el.textContent = i; await vent(700); }
+    el.textContent = "Klapp"; await vent(500);
+    el.classList.remove("vis");
+  }
+
+  $("knapp-start").addEventListener("click", async function(){
+    if (!erVert || !forbindelse || !forbindelse.open) return;
+    var id = datostempel(new Date()) + "-" + lagKode().slice(0, 3);
+    this.disabled = true;
+    send({ t: "start", id: id, dato: Date.now() });
+    await nedtelling();
+    await startOpptak(id, Date.now());
+    status("<b>Opptaket går.</b> Klapp én gang i hendene, så er sporene lette å synkronisere etterpå.");
+  });
+  $("knapp-stopp").addEventListener("click", async function(){
+    var id = opptaker && opptaker.id;
+    send({ t: "stopp", id: id });
+    status("Stopper og lagrer...");
+    await stoppOpptak();
+    status("Opptaket er lagret her. Venter på filene fra " + (denAndreNavn || "gjesten") + ".");
+    $("overforing").hidden = false;
+  });
+  $("knapp-stopp-lokalt").addEventListener("click", async function(){
+    var id = opptaker && opptaker.id;
+    await stoppOpptak();
+    status("Opptaket ditt er lagret. Filene sendes når forbindelsen er tilbake, eller last dem ned under.");
+    ventPaaSending = id;
+  });
+  $("knapp-kopier").addEventListener("click", function(){
+    var l = $("invitasjonslenke");
+    l.select();
+    (navigator.clipboard ? navigator.clipboard.writeText(l.value) : Promise.reject()).then(function(){ $("knapp-kopier").textContent = "Kopiert"; }, function(){ document.execCommand("copy"); });
+    setTimeout(function(){ $("knapp-kopier").textContent = "Kopier"; }, 2000);
+  });
+
+  // ---------- Overføring av gjestens filer til verten ----------
+  // Egen datakanal med rå binærdata, så store filer ikke går gjennom JSON.
+  var sender = false, ventPaaSending = null;
+  function fremdriftsrad(nokkelId, tekst){
+    $("overforing").hidden = false;
+    var rad = document.querySelector('[data-overforing="' + nokkelId + '"]');
+    if (!rad) {
+      rad = document.createElement("div");
+      rad.setAttribute("data-overforing", nokkelId);
+      rad.innerHTML = '<div class="spor-info"></div><div class="fremdrift"><i></i></div>';
+      $("overforing-liste").appendChild(rad);
+    }
+    return {
+      tekst: function(t){ rad.querySelector(".spor-info").textContent = t; },
+      andel: function(a){ rad.querySelector(".fremdrift i").style.width = Math.round(a * 100) + "%"; }
+    };
+  }
+
+  async function sendTilVert(id){
+    if (!id) return;
+    if (!forbindelse || !forbindelse.open) { ventPaaSending = id; return; }
+    ventPaaSending = null;
+    sender = true;
+    $("overforing-tittel").textContent = "Sender filene dine til " + (denAndreNavn || "verten");
+    status("<b>Sender filene.</b> Ikke lukk fanen før alt er sendt.");
+    var opp = (await alleOpptak()).filter(function(p){ return p.id === id; })[0];
+    if (!opp) { sender = false; return; }
+    var kanal = peer.connect(PREFIKS + romkode, { reliable: true, serialization: "raw", label: "fil" });
+    await new Promise(function(ok, feil){ kanal.on("open", ok); kanal.on("error", feil); setTimeout(function(){ feil(new Error("tidsavbrudd")); }, 20000); }).catch(function(){});
+    if (!kanal.open) { sender = false; status("Fikk ikke åpnet overføringen. Prøv knappen «Send til verten» under."); ventPaaSending = id; return; }
+    var dk = kanal.dataChannel;
+    dk.bufferedAmountLowThreshold = 1024 * 1024;
+    try {
+      for (var sporId in opp.spor) {
+        var info = opp.spor[sporId];
+        if (!info.lokal || info.person !== trygtNavn($("navn").value)) continue;
+        var biter = await hentBiter(id, sporId);
+        var total = biter.reduce(function(s, b){ return s + b.size; }, 0);
+        var rad = fremdriftsrad(id + sporId, info.filnavn);
+        rad.tekst(info.filnavn + ", " + storrelse(total));
+        kanal.send(JSON.stringify({ t: "fil-start", o: id, s: sporId, info: info, bytes: total, dato: opp.dato }));
+        var sendt = 0;
+        for (var i = 0; i < biter.length; i++) {
+          var data = await biter[i].arrayBuffer();
+          for (var p = 0; p < data.byteLength; p += BITSTR) {
+            while (dk.bufferedAmount > 8 * 1024 * 1024 || kanal.bufferSize > 0) {
+              if (!kanal.open) throw new Error("Forbindelsen ble brutt");
+              await new Promise(function(ok){ dk.onbufferedamountlow = ok; setTimeout(ok, 100); });
+            }
+            kanal.send(data.slice(p, p + BITSTR));
+            sendt += Math.min(BITSTR, data.byteLength - p);
+          }
+          rad.andel(sendt / total);
+          rad.tekst(info.filnavn + ", " + storrelse(sendt) + " av " + storrelse(total));
+        }
+        kanal.send(JSON.stringify({ t: "fil-slutt", o: id, s: sporId, bytes: total }));
+      }
+      while (dk.bufferedAmount > 0 && kanal.open) await vent(100);
+      status("Alt er sendt. Venter på bekreftelse fra " + (denAndreNavn || "verten") + "...");
+    } catch (e) {
+      status("<b>Overføringen stoppet:</b> " + e.message + ". Filene ligger trygt her, prøv «Send til verten» under.");
+      ventPaaSending = id;
+    }
+    sender = false;
+  }
+  function ferdigSendt(m){
+    var rad = fremdriftsrad(m.o + m.s, "");
+    rad.andel(1);
+    rad.tekst(m.filnavn + " er mottatt hos " + (denAndreNavn || "verten") + ".");
+    status("<b>Ferdig.</b> Filene dine er hos " + (denAndreNavn || "verten") + ". Du har også en kopi under.");
+  }
+  // Sender de som venter når forbindelsen kommer tilbake
+  setInterval(function(){ if (ventPaaSending && !sender && !opptaker && forbindelse && forbindelse.open) sendTilVert(ventPaaSending); }, 3000);
+
+  // Vertens side av overføringen
+  function mottaFiler(kanal){
+    var gjeldende = null;
+    kanal.on("data", function(d){
+      if (typeof d === "string") {
+        var m; try { m = JSON.parse(d); } catch (e) { return; }
+        if (m.t === "fil-start") gjeldende = mottaStart(m);
+        if (m.t === "fil-slutt" && gjeldende) { mottaSlutt(m, gjeldende); gjeldende = null; }
+        return;
+      }
+      if (!gjeldende) return;
+      var buf = d instanceof ArrayBuffer ? d : (d.buffer || d);
+      gjeldende.del.push(buf);
+      gjeldende.iBuffer += buf.byteLength;
+      gjeldende.mottatt += buf.byteLength;
+      if (gjeldende.iBuffer >= 2 * 1024 * 1024) gjeldende.skyll();
+      if (gjeldende.mottatt - gjeldende.vist > 512 * 1024) {
+        gjeldende.vist = gjeldende.mottatt;
+        gjeldende.rad.andel(gjeldende.mottatt / gjeldende.bytes);
+        gjeldende.rad.tekst(gjeldende.info.filnavn + ", " + storrelse(gjeldende.mottatt) + " av " + storrelse(gjeldende.bytes));
+      }
+    });
+  }
+  function mottaStart(m){
+    var g = { o: m.o, s: m.s, info: m.info, bytes: m.bytes, mottatt: 0, vist: 0, del: [], iBuffer: 0, nr: 0, ko: null };
+    $("overforing-tittel").textContent = "Mottar filer fra " + (denAndreNavn || "gjesten");
+    g.rad = fremdriftsrad(m.o + m.s, m.info.filnavn);
+    g.rad.tekst(m.info.filnavn + ", venter...");
+    var info = Object.assign({}, m.info, { lokal: false, ferdig: false });
+    g.ko = slettBiter(m.o, m.s).then(function(){ return oppdaterOpptak(m.o, function(p){ p.dato = p.dato || m.dato; p.spor[m.s] = info; }); });
+    g.skyll = function(){
+      if (!g.del.length) return;
+      var blob = new Blob(g.del), nr = g.nr++;
+      g.del = []; g.iBuffer = 0;
+      g.ko = g.ko.then(function(){ return lagreBit(g.o, g.s, nr, blob); });
+    };
+    return g;
+  }
+  function mottaSlutt(m, g){
+    if (!g) return;
+    g.skyll();
+    g.ko.then(function(){
+      var ok = g.mottatt === m.bytes;
+      g.rad.andel(1);
+      g.rad.tekst(g.info.filnavn + (ok ? " er mottatt, " + storrelse(g.mottatt) + "." : " kom ufullstendig fram (" + storrelse(g.mottatt) + " av " + storrelse(m.bytes) + "). Be gjesten sende på nytt."));
+      return oppdaterOpptak(g.o, function(p){ p.spor[g.s].ferdig = ok; p.spor[g.s].ufullstendig = !ok; });
+    }).then(function(){
+      if (g.mottatt === m.bytes) send({ t: "mottatt", o: g.o, s: g.s, filnavn: g.info.filnavn });
+      tegnBibliotek();
+    });
+  }
+
+  // ---------- Biblioteket: last ned, send på nytt, slett ----------
+  function wavHode(bytes, rate){
+    var h = new DataView(new ArrayBuffer(44));
+    var skrivTekst = function(pos, t){ for (var i = 0; i < t.length; i++) h.setUint8(pos + i, t.charCodeAt(i)); };
+    skrivTekst(0, "RIFF"); h.setUint32(4, 36 + bytes, true); skrivTekst(8, "WAVE");
+    skrivTekst(12, "fmt "); h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true);
+    h.setUint32(24, rate, true); h.setUint32(28, rate * 2, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true);
+    skrivTekst(36, "data"); h.setUint32(40, bytes, true);
+    return h.buffer;
+  }
+  async function lastNed(id, sporId, info){
+    var biter = await hentBiter(id, sporId);
+    var deler = biter;
+    if (info.type === "lyd") {
+      var bytes = biter.reduce(function(s, b){ return s + b.size; }, 0);
+      deler = [wavHode(bytes, info.rate || 48000)].concat(biter);
+    }
+    var url = URL.createObjectURL(new Blob(deler, { type: info.mime }));
+    var a = document.createElement("a");
+    a.href = url; a.download = info.filnavn;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+  }
+
+  async function tegnBibliotek(){
+    var liste = (await alleOpptak()).sort(function(a, b){ return b.opprettet - a.opprettet; });
+    var rot = $("opptaksliste");
+    rot.innerHTML = "";
+    if (!liste.length) { rot.innerHTML = '<p class="studio-liten">Ingen opptak ennå.</p>'; }
+    for (var n = 0; n < liste.length; n++) {
+      var opp = liste[n];
+      var boks = document.createElement("div");
+      boks.className = "opptak";
+      var hode = document.createElement("div");
+      hode.className = "opptak-hode";
+      hode.innerHTML = "<strong></strong>";
+      hode.firstChild.textContent = (opp.dato || opp.id).replace("_", " kl. ").replace(/kl\. (\d\d)(\d\d)/, "kl. $1:$2");
+      var knapper = document.createElement("div");
+      knapper.className = "studio-knapper";
+      if (!erVert && Object.keys(opp.spor).some(function(k){ return opp.spor[k].lokal; })) {
+        var sendKnapp = document.createElement("button");
+        sendKnapp.className = "liten-knapp"; sendKnapp.type = "button"; sendKnapp.textContent = "Send til verten";
+        sendKnapp.onclick = (function(id){ return function(){ if (forbindelse && forbindelse.open && !sender) sendTilVert(id); else status("Ikke koblet til verten akkurat nå."); }; })(opp.id);
+        knapper.appendChild(sendKnapp);
+      }
+      var slett = document.createElement("button");
+      slett.className = "liten-knapp fare"; slett.type = "button"; slett.textContent = "Slett opptaket";
+      slett.onclick = (function(id){ return async function(){
+        if (opptaker && opptaker.id === id) return;
+        if (!confirm("Slette opptaket fra denne maskinen? Har du ikke lastet ned filene, er de borte.")) return;
+        await slettOpptak(id); tegnBibliotek();
+      }; })(opp.id);
+      knapper.appendChild(slett);
+      hode.appendChild(knapper);
+      boks.appendChild(hode);
+
+      var sporListe = Object.keys(opp.spor).sort();
+      for (var i = 0; i < sporListe.length; i++) {
+        var sid = sporListe[i], info = opp.spor[sid];
+        var biter = await hentBiter(opp.id, sid);
+        var b = biter.reduce(function(s, x){ return s + x.size; }, 0);
+        var rad = document.createElement("div");
+        rad.className = "spor";
+        var aktiv = opptaker && opptaker.id === opp.id && info.lokal;
+        var merknad = aktiv ? "tar opp nå" : info.ufullstendig ? "ufullstendig" : !info.ferdig ? (info.lokal ? "avbrutt, men kan lastes ned" : "ikke ferdig overført") : (info.lokal ? "ditt spor" : "mottatt");
+        rad.innerHTML = '<span class="spor-navn"></span><span class="spor-info"></span>';
+        rad.querySelector(".spor-navn").textContent = info.filnavn;
+        rad.querySelector(".spor-info").textContent = storrelse(b) + ", " + merknad;
+        if (!aktiv && b) {
+          var ned = document.createElement("button");
+          ned.className = "liten-knapp"; ned.type = "button"; ned.textContent = "Last ned";
+          ned.onclick = (function(id, s, inf){ return function(){ lastNed(id, s, inf); }; })(opp.id, sid, info);
+          rad.appendChild(ned);
+        }
+        boks.appendChild(rad);
+      }
+      rot.appendChild(boks);
+    }
+    if (navigator.storage && navigator.storage.estimate) {
+      var est = await navigator.storage.estimate();
+      $("lagringsplass").textContent = "Opptakene lagres fortløpende i nettleseren, så de overlever selv om fanen krasjer. Brukt " + storrelse(est.usage || 0) + ", ledig omtrent " + storrelse(Math.max(0, (est.quota || 0) - (est.usage || 0))) + ". En time med video tar rundt 3 GB.";
+    }
+  }
+
+  // ---------- Oppstart ----------
+  async function inn(){
+    $("inngang").hidden = true;
+    $("rom").hidden = false;
+    lagre("podkast-navn", $("navn").value.trim());
+    $("navn-meg").textContent = $("navn").value.trim() || "Deg";
+    settDenAndre("");
+    kontekst();
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    if (erVert) startVert(); else startGjest();
+    visOpptakstilstand(false);
+  }
+  function sjekkNavn(){
+    if ($("navn").value.trim()) return true;
+    $("navn").focus();
+    $("navn").setAttribute("aria-invalid", "true");
+    return false;
+  }
+  $("knapp-prov-igjen").addEventListener("click", startUtstyr);
+  $("knapp-opprett").addEventListener("click", function(){ if (sjekkNavn() && lokalStrom) inn(); });
+  $("knapp-bli-med").addEventListener("click", function(){ if (sjekkNavn() && lokalStrom) inn(); });
+
+  (async function(){
+    if (!window.MediaRecorder || !window.AudioWorkletNode || !navigator.mediaDevices || !window.indexedDB) {
+      $("nettleservarsel").hidden = false;
+      $("nettleservarsel").textContent = "Denne nettleseren mangler det som trengs for opptak. Bruk Google Chrome på Mac eller PC.";
+      return;
+    }
+    if (!window.Peer) {
+      $("nettleservarsel").hidden = false;
+      $("nettleservarsel").textContent = "Fikk ikke lastet tilkoblingsbiblioteket. Sjekk nettet og last siden på nytt.";
+    }
+    $("navn").value = params.get("navn") || hent("podkast-navn") || "";
+    if (!erVert) {
+      $("knapp-opprett").hidden = true;
+      $("knapp-bli-med").hidden = false;
+      $("inngang-tittel").textContent = "Du er invitert til et podkastopptak";
+    } else if (romkode) {
+      $("knapp-opprett").textContent = "Gå inn i rommet igjen";
+    }
+    await apneDb();
+    tegnBibliotek();
+    await startUtstyr();
+  })();
+})();
+</script>
+</body>
+</html>
