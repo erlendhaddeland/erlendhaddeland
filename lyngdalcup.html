@@ -50,6 +50,7 @@
 .cup-knapper{display:flex;gap:8px;flex-wrap:wrap;}
 .cup-knapper button{padding:14px 18px;font-weight:600;border:1px solid var(--strek);}
 .cup-knapper .hoved{flex:1 1 160px;background:var(--aksent);color:var(--natt);border-color:var(--aksent);font-size:18px;}
+.cup-knapper .nullstill{flex:1 1 100%;color:var(--rod);border-color:var(--rod);}
 .cup-knapper .hoved.pause{background:var(--lys);border-color:var(--lys);}
 
 .cup-forslag{margin:16px 0 4px;padding:14px 16px;border:1px solid var(--strek);display:flex;align-items:center;justify-content:space-between;gap:12px;}
@@ -421,6 +422,7 @@
     if(k.ferdig) h+='<button type="button" class="hoved" data-a="gjenapne">Ferdig. Åpne kampen igjen</button>';
     else if(k.gaar) h+='<button type="button" class="hoved pause" data-a="pause">Pause</button><button type="button" data-a="ferdig">Kampen er ferdig</button>';
     else h+='<button type="button" class="hoved" data-a="start">'+(k.klokke?'Fortsett':'Start kampen')+'</button>'+(k.klokke?'<button type="button" data-a="ferdig">Kampen er ferdig</button>':'');
+    if(k.klokke||k.ferdig||k.bytter) h+='<button type="button" class="nullstill" data-a="nullstillkamp">Nullstill kampen</button>';
     h+='</div>';
     if(k.gaar){
       h+='<div data-t="forslag">'+forslagHtml(n,k)+'</div>'+lister(n,k,true);
@@ -454,8 +456,7 @@
     return '<details><summary>Innstillinger for lag '+n+'</summary>'
       +'<label>Kamplengde, minutter<input type="number" min="5" max="60" step="1" data-a="lengde" value="'+L(n).lengde+'"></label>'
       +'<label>Bytt hvert, minutter (tomt gir '+(intervall(n)?mmss(Math.round(L(n).lengde/(tilgjengelige(n).length-1)*2)/2*60000):'ingen')+')<input type="number" min="1" max="20" step="0.5" data-a="intervall" value="'+(L(n).intervall||'')+'" placeholder="auto"></label>'
-      +'<button type="button" class="fare" data-a="nullstillkamp">Nullstill denne kampen</button> '
-      +'<button type="button" class="fare" data-a="nullstill">Nullstill hele dagen for lag '+n+'</button></details>';
+      +'</details><button type="button" class="fare" data-a="nullstill">Nullstill hele dagen for lag '+n+'</button>';
   }
 
   function render(){
@@ -566,7 +567,7 @@
       }
       if(merket===sp) merket=null;
     }
-    else if(a==='nullstillkamp'){if(!confirm('Nullstille kamp '+(i+1)+'? Spilletiden i denne kampen slettes.')) return;delete L(n).kamper[i];merket=null;}
+    else if(a==='nullstillkamp'){if(!confirm('Nullstille kamp '+(i+1)+'? Klokka går til 0:00, spilletiden i denne kampen slettes, og du får en ny foreslått oppstilling.')) return;if(k.gaar) slippSkjerm();delete L(n).kamper[i];merket=null;}
     else if(a==='nullstill'){if(!confirm('Nullstille hele dagen for lag '+n+'? All spilletid slettes.')) return;L(n).kamper={};L(n).valgt=null;L(n).ute={};merket=null;}
     render();
   });
