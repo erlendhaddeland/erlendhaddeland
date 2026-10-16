@@ -53,14 +53,26 @@
 .cup-knapper .nullstill{flex:1 1 100%;color:var(--rod);border-color:var(--rod);}
 .cup-knapper .hoved.pause{background:var(--lys);border-color:var(--lys);}
 
-.cup-forslag{margin:16px 0 4px;padding:14px 16px;border:1px solid var(--strek);display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.cup-forslag p{margin:0;line-height:1.35;}
-.cup-forslag small{display:block;color:var(--dempet);font-size:13px;}
-.cup-forslag button{padding:12px 18px;font-weight:700;background:var(--lys);color:var(--natt);flex:0 0 auto;}
-.cup-forslag.na{background:var(--aksent);color:var(--natt);border-color:var(--aksent);}
-.cup-forslag.na small{color:var(--dypbla);}
-.cup-forslag.na button{background:var(--natt);color:var(--lys);}
-
+.cup-forslag{margin:14px 0 18px;padding:14px;border:2px solid var(--aksent);background:var(--kortflate);}
+.cup-nedtelling{margin:0 0 10px;font-size:17px;font-weight:700;color:var(--aksent);}
+.cup-par{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cup-side{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:12px;background:var(--dypbla);min-width:0;}
+.cup-side .retning{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dempet);}
+.cup-side b{font-size:clamp(20px,6.2vw,30px);line-height:1.1;font-weight:800;overflow-wrap:break-word;max-width:100%;}
+.cup-side .tid{font-size:13px;color:var(--dempet);}
+.cup-side button{margin-top:10px;padding:8px 10px;font-size:14px;font-weight:600;border:1px solid var(--strek);}
+.cup-forslag .cup-bytt{display:block;width:100%;margin-top:10px;padding:18px 12px;font-size:19px;font-weight:800;background:var(--lys);color:var(--natt);}
+.cup-forslag .cup-nullhopp{display:block;width:100%;margin-top:8px;padding:10px;font-size:14px;color:var(--dempet);text-decoration:underline;}
+.cup-forslag.na{background:var(--aksent);color:var(--natt);}
+.cup-forslag.na .cup-nedtelling{color:var(--natt);font-size:20px;}
+.cup-forslag.na .cup-side{background:var(--aksent-lys);}
+.cup-forslag.na .retning,.cup-forslag.na .tid,.cup-forslag.na .cup-nullhopp{color:var(--dypbla);}
+.cup-forslag.na .cup-side button{border-color:var(--natt);}
+.cup-forslag.na .cup-bytt{background:var(--natt);color:var(--lys);}
+@media (prefers-reduced-motion:no-preference){
+  .cup-forslag.na{animation:cup-puls 1.6s ease-in-out infinite;}
+  @keyframes cup-puls{50%{box-shadow:0 0 0 6px var(--aksent-lys);}}
+}
 .cup-rolle{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dempet);font-weight:600;margin:20px 0 6px;display:flex;justify-content:space-between;}
 .cup-spillere{display:grid;gap:6px;}
 .cup-spiller{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;width:100%;text-align:left;padding:13px 14px;background:var(--kortflate);border-left:4px solid var(--strek);font-size:17px;}
@@ -275,7 +287,7 @@
       if(p[1]==='bane') k.inn[p[0]]=k.klokke;
       if(p[1]==='benk') k.ut[p[0]]=k.klokke;
     });
-    if((ra==='bane'&&rb==='benk')||(ra==='benk'&&rb==='bane')){k.sisteBytte=k.klokke;k.bytter++;}
+    if((ra==='bane'&&rb==='benk')||(ra==='benk'&&rb==='bane')){k.sisteBytte=k.klokke;k.bytter++;k.hopp={inn:[],ut:[]};}
     return true;
   }
 
@@ -294,15 +306,21 @@
   // Byttforslag: den med minst spilletid i dag inn, den med mest ut
   function forslag(n,k){
     if(!k.benk.length||!k.bane.length) return null;
-    var inn=k.benk.slice().sort(function(a,b){
+    // Hoppet over: midlertidig ute av køen til neste bytte. Er alle hoppet over, starter køen på nytt
+    var hopp=k.hopp||(k.hopp={inn:[],ut:[]});
+    var benk=k.benk.filter(function(s){return hopp.inn.indexOf(s)<0;});
+    var bane=k.bane.filter(function(s){return hopp.ut.indexOf(s)<0;});
+    if(!benk.length){hopp.inn=[];benk=k.benk;}
+    if(!bane.length){hopp.ut=[];bane=k.bane;}
+    var inn=benk.slice().sort(function(a,b){
       return (sum(n,'tid',a)-sum(n,'tid',b))||((k.ut[a]||0)-(k.ut[b]||0));
     })[0];
-    var ut=k.bane.slice().sort(function(a,b){
+    var ut=bane.slice().sort(function(a,b){
       return (sum(n,'tid',b)-sum(n,'tid',a))||((k.inn[a]||0)-(k.inn[b]||0));
     })[0];
     var iv=intervall(n), igjen=L(n).lengde*60000-k.klokke;
     var na=k.gaar && iv>0 && k.klokke-k.sisteBytte>=iv && igjen>60000;
-    return {inn:inn,ut:ut,na:na,iv:iv};
+    return {inn:inn,ut:ut,na:na,iv:iv,igjen:igjen,hoppet:hopp.inn.length+hopp.ut.length};
   }
 
   // Skjermen skal ikke slukne midt i kampen
@@ -367,12 +385,26 @@
       +'<span class="navn">'+esc(s)+(r==='bane'&&kanBytte?' <small class="lenge" data-t="lenge" data-s="'+esc(s)+'">'+mmss(lenge)+'</small>':'')+'</span>'
       +tider+'</'+(kanBytte?'button':'div')+'>';
   }
+  function nedtelling(f,k){
+    if(f.igjen<=60000) return 'Siste minutt, ingen flere bytter';
+    if(f.na) return 'Tid for bytte nå';
+    if(!f.iv) return 'Neste bytte';
+    return 'Neste bytte om '+mmss(f.iv-(k.klokke-k.sisteBytte));
+  }
   function forslagHtml(n,k){
     var f=forslag(n,k);
     if(!f) return '';
-    var tekst=f.na?'Tid for bytte':'Neste bytte';
-    return '<div class="cup-forslag'+(f.na?' na':'')+'" data-noekkel="'+esc(f.inn+'|'+f.ut+'|'+f.na)+'"><p><small>'+tekst+'</small><b>'+esc(f.inn)+'</b> inn, <b>'+esc(f.ut)+'</b> ut</p>'
-      +'<button type="button" data-a="forslag">Bytt</button></div>';
+    return '<div class="cup-forslag'+(f.na?' na':'')+'" data-noekkel="'+esc(f.inn+'|'+f.ut+'|'+f.na)+'">'
+      +'<p class="cup-nedtelling" data-t="nedtelling">'+nedtelling(f,k)+'</p>'
+      +'<div class="cup-par">'
+      +'<div class="cup-side"><span class="retning">Inn</span><b>'+esc(f.inn)+'</b><span class="tid">'+mmss(sum(n,'tid',f.inn))+' i dag</span>'
+      +'<button type="button" data-a="hopp" data-r="inn">Hopp over</button></div>'
+      +'<div class="cup-side"><span class="retning">Ut</span><b>'+esc(f.ut)+'</b><span class="tid">'+mmss(sum(n,'tid',f.ut))+' i dag</span>'
+      +'<button type="button" data-a="hopp" data-r="ut">Hopp over</button></div>'
+      +'</div>'
+      +'<button type="button" class="cup-bytt" data-a="forslag">Bytt: '+esc(f.inn)+' inn, '+esc(f.ut)+' ut</button>'
+      +(f.hoppet?'<button type="button" class="cup-nullhopp" data-a="nullhopp">Ta med de du hoppet over igjen</button>':'')
+      +'</div>';
   }
   // Oppstilling før kampen og i pausen: tre knapper per spiller
   function oppstilling(n,k){
@@ -416,6 +448,7 @@
       +'<span>Kamp '+(i+1)+' av 4</span>'
       +'<button type="button" data-a="kamp" data-i="'+(i+1)+'"'+(i<3?'':' disabled')+'>Neste ›</button></div>';
     h+='<h2 class="cup-kamptittel">Kl. '+m.fra+' mot '+esc(m.mot)+', bane '+m.bane+'</h2>';
+    if(k.gaar) h+='<div data-t="forslag">'+forslagHtml(n,k)+'</div>';
     h+='<div class="cup-klokke"><div><span class="ur" data-t="klokke">'+mmss(k.klokke)+'</span> <span class="av">/ '+L(n).lengde+':00</span></div>'
       +'<div class="siden">Siden bytte<b data-t="siden">'+mmss(k.klokke-k.sisteBytte)+'</b>'+(iv?'bytt hvert '+mmss(iv):'ingen på benken')+'</div></div>';
     h+='<div class="cup-knapper">';
@@ -425,7 +458,7 @@
     if(k.klokke||k.ferdig||k.bytter) h+='<button type="button" class="nullstill" data-a="nullstillkamp">Nullstill kampen</button>';
     h+='</div>';
     if(k.gaar){
-      h+='<div data-t="forslag">'+forslagHtml(n,k)+'</div>'+lister(n,k,true);
+      h+=lister(n,k,true);
       if(k.angre) h+='<div class="cup-knapper" style="margin-top:12px"><button type="button" data-a="angre">Angre siste bytte</button></div>';
     }
     else if(k.ferdig) h+=lister(n,k,false);
@@ -471,7 +504,8 @@
       h+='<p class="cup-hint">Trykk en kamp for å åpne laget og spilletiden.</p>';
     }else{
       var n=+v, nt=nesteTekst(n), i=valgtKamp(n);
-      h+='<div class="cup-neste"><b data-t="neste">'+esc(nt.b)+'</b><span data-t="neste-s">'+esc(nt.s)+'</span></div>';
+      var kv=L(n).kamper[i];
+      if(!(kv&&kv.gaar)) h+='<div class="cup-neste"><b data-t="neste">'+esc(nt.b)+'</b><span data-t="neste-s">'+esc(nt.s)+'</span></div>';
       h+=spilletid(n,i);
       h+='<h2 id="kampene">Kampene til lag '+n+', pulje '+LAG[n].pulje+'</h2>'+kampliste(n,i);
       h+=dagen(n)+innstillinger(n);
@@ -502,6 +536,7 @@
       else if(t==='kk') el.textContent=mmss(k.keeperTid[s]||0);
       else if(t==='d') el.textContent=mmss(sum(n,'tid',s));
       else if(t==='dk') el.textContent=mmss(sum(n,'keeperTid',s));
+      else if(t==='nedtelling'){var fn=forslag(n,k);if(fn) el.textContent=nedtelling(fn,k);}
       else if(t==='lenge') el.textContent=mmss(k.klokke-(k.inn[s]||0));
       else if(t==='avvik'){var av=sum(n,'tid',s)-snitt;el.textContent=avvikTekst(av);el.className=av>=0?'pluss':'minus';}
       else if(t==='forslag'){
@@ -542,6 +577,8 @@
       else merket=s;
     }
     else if(a==='avbryt'){merket=null;}
+    else if(a==='hopp'){var fh=forslag(n,k);if(fh){var r2=b.getAttribute('data-r');k.hopp[r2].push(fh[r2]);}}
+    else if(a==='nullhopp'){k.hopp={inn:[],ut:[]};}
     else if(a==='rolle'){settTil(n,k,b.getAttribute('data-s'),b.getAttribute('data-r'));}
     else if(a==='foresla'&&!k.klokke){L(n).kamper[i]=nyKamp(n,i);}
     else if(a==='angre'&&k.angre){
