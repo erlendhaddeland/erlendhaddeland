@@ -20,8 +20,8 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
-# Cupverktøyet er skjult, og skal ikke i søkemotorer
+# Byttverktøyet er skjult, og skal ikke i søkemotorer
 [[headers]]
-  for = "/lyngdalcup.html"
+  for = "/kamp.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"

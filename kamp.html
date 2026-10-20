@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spilletid i kamp | Byttverktøy for trenere</title>
+<meta name="description" content="Byttverktøy for barnefotball: legg inn spillerne, start klokka og få forslag til bytter som gir alle like mye spilletid.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://erlendhaddeland.no/kamp.html">
+<meta name="theme-color" content="#14163a">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Verktøy til sidelinja, laget for tommelen på en telefon */
+.kamp{max-width:620px;margin:0 auto;padding:20px 16px 80px;}
+.kamp h1{font-size:30px;line-height:1.1;font-weight:800;margin:4px 0 4px;letter-spacing:-.01em;}
+.kamp h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dempet);font-weight:600;margin:30px 0 10px;}
+.kamp-under{color:var(--dempet);margin:0 0 18px;font-size:15px;}
+.kamp button{font:inherit;color:inherit;background:none;border:0;padding:0;}
+.kamp input[type="text"],.kamp input[type="number"]{font:inherit;color:var(--lys);background:var(--kortflate);border:1px solid var(--strek);padding:12px;}
+.kamp input:focus-visible{outline:2px solid var(--aksent);outline-offset:1px;}
+
+.valg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--strek);}
+.valg button{padding:12px 4px;font-weight:600;font-size:15px;border-right:1px solid var(--strek);}
+.valg button:last-child{border-right:0;}
+.valg button[aria-pressed="true"]{background:var(--lys);color:var(--natt);}
+.valg button:disabled{opacity:.3;}
+.valg-rad{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px;margin-top:10px;}
+.valg-rad > span{font-size:14px;color:var(--dempet);font-weight:600;}
+
+/* Byttboksen er det viktigste på siden */
+.forslag{margin:14px 0 18px;padding:14px;border:2px solid var(--aksent);background:var(--kortflate);}
+.nedtelling{margin:0 0 10px;font-size:17px;font-weight:700;color:var(--aksent);}
+.par{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.side{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--dypbla);min-width:0;}
+.side .retning{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dempet);}
+.side .person{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.side b{font-size:clamp(20px,6.2vw,30px);line-height:1.1;font-weight:800;overflow-wrap:break-word;max-width:100%;}
+.side .tid{font-size:13px;color:var(--dempet);}
+.side .person button{margin-top:6px;padding:7px 10px;font-size:13px;font-weight:600;border:1px solid var(--strek);}
+.side.flere b{font-size:clamp(18px,5vw,24px);}
+.forslag .bytt{display:block;width:100%;margin-top:10px;padding:18px 12px;font-size:19px;font-weight:800;background:var(--lys);color:var(--natt);}
+.forslag .nullhopp{display:block;width:100%;margin-top:8px;padding:10px;font-size:14px;color:var(--dempet);text-decoration:underline;}
+.forslag.na{background:var(--aksent);color:var(--natt);}
+.forslag.na .nedtelling{color:var(--natt);font-size:20px;}
+.forslag.na .side{background:var(--aksent-lys);}
+.forslag.na .retning,.forslag.na .tid,.forslag.na .nullhopp{color:var(--dypbla);}
+.forslag.na .side .person button{border-color:var(--natt);}
+.forslag.na .bytt{background:var(--natt);color:var(--lys);}
+@media (prefers-reduced-motion:no-preference){
+  .forslag.na{animation:puls 1.6s ease-in-out infinite;}
+  @keyframes puls{50%{box-shadow:0 0 0 6px var(--aksent-lys);}}
+}
+
+.klokke{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 0 12px;}
+.klokke .ur{font-size:64px;font-weight:200;line-height:1;letter-spacing:-.02em;}
+.klokke .av{color:var(--dempet);font-size:18px;}
+.klokke .tillegg{display:block;font-size:18px;font-weight:700;color:var(--aksent);margin-top:4px;}
+.klokke .siden{text-align:right;font-size:14px;color:var(--dempet);line-height:1.3;}
+.klokke .siden b{display:block;font-size:22px;color:var(--lys);font-weight:600;}
+.knapper{display:flex;gap:8px;flex-wrap:wrap;}
+.knapper button{padding:14px 18px;font-weight:600;border:1px solid var(--strek);}
+.knapper .hoved{flex:1 1 160px;background:var(--aksent);color:var(--natt);border-color:var(--aksent);font-size:18px;}
+.knapper .hoved.pause{background:var(--lys);border-color:var(--lys);}
+.knapper .nullstill{flex:1 1 100%;color:var(--rod);border-color:var(--rod);}
+
+.status{padding:12px 14px;background:var(--dypbla);font-weight:600;font-size:15px;border-left:4px solid var(--aksent);}
+.status.feil{border-left-color:var(--rod);}
+.merknad{margin-top:8px;padding:12px 14px;border:1px solid var(--kakao);font-size:15px;line-height:1.4;}
+.oppst{display:grid;gap:6px;margin-top:10px;}
+.rad{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 8px 8px 12px;background:var(--kortflate);border-left:4px solid var(--strek);}
+.rad.bane{border-left-color:var(--aksent);}
+.rad.keeper{border-left-color:var(--kakao);}
+.rad .navn{font-weight:600;font-size:17px;line-height:1.25;min-width:0;overflow-wrap:break-word;}
+.rad small{display:block;font-weight:400;font-size:13px;color:var(--dempet);}
+.seg{display:grid;grid-template-columns:repeat(3,56px);border:1px solid var(--strek);}
+.seg button{padding:11px 0;font-size:14px;font-weight:600;border-right:1px solid var(--strek);}
+.seg button:last-child{border-right:0;}
+.seg button[aria-pressed="true"][data-r="bane"]{background:var(--aksent);color:var(--natt);}
+.seg button[aria-pressed="true"][data-r="keeper"]{background:var(--kakao);color:var(--natt);}
+.seg button[aria-pressed="true"][data-r="benk"]{background:var(--lys);color:var(--natt);}
+
+.rolle{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dempet);font-weight:600;margin:20px 0 6px;display:flex;justify-content:space-between;}
+.spillere{display:grid;gap:6px;}
+.spiller{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;width:100%;text-align:left;padding:13px 14px;background:var(--kortflate);border-left:4px solid var(--strek);font-size:17px;}
+.spiller .navn{font-weight:600;}
+.spiller .t{font-size:15px;text-align:right;min-width:54px;}
+.spiller .t2{color:var(--dempet);}
+.spiller.bane{border-left-color:var(--aksent);}
+.spiller.keeper{border-left-color:var(--kakao);}
+.spiller.benk{background:transparent;border:1px solid var(--strek);border-left-width:4px;}
+.spiller.merket{outline:2px solid var(--lys);outline-offset:-2px;background:var(--dypbla);}
+.spiller.mal{background:var(--dypbla);outline:1px dashed var(--aksent);outline-offset:-1px;}
+.spiller .maltekst{grid-column:2 / 4;font-size:14px;font-weight:700;color:var(--aksent);}
+.spiller .lenge{color:var(--aksent);}
+.valgt{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 14px;background:var(--lys);color:var(--natt);}
+.valgt p{margin:0;line-height:1.3;}
+.valgt button{padding:10px 14px;font-weight:700;border:1px solid var(--natt);flex:0 0 auto;}
+.hint{font-size:14px;color:var(--dempet);margin:10px 0 0;}
+.tom{color:var(--dempet);}
+
+.tabell{width:100%;border-collapse:collapse;font-size:15px;}
+.tabell th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--dempet);font-weight:600;text-align:right;padding:6px 5px;}
+.tabell th:first-child{text-align:left;}
+.tabell td{padding:10px 5px;border-top:1px solid var(--strek);text-align:right;white-space:nowrap;}
+.tabell td:first-child{text-align:left;white-space:normal;font-weight:600;}
+.tabell td.sum{font-weight:700;}
+
+.ny{display:grid;grid-template-columns:1fr auto;gap:8px;}
+.ny button{padding:12px 18px;font-weight:700;background:var(--aksent);color:var(--natt);}
+.liste{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--strek);}
+.liste li{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--strek);}
+.liste li.ikke .navn{opacity:.45;text-decoration:line-through;}
+.liste .navn{font-weight:600;font-size:17px;overflow-wrap:break-word;min-width:0;}
+.liste button{padding:9px 12px;font-size:14px;font-weight:600;border:1px solid var(--strek);}
+.liste button[aria-pressed="true"]{background:var(--aksent);color:var(--natt);border-color:var(--aksent);}
+.liste .fjern{color:var(--rod);}
+
+.kamp details{margin-top:30px;border-top:1px solid var(--strek);padding-top:12px;}
+.kamp summary{cursor:var(--kaffe);color:var(--dempet);font-weight:600;padding:6px 0;}
+.kamp label.felt{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--strek);}
+.kamp label.felt input{width:90px;text-align:right;padding:8px;}
+.fare{margin-top:14px;padding:12px 16px;border:1px solid var(--feil) !important;font-weight:600;}
+.motfelt{display:block;margin-top:14px;}
+.motfelt span{display:block;font-size:14px;color:var(--dempet);font-weight:600;margin-bottom:6px;}
+.motfelt input{width:100%;}
+</style>
+</head>
+<body>
+<a class="hopp" href="#innhold">Hopp til innhold</a>
+<main id="innhold" class="kamp">
+  <h1>Spilletid i kamp</h1>
+  <p class="kamp-under">5er-fotball, to omganger. Forslagene gir alle like mye tid på banen.</p>
+  <div id="app"><p class="tom">Laster …</p></div>
+  <noscript><p>Verktøyet trenger JavaScript.</p></noscript>
+</main>
+<script>
+(function(){
+  'use strict';
+
+  var PAA_BANEN=4; // utespillere, keeper kommer i tillegg
+  var NOKKEL='spilletid-kamp';
+  var app=document.getElementById('app');
+  var merket=null, varslet={}, laas=null;
+
+  // Spillerlista blir liggende fra kamp til kamp. Spilletiden gjelder bare én kamp
+  var lager;
+  try{lager=JSON.parse(localStorage.getItem(NOKKEL))||{};}catch(e){lager={};}
+  lager.spillere=lager.spillere||[];
+  lager.visning=lager.visning||(lager.spillere.length?'kamp':'spillere');
+  if(!lager.kamp) lager.kamp=nyKampData();
+  function nyKampData(){
+    var f=lager.kamp||{};
+    return {mot:'',lengde:f.lengde||25,antall:f.antall||1,intervall:f.intervall||null,omgang:1,h:{}};
+  }
+  function lagre(){try{localStorage.setItem(NOKKEL,JSON.stringify(lager));}catch(e){}}
+
+  // Hjelpere
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function mmss(ms){ms=Math.max(0,Math.round(ms/1000));var m=Math.floor(ms/60),s=ms%60;return m+':'+(s<10?'0':'')+s;}
+  function K(){return lager.kamp;}
+  function med(){return lager.spillere.filter(function(p){return p.med;}).map(function(p){return p.navn;});}
+  function lengdeMs(){return K().lengde*60000;}
+  function kampTid(s){var t=0;for(var o in K().h) t+=(K().h[o].tid[s]||0);return t;}
+  function keeperTid(s){var t=0;for(var o in K().h) t+=(K().h[o].keeperTid[s]||0);return t;}
+  function antall(h){return Math.max(0,Math.min(K().antall,h.benk.length,h.bane.length));}
+  function intervall(){
+    // Én full runde per omgang: hver utespiller er inne PAA_BANEN deler og ute resten
+    var ute=med().length-1;
+    if(ute<=PAA_BANEN) return 0;
+    if(K().intervall) return K().intervall*60000;
+    var k=Math.min(K().antall,ute-PAA_BANEN);
+    return Math.max(1,Math.round(K().lengde*k/ute*2)/2)*60000;
+  }
+
+  // Klokka bygger på tidsstempler, så den går riktig selv om skjermen låses.
+  // Den stopper ikke ved full tid, fordi dommeren kan legge til tid
+  function avregn(h){
+    if(!h||!h.gaar) return;
+    var na=Date.now(), d=na-h.sist;
+    if(d>0){
+      h.klokke+=d;
+      h.bane.forEach(function(s){h.tid[s]=(h.tid[s]||0)+d;});
+      if(h.keeper) h.keeperTid[h.keeper]=(h.keeperTid[h.keeper]||0)+d;
+    }
+    h.sist=na;
+  }
+  function avregnAlle(){for(var o in K().h) avregn(K().h[o]);}
+
+  function tomOmgang(keeper,bane,benk){
+    var h={keeper:keeper,bane:bane,benk:benk,gaar:false,ferdig:false,klokke:0,sist:0,sisteBytte:0,bytter:0,
+      inn:{},ut:{},tid:{},keeperTid:{},hopp:{inn:[],ut:[]}};
+    bane.forEach(function(s){h.inn[s]=0;});
+    return h;
+  }
+  // 1. omgang: lista slik den er lagt inn. 2. omgang: keeperen fra 1. omgang starter på benken,
+  // og de som fikk minst tid ute i 1. omgang, starter
+  function nyOmgang(o){
+    var alle=med();
+    if(o===1||!K().h[1]) return tomOmgang(alle[0]||null,alle.slice(1,1+PAA_BANEN),alle.slice(1+PAA_BANEN));
+    var f=K().h[1], forrige=f.keeper;
+    var keeper=alle.filter(function(s){return s!==forrige;}).sort(function(a,b){return (f.tid[b]||0)-(f.tid[a]||0);})[0]||forrige||null;
+    var andre=alle.filter(function(s){return s!==keeper&&s!==forrige;}).sort(function(a,b){return (f.tid[a]||0)-(f.tid[b]||0);});
+    var bane=andre.slice(0,PAA_BANEN), benk=andre.slice(PAA_BANEN);
+    if(forrige&&forrige!==keeper){
+      if(bane.length<PAA_BANEN) bane.push(forrige); else benk.push(forrige);
+    }
+    return tomOmgang(keeper,bane,benk);
+  }
+  function omgang(o){
+    if(!K().h[o]){K().h[o]=nyOmgang(o);lagre();}
+    return K().h[o];
+  }
+
+  function rolle(h,s){
+    if(h.keeper===s) return 'keeper';
+    if(h.bane.indexOf(s)>-1) return 'bane';
+    if(h.benk.indexOf(s)>-1) return 'benk';
+    return null;
+  }
+  function settRolle(h,s,r){
+    if(r==='keeper') h.keeper=s; else h[r].push(s);
+    if(r==='bane') h.inn[s]=h.klokke;
+    if(r==='benk') h.ut[s]=h.klokke;
+  }
+  function fjern(h,s){
+    if(h.keeper===s) h.keeper=null;
+    h.bane=h.bane.filter(function(x){return x!==s;});
+    h.benk=h.benk.filter(function(x){return x!==s;});
+  }
+  function taVare(h){
+    h.angre={keeper:h.keeper,bane:h.bane.slice(),benk:h.benk.slice(),inn:JSON.parse(JSON.stringify(h.inn)),ut:JSON.parse(JSON.stringify(h.ut)),sisteBytte:h.sisteBytte,bytter:h.bytter};
+  }
+  // Bytt plass i lista, så rekkefølgen på banen står stille
+  function bytt(h,a,b){
+    var ra=rolle(h,a), rb=rolle(h,b);
+    if(!ra||!rb||ra===rb) return false;
+    var pa=ra==='keeper'?-1:h[ra].indexOf(a), pb=rb==='keeper'?-1:h[rb].indexOf(b);
+    if(ra==='keeper') h.keeper=b; else h[ra][pa]=b;
+    if(rb==='keeper') h.keeper=a; else h[rb][pb]=a;
+    [[a,rb],[b,ra]].forEach(function(p){
+      if(p[1]==='bane') h.inn[p[0]]=h.klokke;
+      if(p[1]==='benk') h.ut[p[0]]=h.klokke;
+    });
+    if((ra==='bane'&&rb==='benk')||(ra==='benk'&&rb==='bane')){h.sisteBytte=h.klokke;h.hopp={inn:[],ut:[]};}
+    return true;
+  }
+  function byttEn(h,a,b){avregn(h);taVare(h);if(bytt(h,a,b)){if(rolle(h,a)!=='keeper'&&rolle(h,b)!=='keeper') h.bytter++;return true;}h.angre=null;return false;}
+  function settTil(h,s,r){
+    var gammel=rolle(h,s);
+    if(gammel===r) return;
+    avregn(h);
+    var forrige=r==='keeper'?h.keeper:null;
+    fjern(h,s);
+    if(forrige){fjern(h,forrige);settRolle(h,forrige,gammel||'benk');}
+    settRolle(h,s,r);
+    if(h.klokke&&((gammel==='bane'&&r==='benk')||(gammel==='benk'&&r==='bane'))){h.sisteBytte=h.klokke;h.bytter++;}
+    h.angre=null;
+  }
+
+  // Byttforslag: tiden i denne omgangen avgjør. Minst tid inn, mest tid ut
+  function forslag(h){
+    var k=antall(h);
+    if(!k) return null;
+    var hopp=h.hopp||(h.hopp={inn:[],ut:[]});
+    function velg(liste,hoppet,sorter){
+      var fri=liste.filter(function(s){return hoppet.indexOf(s)<0;}).sort(sorter);
+      if(fri.length<k){hoppet.length=0;fri=liste.slice().sort(sorter);}
+      return fri.slice(0,k);
+    }
+    var inn=velg(h.benk,hopp.inn,function(a,b){return ((h.tid[a]||0)-(h.tid[b]||0))||((h.ut[a]||0)-(h.ut[b]||0));});
+    var ut=velg(h.bane,hopp.ut,function(a,b){return ((h.tid[b]||0)-(h.tid[a]||0))||((h.inn[a]||0)-(h.inn[b]||0));});
+    var iv=intervall(), igjen=lengdeMs()-h.klokke;
+    var na=h.gaar&&iv>0&&h.klokke-h.sisteBytte>=iv&&igjen>60000;
+    return {inn:inn,ut:ut,na:na,iv:iv,igjen:igjen,hoppet:hopp.inn.length+hopp.ut.length};
+  }
+
+  function holdSkjerm(){
+    try{if(navigator.wakeLock&&!laas) navigator.wakeLock.request('screen').then(function(w){laas=w;w.addEventListener('release',function(){laas=null;});}).catch(function(){});}catch(e){}
+  }
+  function slippSkjerm(){try{if(laas){laas.release();laas=null;}}catch(e){}}
+
+  // Visning
+  function urTekst(h){return mmss(Math.min(h.klokke,lengdeMs()));}
+  function tilleggTekst(h){return h.klokke>lengdeMs()?'Tillegg +'+mmss(h.klokke-lengdeMs()):'';}
+  function nedtelling(f,h){
+    if(f.igjen<=0) return 'Tilleggstid, ingen flere bytter';
+    if(f.igjen<=60000) return 'Siste minutt, ingen flere bytter';
+    if(f.na) return 'Tid for bytte nå';
+    if(!f.iv) return 'Neste bytte';
+    return 'Neste bytte om '+mmss(f.iv-(h.klokke-h.sisteBytte));
+  }
+  function forslagHtml(h){
+    var f=forslag(h);
+    if(!f) return '';
+    var flere=f.inn.length>1;
+    function side(navn,liste,r){
+      return '<div class="side'+(flere?' flere':'')+'"><span class="retning">'+navn+'</span>'
+        +liste.map(function(s){
+          return '<div class="person"><b>'+esc(s)+'</b><span class="tid">Spilt '+mmss(h.tid[s]||0)+'</span>'
+            +'<button type="button" data-a="hopp" data-r="'+r+'" data-s="'+esc(s)+'">Hopp over</button></div>';
+        }).join('')+'</div>';
+    }
+    return '<div class="forslag'+(f.na?' na':'')+'" data-noekkel="'+esc(f.inn.join(',')+'|'+f.ut.join(',')+'|'+f.na)+'">'
+      +'<p class="nedtelling" data-t="nedtelling">'+nedtelling(f,h)+'</p>'
+      +'<div class="par">'+side('Inn',f.inn,'inn')+side('Ut',f.ut,'ut')+'</div>'
+      +'<button type="button" class="bytt" data-a="forslag">'+(flere?'Bytt '+f.inn.length+' spillere nå':'Bytt: '+esc(f.inn[0])+' inn, '+esc(f.ut[0])+' ut')+'</button>'
+      +(f.hoppet?'<button type="button" class="nullhopp" data-a="nullhopp">Ta med de du hoppet over igjen</button>':'')
+      +'</div>';
+  }
+  function spillerKnapp(h,s,r,kanBytte){
+    var mal=kanBytte&&merket&&merket!==s&&rolle(h,merket)!==r;
+    var tider=mal?'<span class="maltekst">Bytt med '+esc(merket)+'</span>'
+      :'<span class="t" data-t="'+(r==='keeper'?'hk':'h')+'" data-s="'+esc(s)+'">'+mmss(r==='keeper'?(h.keeperTid[s]||0):(h.tid[s]||0))+'</span>'
+      +'<span class="t t2" data-t="kt" data-s="'+esc(s)+'">'+mmss(kampTid(s))+'</span>';
+    return '<'+(kanBytte?'button type="button" data-a="spiller"':'div')+' class="spiller '+r+(merket===s?' merket':'')+(mal?' mal':'')+'" data-s="'+esc(s)+'">'
+      +'<span class="navn">'+esc(s)+(r==='bane'&&kanBytte?' <small class="lenge" data-t="lenge" data-s="'+esc(s)+'">'+mmss(h.klokke-(h.inn[s]||0))+'</small>':'')+'</span>'
+      +tider+'</'+(kanBytte?'button':'div')+'>';
+  }
+  function lister(h,kanBytte){
+    var x='';
+    if(kanBytte&&merket) x+='<div class="valgt"><p><b>'+esc(merket)+'</b> er valgt. Trykk den som skal bytte med '+esc(merket)+'.</p><button type="button" data-a="avbryt">Avbryt</button></div>';
+    x+='<div class="rolle"><span>I mål</span><span>i mål &nbsp; ute i kampen</span></div><div class="spillere">'
+      +(h.keeper?spillerKnapp(h,h.keeper,'keeper',kanBytte):'<p class="tom">Ingen i mål. Trykk Pause for å velge.</p>')+'</div>';
+    x+='<div class="rolle"><span>På banen ('+h.bane.length+')</span><span>omgang &nbsp; kampen</span></div><div class="spillere">'
+      +h.bane.map(function(s){return spillerKnapp(h,s,'bane',kanBytte);}).join('')+'</div>';
+    x+='<div class="rolle"><span>Benken ('+h.benk.length+')</span><span>omgang &nbsp; kampen</span></div><div class="spillere">'
+      +(h.benk.length?h.benk.map(function(s){return spillerKnapp(h,s,'benk',kanBytte);}).join(''):'<p class="tom">Ingen på benken.</p>')+'</div>';
+    if(kanBytte&&!merket) x+='<p class="hint">Bytte selv: trykk spilleren som skal ut, så den som skal inn. Vil du endre mer, trykk Pause.</p>';
+    if(kanBytte&&h.angre) x+='<div class="knapper" style="margin-top:12px"><button type="button" data-a="angre">Angre siste bytte</button></div>';
+    return '<div>'+x+'</div>';
+  }
+  function oppstilling(h,o){
+    var alle=med(), maal=Math.min(PAA_BANEN,Math.max(alle.length-1,0));
+    var feil=!alle.length?'Ingen spillere er med. Legg dem inn under Spillere.':(!h.keeper?'Ingen i mål.':(h.bane.length!==maal?h.bane.length+' på banen, skal være '+maal+'.':''));
+    var x='<div class="status'+(feil?' feil':'')+'">'+(feil||'Klar: '+esc(h.keeper)+' i mål, '+h.bane.length+' på banen, '+h.benk.length+' på benken.')+'</div>';
+    var forrige=o===2&&K().h[1]?K().h[1].keeper:null;
+    if(forrige&&forrige!==h.keeper&&!h.klokke&&rolle(h,forrige)==='benk'){
+      x+='<p class="merknad"><b>'+esc(forrige)+'</b> sto i mål i 1. omgang og starter på benken. Skal '+esc(forrige)+' stå i mål igjen, trykk Mål ved navnet.</p>';
+    }
+    x+='<div class="oppst">';
+    alle.forEach(function(s){
+      var r=rolle(h,s)||'benk', info=[];
+      if(o===2&&K().h[1]) info.push('1. omgang: '+mmss(K().h[1].tid[s]||0)+' ute'+(K().h[1].keeperTid[s]?', '+mmss(K().h[1].keeperTid[s])+' i mål':''));
+      if(h.klokke) info.push('Denne omgangen: '+mmss(h.tid[s]||0));
+      x+='<div class="rad '+r+'"><span class="navn">'+esc(s)+(info.length?'<small>'+info.join('. ')+'</small>':'')+'</span><span class="seg">'
+        +[['keeper','Mål'],['bane','Bane'],['benk','Benk']].map(function(v){
+          return '<button type="button" data-a="rolle" data-s="'+esc(s)+'" data-r="'+v[0]+'" aria-pressed="'+(r===v[0])+'">'+v[1]+'</button>';
+        }).join('')+'</span></div>';
+    });
+    x+='</div>';
+    if(!h.klokke&&alle.length) x+='<div class="knapper" style="margin-top:12px"><button type="button" data-a="foresla">Foreslå oppstilling på nytt</button></div>';
+    x+='<p class="hint">'+(h.klokke?'Klokka står. Endre fritt, og trykk Fortsett når dere er i gang igjen.':'Trykk Mål, Bane eller Benk for å endre. Dukker noen opp sent, legg dem til under Spillere.')+'</p>';
+    return x;
+  }
+  function tabell(){
+    var alle=med();
+    if(!alle.length) return '';
+    var x='<h2>Spilletid i kampen</h2><table class="tabell"><thead><tr><th>Spiller</th><th>1. omg</th><th>2. omg</th><th>Mål</th><th>Ute totalt</th></tr></thead><tbody>';
+    alle.forEach(function(s){
+      var h1=K().h[1], h2=K().h[2];
+      x+='<tr><td>'+esc(s)+'</td><td data-t="o1" data-s="'+esc(s)+'">'+mmss(h1?(h1.tid[s]||0):0)+'</td><td data-t="o2" data-s="'+esc(s)+'">'+mmss(h2?(h2.tid[s]||0):0)+'</td>'
+        +'<td data-t="km" data-s="'+esc(s)+'">'+mmss(keeperTid(s))+'</td><td class="sum" data-t="kt" data-s="'+esc(s)+'">'+mmss(kampTid(s))+'</td></tr>';
+    });
+    return x+'</tbody></table><p class="hint">Byttene i hver omgang regnes ut fra tiden i den omgangen. Den som står i mål, får derfor like mye tid ute som de andre når omgangen etter starter.</p>';
+  }
+  function kampvisning(){
+    var o=K().omgang, h=omgang(o), iv=intervall(), andre=K().h[o===1?2:1];
+    var x=h.gaar?(K().mot?'<p class="kamp-under" style="margin:14px 0 0">Mot '+esc(K().mot)+'</p>':'')
+      :'<label class="motfelt"><span>Motstander</span><input type="text" data-a="mot" value="'+esc(K().mot)+'" placeholder="Valgfritt" autocomplete="off"></label>';
+    x+='<div class="valg" role="group" aria-label="Omgang" style="margin-top:14px">'
+      +[1,2].map(function(n){return '<button type="button" data-a="omgang" data-o="'+n+'" aria-pressed="'+(o===n)+'">'+n+'. omgang'+(K().h[n]&&K().h[n].ferdig?' (ferdig)':'')+'</button>';}).join('')+'</div>';
+    x+='<div class="valg-rad"><span>Spillere per bytte</span><div class="valg" role="group" aria-label="Spillere per bytte">'
+      +[1,2,3].map(function(n){return '<button type="button" data-a="antall" data-v="'+n+'" aria-pressed="'+(K().antall===n)+'">'+n+'</button>';}).join('')+'</div></div>';
+    if(h.gaar) x+='<div data-t="forslag">'+forslagHtml(h)+'</div>';
+    x+='<div class="klokke"><div><span class="ur" data-t="ur">'+urTekst(h)+'</span> <span class="av">/ '+K().lengde+':00</span>'
+      +'<span class="tillegg" data-t="tillegg">'+tilleggTekst(h)+'</span></div>'
+      +'<div class="siden">Siden bytte<b data-t="siden">'+mmss(h.klokke-h.sisteBytte)+'</b>'+(iv?'bytt hvert '+mmss(iv):'ingen på benken')+'</div></div>';
+    x+='<div class="knapper">';
+    if(h.ferdig) x+='<button type="button" class="hoved" data-a="gjenapne">Omgangen er ferdig. Åpne igjen</button>';
+    else if(h.gaar) x+='<button type="button" class="hoved pause" data-a="pause">Pause</button><button type="button" data-a="ferdig">Omgangen er ferdig</button>';
+    else x+='<button type="button" class="hoved" data-a="start">'+(h.klokke?'Fortsett':'Start '+o+'. omgang')+'</button>'+(h.klokke?'<button type="button" data-a="ferdig">Omgangen er ferdig</button>':'');
+    if(h.klokke||h.ferdig||h.bytter) x+='<button type="button" class="nullstill" data-a="nullstillomgang">Nullstill '+o+'. omgang</button>';
+    x+='</div>';
+    if(andre&&andre.gaar) x+='<p class="hint">Klokka i '+(o===1?2:1)+'. omgang går fortsatt. Den stopper når du starter denne.</p>';
+    if(h.gaar) x+=lister(h,true);
+    else if(h.ferdig) x+=lister(h,false);
+    else x+='<h2>Oppstilling '+o+'. omgang</h2>'+oppstilling(h,o);
+    x+=tabell();
+    x+='<details><summary>Innstillinger</summary>'
+      +'<label class="felt">Omgangslengde, minutter<input type="number" min="5" max="60" step="1" data-a="lengde" value="'+K().lengde+'"></label>'
+      +'<label class="felt">Bytt hvert, minutter (tomt gir automatisk)<input type="number" min="1" max="30" step="0.5" data-a="intervall" value="'+(K().intervall||'')+'" placeholder="auto"></label>'
+      +'</details>';
+    x+='<button type="button" class="fare" data-a="nykamp">Ny kamp (spillerne blir liggende)</button>';
+    return x;
+  }
+  function spillervisning(){
+    var x='<h2>Spillere</h2><form class="ny" data-a="nyspiller"><input type="text" name="navn" placeholder="Navn, eller flere med komma" autocomplete="off" aria-label="Navn på spiller"><button type="submit">Legg til</button></form>';
+    x+='<p class="hint">Lim gjerne inn hele lista med komma eller linjeskift mellom navnene. Den som ikke er med i dag, trykker du bort. Lista blir liggende til neste kamp.</p>';
+    if(!lager.spillere.length) return x+'<p class="tom" style="margin-top:16px">Ingen spillere ennå.</p>';
+    x+='<ul class="liste">';
+    lager.spillere.forEach(function(p,i){
+      x+='<li class="'+(p.med?'':'ikke')+'"><span class="navn">'+esc(p.navn)+'</span>'
+        +'<button type="button" data-a="med" data-i="'+i+'" aria-pressed="'+p.med+'">'+(p.med?'Med i dag':'Ikke med')+'</button>'
+        +'<button type="button" class="fjern" data-a="fjernspiller" data-i="'+i+'">Fjern</button></li>';
+    });
+    x+='</ul><p class="hint">'+med().length+' av '+lager.spillere.length+' er med i dag.</p>';
+    x+='<div class="knapper" style="margin-top:14px"><button type="button" class="hoved" data-a="visning" data-v="kamp">Til kampen</button></div>';
+    return x;
+  }
+  function render(){
+    avregnAlle();
+    var v=lager.visning;
+    var x='<div class="valg" role="group" aria-label="Visning">'
+      +'<button type="button" data-a="visning" data-v="kamp" aria-pressed="'+(v==='kamp')+'">Kamp</button>'
+      +'<button type="button" data-a="visning" data-v="spillere" aria-pressed="'+(v==='spillere')+'">Spillere ('+med().length+')</button></div>';
+    x+=v==='kamp'?kampvisning():spillervisning();
+    var fokus=document.activeElement&&document.activeElement.name==='navn';
+    app.innerHTML=x;
+    if(fokus){var f=app.querySelector('input[name="navn"]');if(f) f.focus();}
+    lagre();
+  }
+
+  // Hvert sekund oppdateres bare tallene, så trykk ikke går tapt
+  function tikk(){
+    avregnAlle();
+    if(lager.visning!=='kamp') return;
+    var h=K().h[K().omgang];
+    if(!h||!h.gaar) return;
+    app.querySelectorAll('[data-t]').forEach(function(el){
+      var t=el.getAttribute('data-t'), s=el.getAttribute('data-s');
+      if(t==='ur') el.textContent=urTekst(h);
+      else if(t==='tillegg') el.textContent=tilleggTekst(h);
+      else if(t==='siden') el.textContent=mmss(h.klokke-h.sisteBytte);
+      else if(t==='h') el.textContent=mmss(h.tid[s]||0);
+      else if(t==='hk') el.textContent=mmss(h.keeperTid[s]||0);
+      else if(t==='kt') el.textContent=mmss(kampTid(s));
+      else if(t==='km') el.textContent=mmss(keeperTid(s));
+      else if(t==='o1'||t==='o2'){var ho=K().h[t==='o1'?1:2];el.textContent=mmss(ho?(ho.tid[s]||0):0);}
+      else if(t==='lenge') el.textContent=mmss(h.klokke-(h.inn[s]||0));
+      else if(t==='nedtelling'){var fn=forslag(h);if(fn) el.textContent=nedtelling(fn,h);}
+      else if(t==='forslag'){
+        var f=forslag(h), boks=el.firstElementChild;
+        var noekkel=f?f.inn.join(',')+'|'+f.ut.join(',')+'|'+f.na:'';
+        if(!boks||boks.getAttribute('data-noekkel')!==noekkel){
+          el.innerHTML=forslagHtml(h);
+          var id=K().omgang+'-'+h.sisteBytte;
+          if(f&&f.na&&!varslet[id]){varslet[id]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}}
+        }
+      }
+    });
+    lagre();
+  }
+
+  // Spillere som kommer til eller faller fra midt i kampen
+  function leggTilIKamp(s){
+    for(var o in K().h){var h=K().h[o];if(!h.ferdig&&!rolle(h,s)){avregn(h);settRolle(h,s,h.bane.length<PAA_BANEN?'bane':'benk');}}
+  }
+  function taUtAvKamp(s){
+    for(var o in K().h){
+      var h=K().h[o]; if(h.ferdig) continue;
+      avregn(h);
+      var r=rolle(h,s); fjern(h,s);
+      if((r==='bane'||r==='keeper')&&h.benk.length){
+        var inn=h.benk.slice().sort(function(p,q){return (h.tid[p]||0)-(h.tid[q]||0);})[0];
+        fjern(h,inn); settRolle(h,inn,r);
+      }
+      h.angre=null;
+    }
+    if(merket===s) merket=null;
+  }
+
+  app.addEventListener('submit',function(e){
+    e.preventDefault();
+    var felt=e.target.querySelector('input[name="navn"]');
+    var navn=felt.value.split(/[,\n;]+/).map(function(s){return s.trim();}).filter(Boolean);
+    navn.forEach(function(s){
+      var finnes=lager.spillere.filter(function(p){return p.navn.toLowerCase()===s.toLowerCase();})[0];
+      if(finnes){if(!finnes.med){finnes.med=true;leggTilIKamp(finnes.navn);}return;}
+      lager.spillere.push({navn:s,med:true});
+      leggTilIKamp(s);
+    });
+    felt.value='';
+    render();
+  });
+  app.addEventListener('paste',function(e){
+    // Limer man inn en liste med linjeskift, legges alle til med en gang
+    if(e.target.name!=='navn') return;
+    var tekst=(e.clipboardData||window.clipboardData).getData('text');
+    if(tekst.indexOf('\n')<0) return;
+    e.preventDefault();
+    e.target.value=tekst;
+    e.target.form.requestSubmit?e.target.form.requestSubmit():e.target.form.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}));
+  });
+
+  app.addEventListener('click',function(e){
+    var b=e.target.closest('[data-a]'); if(!b||b.tagName==='INPUT'||b.tagName==='FORM') return;
+    var a=b.getAttribute('data-a'), o=K().omgang, h;
+    if(a==='visning'){lager.visning=b.getAttribute('data-v');merket=null;render();window.scrollTo(0,0);return;}
+    if(a==='med'){var p=lager.spillere[+b.getAttribute('data-i')];p.med=!p.med;if(p.med) leggTilIKamp(p.navn); else taUtAvKamp(p.navn);render();return;}
+    if(a==='fjernspiller'){
+      var q=lager.spillere[+b.getAttribute('data-i')];
+      if(!confirm('Fjerne '+q.navn+' fra lista?')) return;
+      taUtAvKamp(q.navn);lager.spillere.splice(+b.getAttribute('data-i'),1);render();return;
+    }
+    if(a==='omgang'){K().omgang=+b.getAttribute('data-o');merket=null;render();return;}
+    if(a==='antall'){K().antall=+b.getAttribute('data-v');render();return;}
+    if(a==='nykamp'){
+      if(!confirm('Starte en ny kamp? Spilletiden i denne kampen slettes. Spillerlista blir liggende.')) return;
+      slippSkjerm();lager.kamp=nyKampData();merket=null;render();window.scrollTo(0,0);return;
+    }
+    h=omgang(o);
+    if(a==='start'){
+      for(var x in K().h){var hx=K().h[x];if(hx!==h&&hx.gaar){avregn(hx);hx.gaar=false;}}
+      h.gaar=true;h.ferdig=false;h.sist=Date.now();holdSkjerm();
+    }
+    else if(a==='pause'){avregn(h);h.gaar=false;slippSkjerm();}
+    else if(a==='ferdig'){
+      avregn(h);h.gaar=false;h.ferdig=true;slippSkjerm();merket=null;
+      if(o===1){K().omgang=2;if(!K().h[2]||!K().h[2].klokke) K().h[2]=nyOmgang(2);}
+      render();window.scrollTo(0,0);return;
+    }
+    else if(a==='gjenapne'){h.ferdig=false;}
+    else if(a==='forslag'){
+      var f=forslag(h);
+      if(f){avregn(h);taVare(h);f.inn.forEach(function(s,i){bytt(h,s,f.ut[i]);});h.bytter+=f.inn.length;}
+      merket=null;
+    }
+    else if(a==='hopp'){var fh=forslag(h);if(fh){h.hopp[b.getAttribute('data-r')].push(b.getAttribute('data-s'));}}
+    else if(a==='nullhopp'){h.hopp={inn:[],ut:[]};}
+    else if(a==='spiller'){
+      var s=b.getAttribute('data-s');
+      if(merket===s) merket=null;
+      else if(merket&&byttEn(h,merket,s)) merket=null;
+      else merket=s;
+    }
+    else if(a==='avbryt'){merket=null;}
+    else if(a==='rolle'){settTil(h,b.getAttribute('data-s'),b.getAttribute('data-r'));}
+    else if(a==='foresla'&&!h.klokke){K().h[o]=nyOmgang(o);}
+    else if(a==='angre'&&h.angre){
+      var g=h.angre;h.keeper=g.keeper;h.bane=g.bane;h.benk=g.benk;h.inn=g.inn;h.ut=g.ut;h.sisteBytte=g.sisteBytte;h.bytter=g.bytter;h.angre=null;
+    }
+    else if(a==='nullstillomgang'){
+      if(!confirm('Nullstille '+o+'. omgang? Klokka går til 0:00 og spilletiden i omgangen slettes.')) return;
+      if(h.gaar) slippSkjerm();delete K().h[o];merket=null;
+    }
+    render();
+  });
+  app.addEventListener('change',function(e){
+    var el=e.target, a=el.getAttribute('data-a');
+    if(a==='mot'){K().mot=el.value.trim();lagre();return;}
+    if(a==='lengde'){var v=parseFloat(el.value);if(v>=5&&v<=60){avregnAlle();K().lengde=v;}}
+    if(a==='intervall'){var w=parseFloat(el.value);K().intervall=(w>=1&&w<=30)?w:null;}
+    render();
+  });
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState!=='visible') return;
+    if(document.activeElement&&document.activeElement.tagName==='INPUT') return;
+    render();
+    var h=K().h[K().omgang]; if(h&&h.gaar) holdSkjerm();
+  });
+
+  render();
+  setInterval(tikk,1000);
+})();
+</script>
+</body>
+</html>
