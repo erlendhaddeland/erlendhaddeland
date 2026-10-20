@@ -43,6 +43,13 @@
 .side .tid{font-size:13px;color:var(--dempet);}
 .side .person button{margin-top:6px;padding:7px 10px;font-size:13px;font-weight:600;border:1px solid var(--strek);}
 .side.flere b{font-size:clamp(18px,5vw,24px);}
+.imaal{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:1px 5px;margin-left:4px;vertical-align:middle;background:var(--kakao);color:var(--natt);}
+/* Fire eller fem om gangen: én linje per spiller, så boksen ikke blir for høy */
+.side.mange{gap:6px;}
+.side.mange .person{flex-direction:row;align-items:center;justify-content:space-between;gap:6px;}
+.side.mange b{font-size:17px;}
+.side.mange .tid{display:none;}
+.side.mange .person button{margin-top:0;padding:6px 8px;font-size:12px;flex:0 0 auto;}
 .forslag .bytt{display:block;width:100%;margin-top:10px;padding:18px 12px;font-size:19px;font-weight:800;background:var(--lys);color:var(--natt);}
 .forslag .nullhopp{display:block;width:100%;margin-top:8px;padding:10px;font-size:14px;color:var(--dempet);text-decoration:underline;}
 .forslag.na{background:var(--aksent);color:var(--natt);}
@@ -301,8 +308,10 @@
   }
 
   // Byttforslag: tiden i denne omgangen avgjør. Minst tid inn, mest tid ut
+  // Hele rekka: alle utespillerne og keeperen byttes samtidig. Krever nok folk på benken
+  function rekke(h){return K().antall===5&&!!h.keeper&&h.bane.length>0&&h.benk.length>=h.bane.length+1;}
   function forslag(h){
-    var k=antall(h);
+    var hel=rekke(h), k=hel?h.bane.length+1:antall(h);
     if(!k) return null;
     var hopp=h.hopp||(h.hopp={inn:[],ut:[]});
     function velg(liste,hoppet,sorter){
@@ -311,10 +320,18 @@
       return fri.slice(0,k);
     }
     var inn=velg(h.benk,hopp.inn,function(a,b){return ((h.tid[a]||0)-(h.tid[b]||0))||((h.ut[a]||0)-(h.ut[b]||0));});
-    var ut=velg(h.bane,hopp.ut,function(a,b){return ((h.tid[b]||0)-(h.tid[a]||0))||((h.inn[a]||0)-(h.inn[b]||0));});
+    var ut, nyKeeper=null;
+    if(hel){
+      // Ny keeper blant dem som kommer inn: minst tid i mål i kampen, deretter mest tid ute
+      nyKeeper=inn.slice().sort(function(a,b){return (keeperTid(a)-keeperTid(b))||((h.tid[b]||0)-(h.tid[a]||0));})[0];
+      inn=[nyKeeper].concat(inn.filter(function(s){return s!==nyKeeper;}));
+      ut=[h.keeper].concat(h.bane);
+      hopp.ut=[];
+    }
+    else ut=velg(h.bane,hopp.ut,function(a,b){return ((h.tid[b]||0)-(h.tid[a]||0))||((h.inn[a]||0)-(h.inn[b]||0));});
     var iv=intervall(), igjen=lengdeMs()-h.klokke;
     var na=h.gaar&&iv>0&&h.klokke-h.sisteBytte>=iv&&igjen>60000;
-    return {inn:inn,ut:ut,na:na,iv:iv,igjen:igjen,hoppet:hopp.inn.length+hopp.ut.length};
+    return {inn:inn,ut:ut,hel:hel,na:na,iv:iv,igjen:igjen,hoppet:hopp.inn.length+hopp.ut.length};
   }
 
   function holdSkjerm(){
@@ -335,18 +352,19 @@
   function forslagHtml(h){
     var f=forslag(h);
     if(!f) return '';
-    var flere=f.inn.length>1;
+    var flere=f.inn.length>1, mange=f.inn.length>3;
     function side(navn,liste,r){
-      return '<div class="side'+(flere?' flere':'')+'"><span class="retning">'+navn+'</span>'
-        +liste.map(function(s){
-          return '<div class="person"><b>'+esc(s)+'</b><span class="tid">Spilt '+mmss(h.tid[s]||0)+'</span>'
-            +'<button type="button" data-a="hopp" data-r="'+r+'" data-s="'+esc(s)+'">Hopp over</button></div>';
+      return '<div class="side'+(flere?' flere':'')+(mange?' mange':'')+'"><span class="retning">'+navn+'</span>'
+        +liste.map(function(s,i){
+          var maal=f.hel&&i===0;
+          return '<div class="person"><b>'+esc(s)+(maal?' <small class="imaal">mål</small>':'')+'</b><span class="tid">Spilt '+mmss(h.tid[s]||0)+'</span>'
+            +(f.hel&&r==='ut'?'':'<button type="button" data-a="hopp" data-r="'+r+'" data-s="'+esc(s)+'" aria-label="Hopp over '+esc(s)+'">'+(mange?'Hopp':'Hopp over')+'</button>')+'</div>';
         }).join('')+'</div>';
     }
     return '<div class="forslag'+(f.na?' na':'')+'" data-noekkel="'+esc(f.inn.join(',')+'|'+f.ut.join(',')+'|'+f.na)+'">'
       +'<p class="nedtelling" data-t="nedtelling">'+nedtelling(f,h)+'</p>'
       +'<div class="par">'+side('Inn',f.inn,'inn')+side('Ut',f.ut,'ut')+'</div>'
-      +'<button type="button" class="bytt" data-a="forslag">'+(flere?'Bytt '+f.inn.length+' spillere nå':'Bytt: '+esc(f.inn[0])+' inn, '+esc(f.ut[0])+' ut')+'</button>'
+      +'<button type="button" class="bytt" data-a="forslag">'+(f.hel?'Bytt hele rekka nå':flere?'Bytt '+f.inn.length+' spillere nå':'Bytt: '+esc(f.inn[0])+' inn, '+esc(f.ut[0])+' ut')+'</button>'
       +(f.hoppet?'<button type="button" class="nullhopp" data-a="nullhopp">Ta med de du hoppet over igjen</button>':'')
       +'</div>';
   }
@@ -418,7 +436,8 @@
     x+='<div class="valg" role="group" aria-label="Omgang" style="margin-top:14px">'
       +[1,2].map(function(n){return '<button type="button" data-a="omgang" data-o="'+n+'" aria-pressed="'+(o===n)+'">'+n+'. omgang'+(K().h[n]&&K().h[n].ferdig?' (ferdig)':'')+'</button>';}).join('')+'</div>';
     x+='<div class="valg-rad"><span>Spillere per bytte</span><div class="valg" role="group" aria-label="Spillere per bytte">'
-      +[1,2,3].map(function(n){return '<button type="button" data-a="antall" data-v="'+n+'" aria-pressed="'+(K().antall===n)+'">'+n+'</button>';}).join('')+'</div></div>';
+      +[1,2,3,4,5].map(function(n){return '<button type="button" data-a="antall" data-v="'+n+'" aria-pressed="'+(K().antall===n)+'">'+n+'</button>';}).join('')+'</div></div>';
+    if(K().antall===5) x+='<p class="hint">'+(rekke(h)||!h.keeper?'5 betyr hele rekka: alle fire utespillerne og keeperen byttes samtidig.':'For få på benken til å bytte hele rekka. Forslagene tar så mange utespillere som mulig.')+'</p>';
     if(h.gaar) x+='<div data-t="forslag">'+forslagHtml(h)+'</div>';
     x+='<div class="klokke"><div><span class="ur" data-t="ur">'+urTekst(h)+'</span> <span class="av">/ '+K().lengde+':00</span>'
       +'<span class="tillegg" data-t="tillegg">'+tilleggTekst(h)+'</span></div>'
@@ -596,7 +615,8 @@
     else if(a==='gjenapne'){h.ferdig=false;}
     else if(a==='forslag'){
       var f=forslag(h);
-      if(f){avregn(h);taVare(h);f.inn.forEach(function(s,i){bytt(h,s,f.ut[i]);});h.bytter+=f.inn.length;}
+      // Ved hele rekka står keeperen først i begge lister, så første bytte gir ny keeper
+      if(f){avregn(h);taVare(h);f.inn.forEach(function(s,i){bytt(h,s,f.ut[i]);});h.bytter+=f.hel?f.inn.length-1:f.inn.length;}
       merket=null;
     }
     else if(a==='hopp'){var fh=forslag(h);if(fh){h.hopp[b.getAttribute('data-r')].push(b.getAttribute('data-s'));}}
