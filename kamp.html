@@ -102,6 +102,10 @@
 .valgt button{padding:10px 14px;font-weight:700;border:1px solid var(--natt);flex:0 0 auto;}
 .hint{font-size:14px;color:var(--dempet);margin:10px 0 0;}
 .tom{color:var(--dempet);}
+.lagvalg button{padding:14px 4px;font-size:17px;font-weight:700;}
+.trenere{margin:8px 0 14px;font-size:14px;color:var(--dempet);}
+.laan{display:flex;flex-wrap:wrap;gap:8px;}
+.laan button{padding:10px 14px;font-size:15px;font-weight:600;border:1px solid var(--strek);}
 
 .tabell{width:100%;border-collapse:collapse;font-size:15px;}
 .tabell th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--dempet);font-weight:600;text-align:right;padding:6px 5px;}
@@ -143,27 +147,44 @@
   'use strict';
 
   var PAA_BANEN=4; // utespillere, keeper kommer i tillegg
-  var NOKKEL='spilletid-kamp';
+  var NOKKEL='spilletid-lag';
   var app=document.getElementById('app');
   var merket=null, varslet={}, laas=null;
 
-  // Spillerlista blir liggende fra kamp til kamp. Spilletiden gjelder bare én kamp
+  // Lagene med faste lister. Lista på telefonen kan endres, og spillere kan lånes fra det andre laget
+  var LAG={
+    1:{navn:'Lyngdal 1',trenere:'Trond Erik og Erlend',
+      spillere:['Arne','Eirik Emilian','Eliah','Johannes','Jonas F','Lucas','Martin','Matei','Misha','Oskar','Theo','Ugljesa']},
+    2:{navn:'Lyngdal 2',trenere:'Tor Arild og Odd',
+      spillere:['Adrian','Arvid','Bendik','Fillip','Gustav','Illia','Isak','Jonas (Leeds)','Josva','Oliver','Viljar']}
+  };
+
+  // Hvert lag har sin egen spillerliste og sin egen kamp. Spilletiden gjelder bare én kamp
   var lager;
   try{lager=JSON.parse(localStorage.getItem(NOKKEL))||{};}catch(e){lager={};}
-  lager.spillere=lager.spillere||[];
-  lager.visning=lager.visning||(lager.spillere.length?'kamp':'spillere');
-  if(!lager.kamp) lager.kamp=nyKampData();
-  function nyKampData(){
-    var f=lager.kamp||{};
+  lager.lag=lager.lag||{};
+  [1,2].forEach(function(n){
+    var t=lager.lag[n]=lager.lag[n]||{};
+    if(!t.spillere) t.spillere=standardliste(n);
+    t.visning=t.visning||'kamp';
+    if(!t.kamp) t.kamp=nyKampData(t);
+  });
+  var fraAdresse=new URLSearchParams(location.search).get('lag');
+  if(fraAdresse==='1'||fraAdresse==='2') lager.valgt=fraAdresse;
+  if(!lager.valgt) lager.valgt='1';
+  function standardliste(n){return LAG[n].spillere.map(function(s){return {navn:s,med:true};});}
+  function nyKampData(t){
+    var f=t.kamp||{};
     return {mot:'',lengde:f.lengde||25,antall:f.antall||1,intervall:f.intervall||null,omgang:1,h:{}};
   }
+  function T(){return lager.lag[lager.valgt];}
   function lagre(){try{localStorage.setItem(NOKKEL,JSON.stringify(lager));}catch(e){}}
 
   // Hjelpere
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function mmss(ms){ms=Math.max(0,Math.round(ms/1000));var m=Math.floor(ms/60),s=ms%60;return m+':'+(s<10?'0':'')+s;}
-  function K(){return lager.kamp;}
-  function med(){return lager.spillere.filter(function(p){return p.med;}).map(function(p){return p.navn;});}
+  function K(){return T().kamp;}
+  function med(){return T().spillere.filter(function(p){return p.med;}).map(function(p){return p.navn;});}
   function lengdeMs(){return K().lengde*60000;}
   function kampTid(s){var t=0;for(var o in K().h) t+=(K().h[o].tid[s]||0);return t;}
   function keeperTid(s){var t=0;for(var o in K().h) t+=(K().h[o].keeperTid[s]||0);return t;}
@@ -401,21 +422,32 @@
   function spillervisning(){
     var x='<h2>Spillere</h2><form class="ny" data-a="nyspiller"><input type="text" name="navn" placeholder="Navn, eller flere med komma" autocomplete="off" aria-label="Navn på spiller"><button type="submit">Legg til</button></form>';
     x+='<p class="hint">Lim gjerne inn hele lista med komma eller linjeskift mellom navnene. Den som ikke er med i dag, trykker du bort. Lista blir liggende til neste kamp.</p>';
-    if(!lager.spillere.length) return x+'<p class="tom" style="margin-top:16px">Ingen spillere ennå.</p>';
-    x+='<ul class="liste">';
-    lager.spillere.forEach(function(p,i){
+    if(!T().spillere.length) x+='<p class="tom" style="margin-top:16px">Ingen spillere ennå.</p>';
+    if(T().spillere.length) x+='<ul class="liste">';
+    T().spillere.forEach(function(p,i){
       x+='<li class="'+(p.med?'':'ikke')+'"><span class="navn">'+esc(p.navn)+'</span>'
         +'<button type="button" data-a="med" data-i="'+i+'" aria-pressed="'+p.med+'">'+(p.med?'Med i dag':'Ikke med')+'</button>'
         +'<button type="button" class="fjern" data-a="fjernspiller" data-i="'+i+'">Fjern</button></li>';
     });
-    x+='</ul><p class="hint">'+med().length+' av '+lager.spillere.length+' er med i dag.</p>';
-    x+='<div class="knapper" style="margin-top:14px"><button type="button" class="hoved" data-a="visning" data-v="kamp">Til kampen</button></div>';
+    if(T().spillere.length) x+='</ul><p class="hint">'+med().length+' av '+T().spillere.length+' er med i dag.</p>';
+    var annet=lager.valgt==='1'?'2':'1';
+    var har=T().spillere.map(function(p){return p.navn;});
+    var kan=LAG[annet].spillere.filter(function(s){return har.indexOf(s)<0;});
+    if(kan.length){
+      x+='<h2>Lån fra '+LAG[annet].navn+'</h2><div class="laan">'
+        +kan.map(function(s){return '<button type="button" data-a="laan" data-s="'+esc(s)+'">+ '+esc(s)+'</button>';}).join('')+'</div>';
+    }
+    x+='<div class="knapper" style="margin-top:18px"><button type="button" class="hoved" data-a="visning" data-v="kamp">Til kampen</button></div>';
+    x+='<button type="button" class="fare" data-a="tilbakestill">Tilbakestill til lista for '+LAG[lager.valgt].navn+'</button>';
     return x;
   }
   function render(){
     avregnAlle();
-    var v=lager.visning;
-    var x='<div class="valg" role="group" aria-label="Visning">'
+    var v=T().visning, lag=LAG[lager.valgt];
+    var x='<div class="valg lagvalg" role="group" aria-label="Velg lag">'
+      +[1,2].map(function(n){return '<button type="button" data-a="lag" data-v="'+n+'" aria-pressed="'+(lager.valgt===String(n))+'">'+LAG[n].navn+'</button>';}).join('')+'</div>'
+      +'<p class="trenere">Trenere: '+esc(lag.trenere)+'</p>';
+    x+='<div class="valg" role="group" aria-label="Visning">'
       +'<button type="button" data-a="visning" data-v="kamp" aria-pressed="'+(v==='kamp')+'">Kamp</button>'
       +'<button type="button" data-a="visning" data-v="spillere" aria-pressed="'+(v==='spillere')+'">Spillere ('+med().length+')</button></div>';
     x+=v==='kamp'?kampvisning():spillervisning();
@@ -428,7 +460,7 @@
   // Hvert sekund oppdateres bare tallene, så trykk ikke går tapt
   function tikk(){
     avregnAlle();
-    if(lager.visning!=='kamp') return;
+    if(T().visning!=='kamp') return;
     var h=K().h[K().omgang];
     if(!h||!h.gaar) return;
     app.querySelectorAll('[data-t]').forEach(function(el){
@@ -479,9 +511,9 @@
     var felt=e.target.querySelector('input[name="navn"]');
     var navn=felt.value.split(/[,\n;]+/).map(function(s){return s.trim();}).filter(Boolean);
     navn.forEach(function(s){
-      var finnes=lager.spillere.filter(function(p){return p.navn.toLowerCase()===s.toLowerCase();})[0];
+      var finnes=T().spillere.filter(function(p){return p.navn.toLowerCase()===s.toLowerCase();})[0];
       if(finnes){if(!finnes.med){finnes.med=true;leggTilIKamp(finnes.navn);}return;}
-      lager.spillere.push({navn:s,med:true});
+      T().spillere.push({navn:s,med:true});
       leggTilIKamp(s);
     });
     felt.value='';
@@ -500,18 +532,28 @@
   app.addEventListener('click',function(e){
     var b=e.target.closest('[data-a]'); if(!b||b.tagName==='INPUT'||b.tagName==='FORM') return;
     var a=b.getAttribute('data-a'), o=K().omgang, h;
-    if(a==='visning'){lager.visning=b.getAttribute('data-v');merket=null;render();window.scrollTo(0,0);return;}
-    if(a==='med'){var p=lager.spillere[+b.getAttribute('data-i')];p.med=!p.med;if(p.med) leggTilIKamp(p.navn); else taUtAvKamp(p.navn);render();return;}
+    if(a==='lag'){lager.valgt=b.getAttribute('data-v');merket=null;history.replaceState(null,'','?lag='+lager.valgt);render();window.scrollTo(0,0);return;}
+    if(a==='laan'){var ls=b.getAttribute('data-s');T().spillere.push({navn:ls,med:true});leggTilIKamp(ls);render();return;}
+    if(a==='tilbakestill'){
+      if(!confirm('Tilbakestille lista til '+LAG[lager.valgt].navn+'? Lånte spillere fjernes, og alle settes som med i dag.')) return;
+      var nye=standardliste(lager.valgt), navn=nye.map(function(p){return p.navn;});
+      T().spillere.forEach(function(p){if(navn.indexOf(p.navn)<0) taUtAvKamp(p.navn);});
+      T().spillere=nye;
+      nye.forEach(function(p){leggTilIKamp(p.navn);});
+      render();return;
+    }
+    if(a==='visning'){T().visning=b.getAttribute('data-v');merket=null;render();window.scrollTo(0,0);return;}
+    if(a==='med'){var p=T().spillere[+b.getAttribute('data-i')];p.med=!p.med;if(p.med) leggTilIKamp(p.navn); else taUtAvKamp(p.navn);render();return;}
     if(a==='fjernspiller'){
-      var q=lager.spillere[+b.getAttribute('data-i')];
+      var q=T().spillere[+b.getAttribute('data-i')];
       if(!confirm('Fjerne '+q.navn+' fra lista?')) return;
-      taUtAvKamp(q.navn);lager.spillere.splice(+b.getAttribute('data-i'),1);render();return;
+      taUtAvKamp(q.navn);T().spillere.splice(+b.getAttribute('data-i'),1);render();return;
     }
     if(a==='omgang'){K().omgang=+b.getAttribute('data-o');merket=null;render();return;}
     if(a==='antall'){K().antall=+b.getAttribute('data-v');render();return;}
     if(a==='nykamp'){
       if(!confirm('Starte en ny kamp? Spilletiden i denne kampen slettes. Spillerlista blir liggende.')) return;
-      slippSkjerm();lager.kamp=nyKampData();merket=null;render();window.scrollTo(0,0);return;
+      slippSkjerm();T().kamp=nyKampData(T());merket=null;render();window.scrollTo(0,0);return;
     }
     h=omgang(o);
     if(a==='start'){
