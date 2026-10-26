@@ -10,13 +10,21 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 <style>
 /* Kakaokroken, podkaststudioet. Alt her følger husreglene: variablene fra styles.css, skarpe hjørner. */
 .studio{max-width:var(--mal);margin:0 auto;padding:28px 28px 80px;}
 .studio-topp{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--strek);margin-bottom:32px;}
-.studio-topp h1{font-size:26px;font-weight:600;margin:0;letter-spacing:-.01em;}
+.studio-topp h1{font-size:52px;font-weight:600;margin:0;letter-spacing:-.02em;line-height:1.1;}
+/* Overskriften fylles opp bokstav for bokstav, som kakao i en kopp.
+   Skriptet deler den i bokstaver, så uten JavaScript står den bare stille. */
+.studio-topp h1 .bokstav{display:inline-block;font-weight:200;color:var(--dempet);transition:font-weight .9s cubic-bezier(.2,.7,.2,1),color .9s ease;transition-delay:calc(var(--i) * 45ms);}
+.studio-topp h1.klar .bokstav{font-weight:700;color:var(--lys);}
+.studio-topp h1.klar .bokstav.kakao{color:var(--kakao);}
+.studio-topp h1.klar:hover .bokstav{font-weight:300;transition-duration:.5s;}
+@media (prefers-reduced-motion:reduce){.studio-topp h1 .bokstav{transition:none;}}
+@media (max-width:600px){.studio-topp h1{font-size:38px;}}
 .studio-topp a{color:var(--dempet);font-size:14px;text-decoration:none;}
 .studio-topp a:hover{color:var(--lys);}
 .studio > section{padding:0;border-top:0;}
@@ -945,6 +953,24 @@
   $("knapp-prov-igjen").addEventListener("click", startUtstyr);
   $("knapp-opprett").addEventListener("click", function(){ if (sjekkNavn() && lokalStrom) inn(); });
   $("knapp-bli-med").addEventListener("click", function(){ if (sjekkNavn() && lokalStrom) inn(); });
+
+  // Overskriften: del i bokstaver og la vekten fylles opp
+  (function(){
+    var h = document.querySelector(".studio-topp h1");
+    var tekst = h.textContent;
+    h.setAttribute("aria-label", tekst);
+    h.textContent = "";
+    for (var i = 0; i < tekst.length; i++) {
+      var b = document.createElement("span");
+      b.className = "bokstav" + (i < 5 ? " kakao" : "");
+      b.setAttribute("aria-hidden", "true");
+      b.style.setProperty("--i", i);
+      b.textContent = tekst[i];
+      h.appendChild(b);
+    }
+    var start = function(){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ h.classList.add("klar"); }); }); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+  })();
 
   (async function(){
     if (!window.MediaRecorder || !window.AudioWorkletNode || !navigator.mediaDevices || !window.indexedDB) {
